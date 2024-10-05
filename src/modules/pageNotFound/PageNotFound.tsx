@@ -34,7 +34,7 @@ const Button = styled.button`
   cursor: pointer;
   margin-top: ${indent.medium};
   font-size: ${indent.medium};
-  font-family: "Montserrat";
+  font-family: "Manrope";
 `;
 
 const PageNotFound = () => {

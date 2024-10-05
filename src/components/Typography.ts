@@ -23,15 +23,16 @@ export const Bold = withIndentStyles(
     font-weight: 600;
     color: ${content[$color || "primary"]};
     display: ${$display || "inline-block"}
-  `,
-  ),
+  `
+  )
 );
 
 export const Text = withIndentStyles(
-  styled.div<{ $size?: FontSize; $color?: ContentColors }>(
+  styled.span<{ $size?: FontSize; $color?: string }>(
     ({ $size, $color }) => `
+    transition: color .3s ease-in-out;
     ${getFontSizes($size || "default")}
-    color: ${content[$color || "primary"]};
-  `,
-  ),
+    color: ${$color || "#333"};
+  `
+  )
 );

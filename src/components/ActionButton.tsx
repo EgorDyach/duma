@@ -19,6 +19,9 @@ interface ActionButtonProps {
 const StyledButton = styled.button<{
   $size: ActionButtonSize;
 }>`
+  display: flex;
+  justify-content: center;
+  align-items: center;
   background-color: #fff;
   width: 100%;
   padding: 11px;

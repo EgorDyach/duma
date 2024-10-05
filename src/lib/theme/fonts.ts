@@ -9,7 +9,7 @@ interface FontData {
 
 export const getFont = (
   { name, fileName, style, weight }: FontData,
-  pathPrefix = "",
+  pathPrefix = ""
 ) => {
   return `@font-face {
     font-family: '${name}';
@@ -23,17 +23,17 @@ export const getFont = (
 
 export const fonts: FontData[] = [
   {
-    name: "Montserrat",
-    fileName: "Montserrat",
+    name: "Manrope",
+    fileName: "Manrope",
     style: "normal",
   },
 ];
 
 export const fontWeightsDict: Record<FontSize, number> = {
   small: 400,
-  default: 400,
+  default: 500,
   // TODO linar check weight
-  big: 400,
+  big: 500,
   title: 600,
   subheader: 600,
   header: 600,
@@ -43,7 +43,7 @@ export const fontWeightsDict: Record<FontSize, number> = {
 
 export const lineHeightDict = {
   small: "20px",
-  default: "24px",
+  default: "17px",
   big: "18px",
   subtitle: "28px",
   title: "32px",
@@ -55,7 +55,7 @@ export const lineHeightDict = {
 
 export const fontDict: Record<FontSize, string> = {
   small: "12px",
-  default: "14px",
+  default: "18px",
   big: "16px",
   title: "18px",
   subheader: "24px",
