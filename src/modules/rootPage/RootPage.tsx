@@ -1,72 +1,136 @@
-import ActionButton from "@components/ActionButton";
 import Flex from "@components/Flex";
 import TextButton from "@components/TextButton";
 import { Title } from "@components/Title";
-import { useModal } from "@hooks/useModal";
 import React, { useState } from "react";
+import Portal from "@components/Portal";
+import { AddingTeacherModal } from "@components/Modal/ModalViews/AddingTeacherModal";
+import { Backdrop } from "@components/Modal/ModalStyles";
+import { AddingClassModal } from "@components/Modal/ModalViews/AddingClassModal";
 
 type Item = {
-  text: string;
   isActive: boolean;
-  size: "small" | "medium" | "large" | "fullSize";
+  name: string;
   id: number;
 };
 
+export type TeacherItem = Item & {
+  subjects: {
+    name: string;
+    auditory: AuditoryItem[];
+    classes: ClassItem[];
+    id: number;
+  }[];
+};
+
+export type ClassItem = Item & {
+  shift: 1 | 2;
+  schoolWeek: 5 | 6;
+  accounts: AccountItem[];
+  // subjects: {name: string; auditory: number; classes: number[]}[]
+};
+
+export type AuditoryItem = Item & {
+  capacity: number;
+  accounts: AccountItem[];
+  // subjects: {name: string; auditory: number; classes: number[]}[]
+};
+
+export type AccountItem = Item & {
+  // subjects: {name: string; auditory: number; classes: number[]}[]
+};
+
 export const RootPage: React.FC = () => {
-  const [teachers, setTeachers] = useState<Item[]>([]);
-  const [classes, setClasses] = useState<Item[]>([]);
-  const [auditories, setAuditories] = useState<Item[]>([]);
+  const [teachers, setTeachers] = useState<TeacherItem[]>([]);
+  const [isTeacherModalOpen, setIsTeacherModalOpen] = useState(false);
+  const [isClassModalOpen, setIsClassModalOpen] = useState(false);
+  const [isAuditoryModalOpen, setIsAuditoryModalOpen] = useState(false);
+  const [isAccountModalOpen, setIsAccountModalOpen] = useState(false);
+  const [teacherEditValue, setTeacherEditValue] = useState<null | TeacherItem>(
+    null
+  );
+  const [classEditValue, setClassEditValue] = useState<null | ClassItem>(null);
+  const [auditoriEditValue, setAuditoriEditValue] =
+    useState<null | AuditoryItem>(null);
+  const [accountEditValue, setAccountEditValue] = useState<null | AccountItem>(
+    null
+  );
+  const [classes, setClasses] = useState<ClassItem[]>([]);
+  const [auditories, setAuditories] = useState<AuditoryItem[]>([]);
   const [accounts, setAccounts] = useState<Item[]>([]);
-  const [openModal, closeModal] = useModal();
-  const addItem = (
-    arraySetter: React.Dispatch<React.SetStateAction<Item[]>>,
-    size: "small" | "medium" | "large" | "fullSize",
-    type: "teachers" | "classes" | "auditories" | "accounts",
-    text: string = "Name"
-  ) => {
-    const newItem: Item = {
-      text,
-      isActive: true,
-      size: size,
-      id: Date.now(),
-    };
-    if (type === "accounts") {
-      arraySetter((prevItems) => [...prevItems, newItem]);
-      return;
-    }
-    openModal({
-      title: "Новый элемент",
-      type: "InformationModal",
-      size: "default",
-      onOk: () => {
-        arraySetter((prevItems) => [...prevItems, newItem]);
-        closeModal();
-      },
-      okText: "Добавить",
-      description: (
-        <Flex justify="end">
-          Страница в разработке, добавьте тестовое данное...
-        </Flex>
-      ),
-      hideModal: closeModal,
-    });
+
+  const closeAllModals = () => {
+    setIsTeacherModalOpen(false);
+    setIsClassModalOpen(false);
+    setIsAuditoryModalOpen(false);
+    setIsAccountModalOpen(false);
   };
 
-  const updateItemText = (
-    arraySetter: React.Dispatch<React.SetStateAction<Item[]>>,
-    id: number,
-    newText: string
-  ) => {
-    arraySetter((prevItems) =>
-      prevItems.map((item) =>
-        item.id === id ? { ...item, text: newText } : item
-      )
-    );
+  const handleAddTeacher = (newItem: TeacherItem) => {
+    if (teacherEditValue) {
+      setTeachers((prevItems) => [
+        ...prevItems.filter((el) => el.id !== newItem.id),
+      ]);
+      setTeacherEditValue(null);
+    }
+    setTeachers((prevItems) => [...prevItems, newItem]);
+    closeAllModals();
+  };
+
+  const handleAddClass = (newItem: ClassItem) => {
+    if (classEditValue) {
+      setClasses((prevItems) => [
+        ...prevItems.filter((el) => el.id !== newItem.id),
+      ]);
+      setClassEditValue(null);
+    }
+    setClasses((prevItems) => [...prevItems, newItem]);
+    closeAllModals();
+  };
+
+  const handleAddAuditory = (newItem: AuditoryItem) => {
+    if (auditoriEditValue) {
+      setAuditories((prevItems) => [
+        ...prevItems.filter((el) => el.id !== newItem.id),
+      ]);
+      setAuditoriEditValue(null);
+    }
+    setAuditories((prevItems) => [...prevItems, newItem]);
+    closeAllModals();
   };
 
   return (
     <div>
-      <Flex>
+      {isTeacherModalOpen && (
+        <Portal elementId="overlay">
+          <Backdrop />
+          <AddingTeacherModal
+            initValue={teacherEditValue}
+            onConfirm={handleAddTeacher}
+            hideModal={closeAllModals}
+          />
+        </Portal>
+      )}
+      {isClassModalOpen && (
+        <Portal elementId="overlay">
+          <Backdrop />
+          <AddingClassModal
+            initValue={classEditValue}
+            onConfirm={handleAddClass}
+            hideModal={closeAllModals}
+          />
+        </Portal>
+      )}
+      {isAuditoryModalOpen && (
+        <Portal elementId="overlay">
+          <Backdrop />
+          <AddingTeacherModal
+            initValue={teacherEditValue}
+            onConfirm={handleAddTeacher}
+            hideModal={closeAllModals}
+          />
+        </Portal>
+      )}
+      {/* <Flex>
         <Flex flex="1" direction="column">
           <Title>Профили ({accounts.length})</Title>
           <Flex
@@ -93,6 +157,8 @@ export const RootPage: React.FC = () => {
                 onSave={(newText) =>
                   updateItemText(setAccounts, item.id, newText)
                 }
+                isActive={item.isActive}
+                setIsActive={() => updateIsActive(setAccounts, item.id)}
               />
             ))}
           </Flex>
@@ -128,6 +194,8 @@ export const RootPage: React.FC = () => {
                 onSave={(newText) =>
                   updateItemText(setAuditories, item.id, newText)
                 }
+                isActive={item.isActive}
+                setIsActive={() => updateIsActive(setAuditories, item.id)}
               />
             ))}
           </Flex>
@@ -165,12 +233,49 @@ export const RootPage: React.FC = () => {
             size={item.size}
             setText={(newText) => updateItemText(setClasses, item.id, newText)}
             onSave={(newText) => updateItemText(setClasses, item.id, newText)}
+            isActive={item.isActive}
+            setIsActive={() => updateIsActive(setClasses, item.id)}
           />
         ))}
+      </Flex> */}
+      <Title action={() => setIsClassModalOpen(true)}>Классы</Title>
+      <Flex
+        wrap="wrap"
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          maxHeight: "calc(3 * 42px + 2 * 11px)",
+          overflowX: "auto",
+          alignContent: "start",
+        }}
+        justify="start"
+        basis="24%"
+        gap="11px"
+      >
+        {classes
+          .sort((a, b) => a.id - b.id)
+          .map((item) => (
+            <TextButton
+              key={item.id}
+              text={item.name}
+              size="small"
+              openEditing={() => {
+                setIsClassModalOpen(true);
+                setClassEditValue(item);
+              }}
+              setIsActive={() =>
+                setClasses((prevItems) =>
+                  prevItems.map((elem) =>
+                    elem.id === item.id
+                      ? { ...item, isActive: !elem.isActive }
+                      : elem
+                  )
+                )
+              }
+            />
+          ))}
       </Flex>
-      <Title action={() => addItem(setTeachers, "large", "teachers")}>
-        Учителя
-      </Title>
+      <Title action={() => setIsTeacherModalOpen(true)}>Учителя</Title>
       <Flex
         wrap="wrap"
         style={{
@@ -184,16 +289,34 @@ export const RootPage: React.FC = () => {
         basis="24%"
         gap="11px"
       >
-        {teachers.map((item) => (
-          <TextButton
-            key={item.id}
-            text={item.text}
-            size={item.size}
-            setText={(newText) => updateItemText(setTeachers, item.id, newText)}
-            onSave={(newText) => updateItemText(setTeachers, item.id, newText)}
-          />
-        ))}
+        {teachers
+          .sort((a, b) => a.id - b.id)
+          .map((item) => (
+            <TextButton
+              key={item.id}
+              text={item.name}
+              size="large"
+              openEditing={() => {
+                setIsTeacherModalOpen(true);
+                setTeacherEditValue(item);
+              }}
+              setIsActive={() =>
+                setTeachers((prevItems) =>
+                  prevItems.map((elem) =>
+                    elem.id === item.id
+                      ? { ...item, isActive: !elem.isActive }
+                      : elem
+                  )
+                )
+              }
+            />
+          ))}
       </Flex>
+      <button
+        onClick={() => console.log(teachers, classes, auditories, accounts)}
+      >
+        console log
+      </button>
     </div>
   );
 };

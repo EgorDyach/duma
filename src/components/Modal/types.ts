@@ -1,10 +1,7 @@
-import { ReactNode } from 'react';
-import { ModalWidth } from './constants';
+import { ReactNode } from "react";
+import { ModalWidth } from "./constants";
 
-export type ModalType =
-  | 'ConfirmationModal'
-  | 'InformationModal'
-  | 'FailureModal';
+export type ModalType = "InformationModal" | "addingModal";
 
 export type OpenModal = {
   visible: boolean;
@@ -18,7 +15,7 @@ export type OpenModal = {
   size: ModalWidth;
 };
 
-export type ShowModal = Omit<OpenModal, 'visible'>;
+export type ShowModal = Omit<OpenModal, "visible">;
 
 export type CloseModal = {
   visible: boolean;
@@ -26,4 +23,4 @@ export type CloseModal = {
 
 export type ModalEvent = CustomEvent<OpenModal | CloseModal>;
 
-export const MODAL_EVENT_NAME = 'modalWindow';
+export const MODAL_EVENT_NAME = "modalWindow";
