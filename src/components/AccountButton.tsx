@@ -2,28 +2,27 @@ import React, { useState, useEffect, useRef, FC } from "react";
 import styled from "styled-components";
 import { Text } from "./Typography";
 
-const textButtonSizes: Record<TextButtonSize, string> = {
+const accountButtonSizes: Record<AccountButtonSize, string> = {
   small: "86px",
   medium: "180px",
   large: "240px",
   fullSize: "100%",
 };
 
-type TextButtonSize = "small" | "medium" | "large" | "fullSize";
+type AccountButtonSize = "small" | "medium" | "large" | "fullSize";
 
-interface TextButtonProps {
+interface AccountButtonProps {
   text: string;
   setText: (n: string) => void;
-  size?: TextButtonSize;
-  isActive?: boolean;
-  onSave: (newText: string) => void; // Добавлено
+  size?: AccountButtonSize;
+  isActive: boolean;
   setIsActive: VoidFunction;
 }
 
 const StyledButton = styled.button<{
   $active: boolean;
   $isEditing?: boolean;
-  $size: TextButtonSize;
+  $size: AccountButtonSize;
 }>`
   background-color: ${(props) => (props.$active ? "#9813D7" : "#fff")};
   width: 100%;
@@ -34,7 +33,7 @@ const StyledButton = styled.button<{
     background-color 0.2s ease-in-out,
     color 0.2s ease-in-out;
   cursor: pointer;
-  max-width: ${(props) => textButtonSizes[props.$size]};
+  max-width: ${(props) => accountButtonSizes[props.$size]};
   color: ${(props) => (props.$active ? "#fff" : "#9813D7")};
 `;
 
@@ -52,13 +51,12 @@ const StyledInput = styled.input<{ $active: boolean; $isEditing: boolean }>`
   color: ${(props) => (props.$active ? "#fff" : "#9813D7")};
 `;
 
-const TextButton: FC<TextButtonProps> = ({
+const AccountButton: FC<AccountButtonProps> = ({
   text,
   setText,
   size = "medium",
-  isActive = false,
+  isActive,
   setIsActive,
-  onSave, // Добавлено
 }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [tempText, setTempText] = useState(
@@ -70,6 +68,7 @@ const TextButton: FC<TextButtonProps> = ({
   const handleClick = () => {
     if (isEditing) return;
     setIsActive();
+    console.log(isActive);
   };
 
   const handleDoubleClick = () => {
@@ -84,7 +83,6 @@ const TextButton: FC<TextButtonProps> = ({
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
-      onSave(tempText); // Сохранение нового текста
       setText(tempText);
       setIsEditing(false);
     } else if (e.key === "Escape") {
@@ -95,10 +93,10 @@ const TextButton: FC<TextButtonProps> = ({
 
   const handleClickOutside = (e: MouseEvent) => {
     if (
+      isEditing &&
       containerRef.current &&
       !containerRef.current.contains(e.target as Node)
     ) {
-      onSave(tempText); // Сохранение нового текста
       setText(tempText);
       setIsEditing(false);
     }
@@ -140,4 +138,4 @@ const TextButton: FC<TextButtonProps> = ({
   );
 };
 
-export default TextButton;
+export default AccountButton;

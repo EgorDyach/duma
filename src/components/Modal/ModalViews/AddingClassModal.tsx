@@ -10,27 +10,30 @@ import {
   StyledModalButton,
   StyledModalButtons,
 } from "../ModalStyles";
-import { ClassItem } from "@modules/rootPage/RootPage";
+import { AccountItem, ClassItem } from "@modules/rootPage/RootPage";
 import { validateClass } from "./helpers";
-import { ItemTitle, Text } from "@components/Typography";
+import { Text } from "@components/Typography";
+import Dropdown from "@components/Dropdown";
 
 interface AddingModalProps<T> {
   onConfirm: (newItem: T) => void;
   hideModal: VoidFunction;
   initValue: T | null;
+  accounts: AccountItem[];
 }
 
 export const AddingClassModal: FC<AddingModalProps<ClassItem>> = ({
   onConfirm,
   hideModal,
   initValue,
+  accounts,
 }) => {
   const [newItem, setNewItem] = useState<Omit<ClassItem, "isActive" | "size">>(
     initValue || {
       name: "",
       shift: 1,
       schoolWeek: 5,
-      accounts: [],
+      account: null,
       id: 0,
     }
   );
@@ -54,7 +57,9 @@ export const AddingClassModal: FC<AddingModalProps<ClassItem>> = ({
       <StyledModalContent>
         <Flex justify="space-between">
           <Flex>
-            <StyledModalTitle $top="xsmall">Новый класс</StyledModalTitle>
+            <StyledModalTitle $top="xsmall">
+              {initValue ? "Изменить" : "Новый"} класс
+            </StyledModalTitle>
             <StyledModalInput
               onChange={(e) =>
                 setNewItem((prev) => ({ ...prev, name: e.target.value }))
@@ -110,12 +115,23 @@ export const AddingClassModal: FC<AddingModalProps<ClassItem>> = ({
             </Flex>
           </StyledModalButtons>
         </Flex>
-        <Flex $top="medium"></Flex>
+        <StyledModalButtons $top="small" direction="column" gap="8px">
+          <StyledItemTitle>Профиль/факультет</StyledItemTitle>
+          <Dropdown
+            options={accounts}
+            setSelectedOption={(n) =>
+              setNewItem((prev) => ({ ...prev, account: n }))
+            }
+            selectedOption={newItem.account}
+          />
+        </StyledModalButtons>
         <Flex justify="start">
           <Flex direction="column">
             <Text $color="red">{classError}</Text>
             <Flex gap="16px" $top="large" justify="start">
-              <button onClick={handleAdd}>Добавить</button>
+              <button onClick={handleAdd}>
+                {initValue ? "Изменить" : "Добавить"}
+              </button>
             </Flex>
           </Flex>
         </Flex>

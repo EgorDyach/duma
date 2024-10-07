@@ -52,6 +52,8 @@ export const StyledModalTitle = styled(SubHeader)`
 
 export const StyledModalInput = styled.input`
   font-size: 16px;
+  border: none;
+  outline: none;
   background-color: #9813d7;
   color: #fff;
   padding: 3px 24px;

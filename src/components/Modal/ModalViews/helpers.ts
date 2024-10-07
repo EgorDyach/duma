@@ -12,3 +12,5 @@ export const validateClass = (item: ClassItem): string => {
   if (!item.name) return "Введите название класса!";
   return "";
 };
+
+// export const formatOptions = (items: AccountItem[]): Option[] => items.map(el => )

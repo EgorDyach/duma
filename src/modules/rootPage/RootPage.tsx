@@ -6,6 +6,8 @@ import Portal from "@components/Portal";
 import { AddingTeacherModal } from "@components/Modal/ModalViews/AddingTeacherModal";
 import { Backdrop } from "@components/Modal/ModalStyles";
 import { AddingClassModal } from "@components/Modal/ModalViews/AddingClassModal";
+import ActionButton from "@components/ActionButton";
+import AccountButton from "@components/AccountButton";
 
 type Item = {
   isActive: boolean;
@@ -25,13 +27,13 @@ export type TeacherItem = Item & {
 export type ClassItem = Item & {
   shift: 1 | 2;
   schoolWeek: 5 | 6;
-  accounts: AccountItem[];
+  account: AccountItem | null;
   // subjects: {name: string; auditory: number; classes: number[]}[]
 };
 
 export type AuditoryItem = Item & {
   capacity: number;
-  accounts: AccountItem[];
+  account: AccountItem;
   // subjects: {name: string; auditory: number; classes: number[]}[]
 };
 
@@ -114,6 +116,7 @@ export const RootPage: React.FC = () => {
         <Portal elementId="overlay">
           <Backdrop />
           <AddingClassModal
+            accounts={accounts}
             initValue={classEditValue}
             onConfirm={handleAddClass}
             hideModal={closeAllModals}
@@ -130,7 +133,7 @@ export const RootPage: React.FC = () => {
           />
         </Portal>
       )}
-      {/* <Flex>
+      <Flex>
         <Flex flex="1" direction="column">
           <Title>Профили ({accounts.length})</Title>
           <Flex
@@ -138,7 +141,7 @@ export const RootPage: React.FC = () => {
               marginBottom: 11,
               display: "flex",
               flexDirection: "column",
-              maxHeight: "calc(2 * 42px + 1 * 11px)",
+              maxHeight: "calc(2.5 * 42px + 2 * 11px)",
               overflowY: "auto",
               alignContent: "start",
             }}
@@ -146,28 +149,44 @@ export const RootPage: React.FC = () => {
             basis="100%"
             gap="11px"
           >
-            {accounts.map((item) => (
-              <TextButton
-                key={item.id}
-                text={item.text}
-                size={item.size}
-                setText={(newText) =>
-                  updateItemText(setAccounts, item.id, newText)
-                }
-                onSave={(newText) =>
-                  updateItemText(setAccounts, item.id, newText)
-                }
-                isActive={item.isActive}
-                setIsActive={() => updateIsActive(setAccounts, item.id)}
-              />
-            ))}
+            {accounts
+              .sort((a, b) => a.id - b.id)
+              .map((item) => (
+                <AccountButton
+                  key={item.id}
+                  text={item.name}
+                  size="large"
+                  setText={(newText) =>
+                    setAccounts((prev) => [
+                      ...prev.filter((el) => el.id !== item.id),
+                      { ...item, name: newText },
+                    ])
+                  }
+                  isActive={item.isActive}
+                  setIsActive={() =>
+                    setAccounts((prevItems) =>
+                      prevItems.map((elem) =>
+                        elem.id === item.id
+                          ? { ...elem, isActive: !item.isActive }
+                          : elem
+                      )
+                    )
+                  }
+                />
+              ))}
           </Flex>
           <ActionButton
             size="large"
-            handleClick={() => addItem(setAccounts, "large", "accounts")}
+            handleClick={() =>
+              setAccounts((prev) => [
+                ...prev,
+                { name: "Название", id: new Date().getTime(), isActive: false },
+              ])
+            }
           />
         </Flex>
-        <Flex flex="2" direction="column">
+      </Flex>
+      {/* <Flex flex="2" direction="column">
           <Title action={() => addItem(setAuditories, "medium", "auditories")}>
             Аудитории
           </Title>
@@ -200,43 +219,6 @@ export const RootPage: React.FC = () => {
             ))}
           </Flex>
         </Flex>
-      </Flex>
-      <Title
-        action={() =>
-          addItem(
-            setClasses,
-            "small",
-            "classes",
-            `${Math.ceil(Math.random() * 11)}А`
-          )
-        }
-      >
-        Классы
-      </Title>
-      <Flex
-        wrap="wrap"
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          maxHeight: "calc(3 * 42px + 2 * 11px)",
-          overflowX: "auto",
-          alignContent: "start",
-        }}
-        justify="start"
-        basis="24%"
-        gap="11px"
-      >
-        {classes.map((item) => (
-          <TextButton
-            key={item.id}
-            text={item.text}
-            size={item.size}
-            setText={(newText) => updateItemText(setClasses, item.id, newText)}
-            onSave={(newText) => updateItemText(setClasses, item.id, newText)}
-            isActive={item.isActive}
-            setIsActive={() => updateIsActive(setClasses, item.id)}
-          />
-        ))}
       </Flex> */}
       <Title action={() => setIsClassModalOpen(true)}>Классы</Title>
       <Flex
@@ -259,6 +241,7 @@ export const RootPage: React.FC = () => {
               key={item.id}
               text={item.name}
               size="small"
+              isActive={item.isActive}
               openEditing={() => {
                 setIsClassModalOpen(true);
                 setClassEditValue(item);
@@ -295,6 +278,7 @@ export const RootPage: React.FC = () => {
             <TextButton
               key={item.id}
               text={item.name}
+              isActive={item.isActive}
               size="large"
               openEditing={() => {
                 setIsTeacherModalOpen(true);
