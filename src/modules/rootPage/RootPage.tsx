@@ -1,15 +1,16 @@
 import Flex from "@components/Flex";
 import TextButton from "@components/TextButton";
 import { Title } from "@components/Title";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Portal from "@components/Portal";
 import { AddingTeacherModal } from "@components/Modal/ModalViews/AddingTeacherModal";
 import { Backdrop } from "@components/Modal/ModalStyles";
 import { AddingClassModal } from "@components/Modal/ModalViews/AddingClassModal";
 import ActionButton from "@components/ActionButton";
 import AccountButton from "@components/AccountButton";
+import { AddingAuditoryModal } from "@components/Modal/ModalViews/AddingAuditoryModal";
 
-type Item = {
+export type Item = {
   isActive: boolean;
   name: string;
   id: number;
@@ -33,7 +34,7 @@ export type ClassItem = Item & {
 
 export type AuditoryItem = Item & {
   capacity: number;
-  account: AccountItem;
+  accounts: AccountItem[];
   // subjects: {name: string; auditory: number; classes: number[]}[]
 };
 
@@ -42,30 +43,54 @@ export type AccountItem = Item & {
 };
 
 export const RootPage: React.FC = () => {
-  const [teachers, setTeachers] = useState<TeacherItem[]>([]);
   const [isTeacherModalOpen, setIsTeacherModalOpen] = useState(false);
   const [isClassModalOpen, setIsClassModalOpen] = useState(false);
   const [isAuditoryModalOpen, setIsAuditoryModalOpen] = useState(false);
-  const [isAccountModalOpen, setIsAccountModalOpen] = useState(false);
   const [teacherEditValue, setTeacherEditValue] = useState<null | TeacherItem>(
     null
   );
   const [classEditValue, setClassEditValue] = useState<null | ClassItem>(null);
-  const [auditoriEditValue, setAuditoriEditValue] =
+  const [auditoryEditValue, setAuditoriEditValue] =
     useState<null | AuditoryItem>(null);
-  const [accountEditValue, setAccountEditValue] = useState<null | AccountItem>(
-    null
+  const [teachers, setTeachers] = useState<TeacherItem[]>(
+    localStorage.getItem("teachers")
+      ? JSON.parse(localStorage.getItem("teachers") || "")
+      : []
   );
-  const [classes, setClasses] = useState<ClassItem[]>([]);
-  const [auditories, setAuditories] = useState<AuditoryItem[]>([]);
-  const [accounts, setAccounts] = useState<Item[]>([]);
+  const [classes, setClasses] = useState<ClassItem[]>(
+    localStorage.getItem("classes")
+      ? JSON.parse(localStorage.getItem("classes") || "")
+      : []
+  );
+  const [auditories, setAuditories] = useState<AuditoryItem[]>(
+    localStorage.getItem("auditories")
+      ? JSON.parse(localStorage.getItem("auditories") || "")
+      : []
+  );
+  const [accounts, setAccounts] = useState<Item[]>(
+    localStorage.getItem("accounts")
+      ? JSON.parse(localStorage.getItem("accounts") || "")
+      : []
+  );
 
   const closeAllModals = () => {
     setIsTeacherModalOpen(false);
     setIsClassModalOpen(false);
     setIsAuditoryModalOpen(false);
-    setIsAccountModalOpen(false);
   };
+
+  useEffect(() => {
+    localStorage.setItem("teachers", JSON.stringify(teachers));
+  }, [teachers]);
+  useEffect(() => {
+    localStorage.setItem("classes", JSON.stringify(classes));
+  }, [classes]);
+  useEffect(() => {
+    localStorage.setItem("auditories", JSON.stringify(auditories));
+  }, [auditories]);
+  useEffect(() => {
+    localStorage.setItem("accounts", JSON.stringify(accounts));
+  }, [accounts]);
 
   const handleAddTeacher = (newItem: TeacherItem) => {
     if (teacherEditValue) {
@@ -90,7 +115,7 @@ export const RootPage: React.FC = () => {
   };
 
   const handleAddAuditory = (newItem: AuditoryItem) => {
-    if (auditoriEditValue) {
+    if (auditoryEditValue) {
       setAuditories((prevItems) => [
         ...prevItems.filter((el) => el.id !== newItem.id),
       ]);
@@ -109,6 +134,8 @@ export const RootPage: React.FC = () => {
             initValue={teacherEditValue}
             onConfirm={handleAddTeacher}
             hideModal={closeAllModals}
+            auditories={auditories}
+            classes={classes}
           />
         </Portal>
       )}
@@ -126,9 +153,10 @@ export const RootPage: React.FC = () => {
       {isAuditoryModalOpen && (
         <Portal elementId="overlay">
           <Backdrop />
-          <AddingTeacherModal
-            initValue={teacherEditValue}
-            onConfirm={handleAddTeacher}
+          <AddingAuditoryModal
+            accounts={accounts}
+            initValue={auditoryEditValue}
+            onConfirm={handleAddAuditory}
             hideModal={closeAllModals}
           />
         </Portal>
@@ -185,11 +213,8 @@ export const RootPage: React.FC = () => {
             }
           />
         </Flex>
-      </Flex>
-      {/* <Flex flex="2" direction="column">
-          <Title action={() => addItem(setAuditories, "medium", "auditories")}>
-            Аудитории
-          </Title>
+        <Flex flex="2" direction="column">
+          <Title action={() => setIsAuditoryModalOpen(true)}>Аудитории</Title>
           <Flex
             wrap="wrap"
             style={{
@@ -203,23 +228,32 @@ export const RootPage: React.FC = () => {
             basis="24%"
             gap="11px"
           >
-            {auditories.map((item) => (
-              <TextButton
-                key={item.id}
-                text={item.text}
-                setText={(newText) =>
-                  updateItemText(setAuditories, item.id, newText)
-                }
-                onSave={(newText) =>
-                  updateItemText(setAuditories, item.id, newText)
-                }
-                isActive={item.isActive}
-                setIsActive={() => updateIsActive(setAuditories, item.id)}
-              />
-            ))}
+            {auditories
+              .sort((a, b) => a.id - b.id)
+              .map((item) => (
+                <TextButton
+                  key={item.id}
+                  text={item.name}
+                  size="large"
+                  isActive={item.isActive}
+                  openEditing={() => {
+                    setIsAuditoryModalOpen(true);
+                    setAuditoriEditValue(item);
+                  }}
+                  setIsActive={() =>
+                    setAuditories((prevItems) =>
+                      prevItems.map((elem) =>
+                        elem.id === item.id
+                          ? { ...item, isActive: !elem.isActive }
+                          : elem
+                      )
+                    )
+                  }
+                />
+              ))}
           </Flex>
         </Flex>
-      </Flex> */}
+      </Flex>
       <Title action={() => setIsClassModalOpen(true)}>Классы</Title>
       <Flex
         wrap="wrap"

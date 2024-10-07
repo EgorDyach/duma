@@ -1,4 +1,8 @@
-import { ClassItem, TeacherItem } from "@modules/rootPage/RootPage";
+import {
+  AuditoryItem,
+  ClassItem,
+  TeacherItem,
+} from "@modules/rootPage/RootPage";
 
 export const validateTeacher = (item: TeacherItem): string => {
   if (!item.name) return "Введите имя учителя!";
@@ -10,6 +14,12 @@ export const validateTeacher = (item: TeacherItem): string => {
 };
 export const validateClass = (item: ClassItem): string => {
   if (!item.name) return "Введите название класса!";
+  return "";
+};
+
+export const validateAuditory = (item: AuditoryItem): string => {
+  if (!item.name) return "Введите название аудитории!";
+  if (!item.capacity) return "Введите вместимость!";
   return "";
 };
 
