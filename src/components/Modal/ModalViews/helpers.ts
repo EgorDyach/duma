@@ -1,6 +1,7 @@
 import {
   AuditoryItem,
   ClassItem,
+  SubjectItem,
   TeacherItem,
 } from "@modules/rootPage/RootPage";
 
@@ -23,4 +24,21 @@ export const validateAuditory = (item: AuditoryItem): string => {
   return "";
 };
 
-// export const formatOptions = (items: AccountItem[]): Option[] => items.map(el => )
+export const validateSubject = (item: SubjectItem): string => {
+  if (!item.name) return "Введите название дисциплины!";
+  if (!item.room) return "Введите название аудитории!";
+  if (item.time <= 0) return "Введите время урока!";
+  return "";
+};
+
+export const getLocaleTime = (number: number): string => {
+  if (number % 10 === 1 && number % 100 !== 11) return `минута`;
+  if (
+    number % 10 >= 2 &&
+    number % 10 <= 4 &&
+    number % 100 > 15 &&
+    number % 100 > 11
+  )
+    return `минуты`;
+  return `минут`;
+};

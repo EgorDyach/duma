@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React from "react";
 import Flex from "./Flex";
 import styled from "styled-components";
 
 interface InputWithLabelProps {
   label: string;
-  value: number;
+  value: number | string;
   setValue: (newVal: number) => void;
 }
 
@@ -28,17 +28,11 @@ const InputWithLabel: React.FC<InputWithLabelProps> = ({
   setValue,
   label,
 }) => {
-  const [error, setError] = useState<string>("");
-
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = event.target.value;
-
     // Проверка на положительное или нулевое значение
     if (newValue === "" || /^[0-9]*$/.test(newValue)) {
       setValue(newValue === "" ? 0 : Number(newValue));
-      setError(""); // Сбрасываем ошибку, если значение корректное
-    } else {
-      setError("Введите положительное целое число или 0");
     }
   };
 
@@ -52,7 +46,6 @@ const InputWithLabel: React.FC<InputWithLabelProps> = ({
         />
         <span>{label}</span>
       </StyledWrapper>
-      {error && <span style={{ color: "red" }}>{error}</span>}
     </Flex>
   );
 };
