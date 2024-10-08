@@ -1,31 +1,33 @@
-import React, { useState, useEffect, useRef, FC } from "react";
+import React, { useState, useEffect, useRef, FC, ReactNode } from "react";
 import styled from "styled-components";
 import { Text } from "./Typography";
+import Flex from "./Flex";
 
-const studyPlanButtonSizes: Record<StudyPlanButtonSize, string> = {
+const txextButtonWithLabelSizes: Record<TextButtonWithLabelSize, string> = {
   small: "86px",
   medium: "180px",
   large: "240px",
   fullSize: "100%",
 };
 
-type StudyPlanButtonSize = "small" | "medium" | "large" | "fullSize";
+type TextButtonWithLabelSize = "small" | "medium" | "large" | "fullSize";
 
-interface StudyPlanButtonProps {
+interface TextButtonWithLabelProps {
   text: string;
-  setText?: (n: string) => void;
-  size?: StudyPlanButtonSize;
+  setText: (n: string) => void;
+  size?: TextButtonWithLabelSize;
   isActive: boolean;
-  setIsActive?: VoidFunction;
+  setIsActive: VoidFunction;
+  label?: ReactNode;
 }
 
 const StyledButton = styled.button<{
   $active: boolean;
   $isEditing?: boolean;
-  $size: StudyPlanButtonSize;
+  $size: TextButtonWithLabelSize;
 }>`
   background-color: ${(props) => (props.$active ? "#9813D7" : "#fff")};
-  width: 248px;
+  width: 86px;
   padding: ${(props) => (props.$isEditing ? "7px 11px" : "11px")};
   border-radius: 9px;
   border: 1.2px solid #9813d7;
@@ -33,17 +35,17 @@ const StyledButton = styled.button<{
     background-color 0.2s ease-in-out,
     color 0.2s ease-in-out;
   cursor: pointer;
-  max-width: ${(props) => studyPlanButtonSizes[props.$size]};
+  max-width: ${(props) => txextButtonWithLabelSizes[props.$size]};
   color: ${(props) => (props.$active ? "#fff" : "#9813D7")};
 `;
 
 const StyledInput = styled.input<{ $active: boolean; $isEditing: boolean }>`
   background-color: ${(props) => (props.$active ? "#9813D7" : "#fff")};
-  width: calc(100% - 20px);
+  width: calc(100% - 31px);
   padding: 4px;
   border: none;
-  border-bottom: 1.2px solid ${(props) => (props.$active ? "#fff" : "#9813D7")};
   outline: none;
+  font-size: 14px;
   transition: 0.2s ease-in-out;
   height: ${(props) => (props.$isEditing ? "100%" : 0)};
   padding: ${(props) => (props.$isEditing ? 11 : 0)};
@@ -51,12 +53,13 @@ const StyledInput = styled.input<{ $active: boolean; $isEditing: boolean }>`
   color: ${(props) => (props.$active ? "#fff" : "#9813D7")};
 `;
 
-const StudyPlanButton: FC<StudyPlanButtonProps> = ({
+const TextButtonWithLabel: FC<TextButtonWithLabelProps> = ({
   text,
   setText,
   size = "medium",
   isActive,
   setIsActive,
+  label,
 }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [tempText, setTempText] = useState(
@@ -66,12 +69,12 @@ const StudyPlanButton: FC<StudyPlanButtonProps> = ({
   const containerRef = useRef<HTMLButtonElement>(null);
 
   const handleClick = () => {
-    if (isEditing || !setIsActive) return;
+    if (isEditing) return;
     setIsActive();
+    console.log(isActive);
   };
 
   const handleDoubleClick = () => {
-    if (!setIsActive) return;
     setIsEditing(true);
     setTempText(text);
     if (!isEditing) setIsActive();
@@ -82,7 +85,7 @@ const StudyPlanButton: FC<StudyPlanButtonProps> = ({
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter" && setText) {
+    if (e.key === "Enter") {
       setText(tempText);
       setIsEditing(false);
     } else if (e.key === "Escape") {
@@ -94,7 +97,6 @@ const StudyPlanButton: FC<StudyPlanButtonProps> = ({
   const handleClickOutside = (e: MouseEvent) => {
     if (
       isEditing &&
-      setText &&
       containerRef.current &&
       !containerRef.current.contains(e.target as Node)
     ) {
@@ -122,21 +124,26 @@ const StudyPlanButton: FC<StudyPlanButtonProps> = ({
       ref={containerRef}
       onDoubleClick={handleDoubleClick}
     >
-      {isEditing ? (
-        <StyledInput
-          $active={isActive}
-          $isEditing={isEditing}
-          ref={inputRef}
-          type="text"
-          value={tempText}
-          onChange={handleInputChange}
-          onKeyDown={handleKeyDown}
-        />
-      ) : (
-        <Text $color={isActive ? "#fff" : "#9813D7"}>{text}</Text>
-      )}
+      <Flex justify="center" align="center" gap="3px">
+        {isEditing ? (
+          <StyledInput
+            $active={isActive}
+            $isEditing={isEditing}
+            ref={inputRef}
+            type="text"
+            value={tempText}
+            onChange={handleInputChange}
+            onKeyDown={handleKeyDown}
+          />
+        ) : (
+          <Text $size="small" $color={isActive ? "#fff" : "#9813D7"}>
+            {text}
+          </Text>
+        )}
+        <span>{label}</span>
+      </Flex>
     </StyledButton>
   );
 };
 
-export default StudyPlanButton;
+export default TextButtonWithLabel;

@@ -12,6 +12,7 @@ import { AddingAuditoryModal } from "@components/Modal/ModalViews/AddingAuditory
 import StudyPlanButton from "@components/StudyPlanButton";
 import InputWithLabel from "@components/InputWithLabel";
 import { AddingSubjectModal } from "@components/Modal/ModalViews/AddingSubjectModal";
+import TextButtonWithLabel from "@components/TextButtonWithLabel";
 
 export type Item = {
   isActive: boolean;
@@ -52,6 +53,7 @@ export type StudyPlan = {
   classId: number;
   subjectId: number | "total";
   value: number;
+  isActive: boolean;
 };
 
 export const RootPage: React.FC = () => {
@@ -103,6 +105,7 @@ export const RootPage: React.FC = () => {
             classId: el.id,
             subjectId: "total",
             value: 0,
+            isActive: false,
           })),
           ...(() => {
             const initSubjects: StudyPlan[][] = [];
@@ -112,6 +115,7 @@ export const RootPage: React.FC = () => {
                   classId: classItem.id,
                   subjectId: subject.id,
                   value: 0,
+                  isActive: false,
                 }))
               );
             });
@@ -141,7 +145,10 @@ export const RootPage: React.FC = () => {
   }, [accounts]);
   useEffect(() => {
     localStorage.setItem("subjects", JSON.stringify(subjects));
-  }, [accounts]);
+  }, [subjects]);
+  useEffect(() => {
+    localStorage.setItem("studyPlan", JSON.stringify(studyPlan));
+  }, [studyPlan]);
 
   const handleAddTeacher = (newItem: TeacherItem) => {
     if (teacherEditValue) {
@@ -164,7 +171,18 @@ export const RootPage: React.FC = () => {
     setClasses((prevItems) => [...prevItems, newItem]);
     setStudyPlan((prev) => [
       ...prev,
-      { classId: newItem.id, subjectId: "total", value: 0 },
+      ...subjects.map((subject) => ({
+        classId: newItem.id,
+        subjectId: subject.id,
+        value: 0,
+        isActive: false,
+      })),
+      {
+        classId: newItem.id,
+        subjectId: "total",
+        value: 0,
+        isActive: false,
+      },
     ]);
     closeAllModals();
   };
@@ -194,6 +212,7 @@ export const RootPage: React.FC = () => {
         classId: el.id,
         subjectId: newItem.id,
         value: 0,
+        isActive: false,
       })),
     ]);
     closeAllModals();
@@ -408,52 +427,41 @@ export const RootPage: React.FC = () => {
       </Flex>
 
       <Title>Учебный план</Title>
-      <table>
-        <thead>
-          <tr>
-            <th>
-              <StudyPlanButton
-                text={"Дисциплина\\Класс"}
-                size="large"
-                isActive={false}
-              />
-            </th>
+      <Flex style={{ position: "relative", overflow: "scroll" }}>
+        <Flex gap="7px" direction="column" style={{ width: "fit-content" }}>
+          <Flex gap="7px">
+            <StudyPlanButton
+              text={"Дисциплина\\Класс"}
+              size="large"
+              isActive={false}
+            />
             {classes
               .filter((el) => el.isActive)
               .map((el) => (
-                <th>
-                  <TextButton
-                    key={el.id}
-                    text={el.name}
-                    size="small"
-                    isActive={el.isActive}
-                    openEditing={() => {
-                      setIsClassModalOpen(true);
-                      setClassEditValue(el);
-                    }}
-                    setIsActive={() =>
-                      setClasses((prevItems) =>
-                        prevItems.map((elem) =>
-                          elem.id === el.id
-                            ? { ...el, isActive: !elem.isActive }
-                            : elem
-                        )
+                <TextButton
+                  key={el.id}
+                  text={el.name}
+                  size="small"
+                  isActive={el.isActive}
+                  openEditing={() => {
+                    setIsClassModalOpen(true);
+                    setClassEditValue(el);
+                  }}
+                  setIsActive={() =>
+                    setClasses((prevItems) =>
+                      prevItems.map((elem) =>
+                        elem.id === el.id
+                          ? { ...el, isActive: !elem.isActive }
+                          : elem
                       )
-                    }
-                  />
-                  {/* <StudyPlanButton
-                    text={el.name}
-                    size="small"
-                    isActive={false}
-                  /> */}
-                </th>
+                    )
+                  }
+                />
               ))}
-          </tr>
-        </thead>
-        <tbody>
-          {subjects.map((subject) => (
-            <tr>
-              <th>
+          </Flex>
+          <Flex direction="column" gap="7px">
+            {subjects.map((subject) => (
+              <Flex gap="7px">
                 <TextButton
                   text={subject.name}
                   size="large"
@@ -464,14 +472,12 @@ export const RootPage: React.FC = () => {
                   }}
                   setIsActive={() => {}}
                 />
-              </th>
-              {classes
-                .filter((el) => el.isActive)
-                .map((el) => (
-                  <th>
-                    <InputWithLabel
+                {classes
+                  .filter((el) => el.isActive)
+                  .map((el) => (
+                    <TextButtonWithLabel
                       label="ак. ч"
-                      setValue={(n) => {
+                      setText={(n) => {
                         const val = studyPlan.find(
                           (item) =>
                             item.classId === el.id &&
@@ -480,7 +486,63 @@ export const RootPage: React.FC = () => {
                         if (!val) {
                           setStudyPlan((prev) => [
                             ...prev,
-                            { classId: el.id, subjectId: subject.id, value: 0 },
+                            {
+                              classId: el.id,
+                              subjectId: subject.id,
+                              value: 0,
+                              isActive: false,
+                            },
+                          ]);
+                          return;
+                        }
+                        let newVal = 0;
+                        if (n === "" || /^[0-9]*$/.test(n)) {
+                          newVal = n === "" ? 0 : Number(n);
+                        } else {
+                          return;
+                        }
+                        setStudyPlan((prev) => [
+                          ...prev.filter(
+                            (p) =>
+                              !(
+                                p.classId === val.classId &&
+                                p.subjectId === val.subjectId
+                              )
+                          ),
+                          { ...val, value: newVal },
+                        ]);
+                        // val.value = newVal;
+                        console.log(val);
+                      }}
+                      text={
+                        studyPlan.find(
+                          (item) =>
+                            item.classId === el.id &&
+                            item.subjectId === subject.id
+                        )?.value + ""
+                      }
+                      isActive={
+                        studyPlan.find(
+                          (item) =>
+                            item.classId === el.id &&
+                            item.subjectId === subject.id
+                        )?.isActive || false
+                      }
+                      setIsActive={() => {
+                        const val = studyPlan.find(
+                          (item) =>
+                            item.classId === el.id &&
+                            item.subjectId === subject.id
+                        );
+                        if (!val) {
+                          setStudyPlan((prev) => [
+                            ...prev,
+                            {
+                              classId: el.id,
+                              subjectId: subject.id,
+                              value: 0,
+                              isActive: false,
+                            },
                           ]);
                           return;
                         }
@@ -492,82 +554,112 @@ export const RootPage: React.FC = () => {
                                 p.subjectId === val.subjectId
                               )
                           ),
-                          { classId: el.id, subjectId: subject.id, value: n },
+                          { ...val, isActive: !val.isActive },
                         ]);
-                        val.value = n;
-                        console.log(val);
                       }}
-                      value={
-                        studyPlan.find(
-                          (item) =>
-                            item.classId === el.id &&
-                            item.subjectId === subject.id
-                        )?.value || 0
-                      }
                     />
-                  </th>
-                ))}
-            </tr>
-          ))}
-          <tr>
-            <th>
+                  ))}
+              </Flex>
+            ))}
+            <Flex gap="7px">
               <StudyPlanButton
                 text={`Все дисциплины (${subjects.length})`}
                 size="large"
                 isActive={false}
               />
-            </th>
-            {classes
-              .filter((el) => el.isActive)
-              .map((el) => (
-                <th>
-                  <InputWithLabel
-                    label="ак. ч"
-                    setValue={(n) => {
-                      const val = studyPlan.find(
-                        (item) =>
-                          item.classId === el.id && item.subjectId === "total"
-                      );
-                      if (!val) {
+              {classes
+                .filter((el) => el.isActive)
+                .map((el) => (
+                  <td style={{ width: "86px" }}>
+                    <TextButtonWithLabel
+                      label="ак. ч"
+                      setText={(n) => {
+                        const val = studyPlan.find(
+                          (item) =>
+                            item.classId === el.id && item.subjectId === "total"
+                        );
+                        if (!val) {
+                          setStudyPlan((prev) => [
+                            ...prev,
+                            {
+                              classId: el.id,
+                              subjectId: "total",
+                              value: 0,
+                              isActive: false,
+                            },
+                          ]);
+                          return;
+                        }
+                        let newVal = 0;
+                        if (n === "" || /^[0-9]*$/.test(n)) {
+                          newVal = n === "" ? 0 : Number(n);
+                        } else {
+                          return;
+                        }
                         setStudyPlan((prev) => [
-                          ...prev,
-                          { classId: el.id, subjectId: "total", value: 0 },
+                          ...prev.filter(
+                            (p) =>
+                              !(
+                                p.classId === val.classId &&
+                                p.subjectId === val.subjectId
+                              )
+                          ),
+                          { ...val, value: newVal },
                         ]);
-                        return;
+                        // val.value = newVal;
+                        console.log(val);
+                      }}
+                      text={
+                        studyPlan.find(
+                          (item) =>
+                            item.classId === el.id && item.subjectId === "total"
+                        )?.value + ""
                       }
-                      setStudyPlan((prev) => [
-                        ...prev.filter(
-                          (p) =>
-                            !(
-                              p.classId === val.classId &&
-                              p.subjectId === val.subjectId
-                            )
-                        ),
-                        { classId: el.id, subjectId: "total", value: n },
-                      ]);
-                      val.value = n;
-                      console.log(val);
-                    }}
-                    value={
-                      studyPlan.find(
-                        (item) =>
-                          item.classId === el.id && item.subjectId === "total"
-                      )?.value || 0
-                    }
-                  />
-                </th>
-              ))}
-          </tr>
-          <tr>
-            <td>
-              <ActionButton
-                size="large"
-                handleClick={() => setIsSubjectModalOpen(true)}
-              />
-            </td>
-          </tr>
-        </tbody>
-      </table>
+                      isActive={
+                        studyPlan.find(
+                          (item) =>
+                            item.classId === el.id && item.subjectId === "total"
+                        )?.isActive || false
+                      }
+                      setIsActive={() => {
+                        const val = studyPlan.find(
+                          (item) =>
+                            item.classId === el.id && item.subjectId === "total"
+                        );
+                        if (!val) {
+                          setStudyPlan((prev) => [
+                            ...prev,
+                            {
+                              classId: el.id,
+                              subjectId: "total",
+                              value: 0,
+                              isActive: false,
+                            },
+                          ]);
+                          return;
+                        }
+                        setStudyPlan((prev) => [
+                          ...prev.filter(
+                            (p) =>
+                              !(
+                                p.classId === val.classId &&
+                                p.subjectId === val.subjectId
+                              )
+                          ),
+                          { ...val, isActive: !val.isActive },
+                        ]);
+                      }}
+                    />
+                  </td>
+                ))}
+            </Flex>
+            <ActionButton
+              size="large"
+              handleClick={() => setIsSubjectModalOpen(true)}
+            />
+          </Flex>
+        </Flex>
+      </Flex>
       <button
         onClick={() =>
           console.log(

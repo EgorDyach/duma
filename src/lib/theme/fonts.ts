@@ -54,7 +54,7 @@ export const lineHeightDict = {
 };
 
 export const fontDict: Record<FontSize, string> = {
-  small: "12px",
+  small: "14px",
   default: "18px",
   big: "16px",
   title: "18px",
