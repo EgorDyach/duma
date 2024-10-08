@@ -15,7 +15,7 @@
     "@ckeditor/ckeditor5-react": "^8.0.0",
     "@reduxjs/toolkit": "^2.2.6",
     "@vitejs/plugin-react-swc": "^3.7.0",
-    "axios": "^1.7.2",
+    "axios": "^1.7.7",
     "ckeditor5": "^42.0.1",
     "dayjs": "^1.11.12",
     "formik": "^2.4.6",

@@ -4,15 +4,16 @@ import { Title } from "@components/Title";
 import React, { useEffect, useState } from "react";
 import Portal from "@components/Portal";
 import { AddingTeacherModal } from "@components/Modal/ModalViews/AddingTeacherModal";
-import { Backdrop } from "@components/Modal/ModalStyles";
+import { Backdrop, StyledModalButton } from "@components/Modal/ModalStyles";
 import { AddingClassModal } from "@components/Modal/ModalViews/AddingClassModal";
 import ActionButton from "@components/ActionButton";
 import AccountButton from "@components/AccountButton";
 import { AddingAuditoryModal } from "@components/Modal/ModalViews/AddingAuditoryModal";
 import StudyPlanButton from "@components/StudyPlanButton";
-import InputWithLabel from "@components/InputWithLabel";
 import { AddingSubjectModal } from "@components/Modal/ModalViews/AddingSubjectModal";
 import TextButtonWithLabel from "@components/TextButtonWithLabel";
+import { DateRange } from "@lib/utils/getDateRange";
+import { formatData } from "@lib/utils/formatData";
 
 export type Item = {
   isActive: boolean;
@@ -124,6 +125,11 @@ export const RootPage: React.FC = () => {
         ]
   );
 
+  const [period, setPeriod] = useState<DateRange>(
+    (JSON.parse(localStorage.getItem("period") || "") as DateRange) ||
+      "semester"
+  );
+
   const closeAllModals = () => {
     setIsTeacherModalOpen(false);
     setIsClassModalOpen(false);
@@ -149,6 +155,10 @@ export const RootPage: React.FC = () => {
   useEffect(() => {
     localStorage.setItem("studyPlan", JSON.stringify(studyPlan));
   }, [studyPlan]);
+
+  useEffect(() => {
+    localStorage.setItem("period", JSON.stringify(period));
+  }, [period]);
 
   const handleAddTeacher = (newItem: TeacherItem) => {
     if (teacherEditValue) {
@@ -570,87 +580,85 @@ export const RootPage: React.FC = () => {
               {classes
                 .filter((el) => el.isActive)
                 .map((el) => (
-                  <td style={{ width: "86px" }}>
-                    <TextButtonWithLabel
-                      label="ак. ч"
-                      setText={(n) => {
-                        const val = studyPlan.find(
-                          (item) =>
-                            item.classId === el.id && item.subjectId === "total"
-                        );
-                        if (!val) {
-                          setStudyPlan((prev) => [
-                            ...prev,
-                            {
-                              classId: el.id,
-                              subjectId: "total",
-                              value: 0,
-                              isActive: false,
-                            },
-                          ]);
-                          return;
-                        }
-                        let newVal = 0;
-                        if (n === "" || /^[0-9]*$/.test(n)) {
-                          newVal = n === "" ? 0 : Number(n);
-                        } else {
-                          return;
-                        }
+                  <TextButtonWithLabel
+                    label="ак. ч"
+                    setText={(n) => {
+                      const val = studyPlan.find(
+                        (item) =>
+                          item.classId === el.id && item.subjectId === "total"
+                      );
+                      if (!val) {
                         setStudyPlan((prev) => [
-                          ...prev.filter(
-                            (p) =>
-                              !(
-                                p.classId === val.classId &&
-                                p.subjectId === val.subjectId
-                              )
-                          ),
-                          { ...val, value: newVal },
+                          ...prev,
+                          {
+                            classId: el.id,
+                            subjectId: "total",
+                            value: 0,
+                            isActive: false,
+                          },
                         ]);
-                        // val.value = newVal;
-                        console.log(val);
-                      }}
-                      text={
-                        studyPlan.find(
-                          (item) =>
-                            item.classId === el.id && item.subjectId === "total"
-                        )?.value + ""
+                        return;
                       }
-                      isActive={
-                        studyPlan.find(
-                          (item) =>
-                            item.classId === el.id && item.subjectId === "total"
-                        )?.isActive || false
+                      let newVal = 0;
+                      if (n === "" || /^[0-9]*$/.test(n)) {
+                        newVal = n === "" ? 0 : Number(n);
+                      } else {
+                        return;
                       }
-                      setIsActive={() => {
-                        const val = studyPlan.find(
-                          (item) =>
-                            item.classId === el.id && item.subjectId === "total"
-                        );
-                        if (!val) {
-                          setStudyPlan((prev) => [
-                            ...prev,
-                            {
-                              classId: el.id,
-                              subjectId: "total",
-                              value: 0,
-                              isActive: false,
-                            },
-                          ]);
-                          return;
-                        }
+                      setStudyPlan((prev) => [
+                        ...prev.filter(
+                          (p) =>
+                            !(
+                              p.classId === val.classId &&
+                              p.subjectId === val.subjectId
+                            )
+                        ),
+                        { ...val, value: newVal },
+                      ]);
+                      // val.value = newVal;
+                      console.log(val);
+                    }}
+                    text={
+                      studyPlan.find(
+                        (item) =>
+                          item.classId === el.id && item.subjectId === "total"
+                      )?.value + ""
+                    }
+                    isActive={
+                      studyPlan.find(
+                        (item) =>
+                          item.classId === el.id && item.subjectId === "total"
+                      )?.isActive || false
+                    }
+                    setIsActive={() => {
+                      const val = studyPlan.find(
+                        (item) =>
+                          item.classId === el.id && item.subjectId === "total"
+                      );
+                      if (!val) {
                         setStudyPlan((prev) => [
-                          ...prev.filter(
-                            (p) =>
-                              !(
-                                p.classId === val.classId &&
-                                p.subjectId === val.subjectId
-                              )
-                          ),
-                          { ...val, isActive: !val.isActive },
+                          ...prev,
+                          {
+                            classId: el.id,
+                            subjectId: "total",
+                            value: 0,
+                            isActive: false,
+                          },
                         ]);
-                      }}
-                    />
-                  </td>
+                        return;
+                      }
+                      setStudyPlan((prev) => [
+                        ...prev.filter(
+                          (p) =>
+                            !(
+                              p.classId === val.classId &&
+                              p.subjectId === val.subjectId
+                            )
+                        ),
+                        { ...val, isActive: !val.isActive },
+                      ]);
+                    }}
+                  />
                 ))}
             </Flex>
             <ActionButton
@@ -660,19 +668,49 @@ export const RootPage: React.FC = () => {
           </Flex>
         </Flex>
       </Flex>
+      <Flex direction="column" $top="medium">
+        <Title>Диапозон формирования</Title>
+        <Flex gap="10px">
+          <StyledModalButton
+            $active={period === "quarter"}
+            onClick={() => setPeriod("quarter")}
+          >
+            1 четверть
+          </StyledModalButton>
+          <StyledModalButton
+            $active={period === "semester"}
+            onClick={() => setPeriod("semester")}
+          >
+            1 семестр
+          </StyledModalButton>
+          <StyledModalButton
+            $active={period === "halfYear"}
+            onClick={() => setPeriod("halfYear")}
+          >
+            Полгода
+          </StyledModalButton>
+          <StyledModalButton
+            $active={period === "year"}
+            onClick={() => setPeriod("year")}
+          >
+            Год
+          </StyledModalButton>
+        </Flex>
+      </Flex>
       <button
         onClick={() =>
-          console.log(
+          formatData(
             teachers,
             classes,
             auditories,
             accounts,
             subjects,
-            studyPlan
+            studyPlan,
+            period
           )
         }
       >
-        console log
+        Сгенерировать
       </button>
     </div>
   );

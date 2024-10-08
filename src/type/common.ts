@@ -66,3 +66,65 @@ export interface CategoryItem {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type AnyObject = Record<string, any>;
+
+export type StudyPlan = {
+  account: string;
+  classes: {
+    days_of_week: number;
+    holidays: string[];
+    id: number;
+    name: string;
+    profile_id: number;
+    shift: number;
+  }[];
+  plan_study: [
+    {
+      class_id: number;
+      depends_on: number[];
+      id: number;
+      preriod: string;
+      room: string;
+      subject_id: number;
+      teacher_id: number;
+      time_lesson: number;
+      total_hours: number;
+      type: string;
+    },
+  ];
+  profiles: [
+    {
+      id: number;
+      name: string;
+    },
+  ];
+  rooms: [
+    {
+      capacity: number;
+      id: number;
+      name: string;
+      profile_ids: number[];
+    },
+  ];
+  subjects: [
+    {
+      id: number;
+      name: string;
+    },
+  ];
+  teachers: [
+    {
+      class_ids: [number];
+      holidays: string[];
+      hours: number;
+      id: number;
+      name: string;
+      room: string;
+      subject_id: number;
+    },
+  ];
+  users: [
+    {
+      user_id: number;
+    },
+  ];
+};
