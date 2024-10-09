@@ -23,6 +23,8 @@ interface AddingModalProps<T> {
   onConfirm: (newItem: T) => void;
   hideModal: VoidFunction;
   initValue: T | null;
+  handleDelete: (id: number) => void;
+
   auditories: AuditoryItem[];
   classes: ClassItem[];
 }
@@ -33,6 +35,7 @@ export const AddingTeacherModal: FC<AddingModalProps<TeacherItem>> = ({
   classes,
   hideModal,
   initValue,
+  handleDelete,
 }) => {
   const [newItem, setNewItem] = useState<TeacherItem>(
     initValue || {
@@ -174,7 +177,14 @@ export const AddingTeacherModal: FC<AddingModalProps<TeacherItem>> = ({
           <Flex direction="column">
             <Text $color="red">{teacherError}</Text>
             <Flex gap="16px" $top="large" justify="start">
-              <button onClick={handleAdd}>Добавить</button>
+              <button onClick={handleAdd}>
+                {initValue ? "Изменить" : "Добавить"}
+              </button>
+              {initValue && (
+                <button onClick={() => handleDelete(initValue.id)}>
+                  Удалить
+                </button>
+              )}
             </Flex>
           </Flex>
         </Flex>

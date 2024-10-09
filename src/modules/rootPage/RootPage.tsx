@@ -241,6 +241,9 @@ export const RootPage: React.FC = () => {
         <Portal elementId="overlay">
           <Backdrop />
           <AddingTeacherModal
+            handleDelete={(id) =>
+              setTeachers((prev) => prev.filter((el) => el.id !== id))
+            }
             initValue={teacherEditValue}
             onConfirm={handleAddTeacher}
             hideModal={closeAllModals}
@@ -253,6 +256,9 @@ export const RootPage: React.FC = () => {
         <Portal elementId="overlay">
           <Backdrop />
           <AddingClassModal
+            handleDelete={(id) =>
+              setClasses((prev) => prev.filter((el) => el.id !== id))
+            }
             accounts={accounts}
             initValue={classEditValue}
             onConfirm={handleAddClass}
@@ -264,6 +270,9 @@ export const RootPage: React.FC = () => {
         <Portal elementId="overlay">
           <Backdrop />
           <AddingAuditoryModal
+            handleDelete={(id) =>
+              setAuditories((prev) => prev.filter((el) => el.id !== id))
+            }
             accounts={accounts}
             initValue={auditoryEditValue}
             onConfirm={handleAddAuditory}
@@ -275,6 +284,9 @@ export const RootPage: React.FC = () => {
         <Portal elementId="overlay">
           <Backdrop />
           <AddingSubjectModal
+            handleDelete={(id) =>
+              setSubjects((prev) => prev.filter((el) => el.id !== id))
+            }
             teachers={teachers}
             initValue={subjectEditValue}
             onConfirm={handleAddSubject}
@@ -597,6 +609,7 @@ export const RootPage: React.FC = () => {
             period
           );
           console.log(data);
+          console.log(JSON.stringify(data));
           try {
             await requestStudyPlan(data);
           } catch (e) {

@@ -18,6 +18,7 @@ import Dropdown from "@components/Dropdown";
 interface AddingModalProps<T> {
   onConfirm: (newItem: T) => void;
   hideModal: VoidFunction;
+  handleDelete: (id: number) => void;
   initValue: T | null;
   accounts: AccountItem[];
 }
@@ -26,6 +27,7 @@ export const AddingClassModal: FC<AddingModalProps<ClassItem>> = ({
   onConfirm,
   hideModal,
   initValue,
+  handleDelete,
   accounts,
 }) => {
   const [newItem, setNewItem] = useState<ClassItem>(
@@ -132,6 +134,11 @@ export const AddingClassModal: FC<AddingModalProps<ClassItem>> = ({
               <button onClick={handleAdd}>
                 {initValue ? "Изменить" : "Добавить"}
               </button>
+              {initValue && (
+                <button onClick={() => handleDelete(initValue.id)}>
+                  Удалить
+                </button>
+              )}
             </Flex>
           </Flex>
         </Flex>

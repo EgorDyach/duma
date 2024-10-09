@@ -19,6 +19,7 @@ interface AddingModalProps<T> {
   onConfirm: (newItem: T) => void;
   hideModal: VoidFunction;
   initValue: T | null;
+  handleDelete: (id: number) => void;
   accounts: AccountItem[];
 }
 
@@ -27,6 +28,7 @@ export const AddingAuditoryModal: FC<AddingModalProps<AuditoryItem>> = ({
   hideModal,
   initValue,
   accounts,
+  handleDelete,
 }) => {
   const [newItem, setNewItem] = useState<AuditoryItem>(
     initValue || {
@@ -107,6 +109,11 @@ export const AddingAuditoryModal: FC<AddingModalProps<AuditoryItem>> = ({
               <button onClick={handleAdd}>
                 {initValue ? "Изменить" : "Добавить"}
               </button>
+              {initValue && (
+                <button onClick={() => handleDelete(initValue.id)}>
+                  Удалить
+                </button>
+              )}
             </Flex>
           </Flex>
         </Flex>
