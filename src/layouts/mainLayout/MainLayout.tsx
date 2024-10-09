@@ -1,5 +1,4 @@
 import Flex from "@components/Flex";
-import { Header } from "@layouts/shared/header/Header";
 import { FC, PropsWithChildren } from "react";
 import { Outlet } from "react-router-dom";
 import styled from "styled-components";
@@ -10,10 +9,5 @@ const MainWrapper = styled(Flex)`
 `;
 
 export const MainLayout: FC<PropsWithChildren> = ({ children }) => {
-  return (
-    <MainWrapper direction="column">
-      <Header />
-      {children || <Outlet />}
-    </MainWrapper>
-  );
+  return <MainWrapper direction="column">{children || <Outlet />}</MainWrapper>;
 };
