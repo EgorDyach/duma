@@ -15,16 +15,13 @@ interface AccountButtonProps {
   text: string;
   setText: (n: string) => void;
   size?: AccountButtonSize;
-  isActive: boolean;
-  setIsActive: VoidFunction;
 }
 
 const StyledButton = styled.button<{
-  $active: boolean;
   $isEditing?: boolean;
   $size: AccountButtonSize;
 }>`
-  background-color: ${(props) => (props.$active ? "#9813D7" : "#fff")};
+  background-color: #9813d7;
   width: 100%;
   padding: ${(props) => (props.$isEditing ? "7px 11px" : "11px")};
   border-radius: 9px;
@@ -34,29 +31,27 @@ const StyledButton = styled.button<{
     color 0.2s ease-in-out;
   cursor: pointer;
   max-width: ${(props) => accountButtonSizes[props.$size]};
-  color: ${(props) => (props.$active ? "#fff" : "#9813D7")};
+  color: #fff;
 `;
 
-const StyledInput = styled.input<{ $active: boolean; $isEditing: boolean }>`
-  background-color: ${(props) => (props.$active ? "#9813D7" : "#fff")};
+const StyledInput = styled.input<{ $isEditing: boolean }>`
+  background-color: #9813d7;
   width: calc(100% - 20px);
   padding: 4px;
   border: none;
-  border-bottom: 1.2px solid ${(props) => (props.$active ? "#fff" : "#9813D7")};
+  border-bottom: 1.2px solid #fff;
   outline: none;
   transition: 0.2s ease-in-out;
   height: ${(props) => (props.$isEditing ? "100%" : 0)};
   padding: ${(props) => (props.$isEditing ? 11 : 0)};
   border-bottom-width: ${(props) => (props.$isEditing ? 1.2 : 0)};
-  color: ${(props) => (props.$active ? "#fff" : "#9813D7")};
+  color: #fff;
 `;
 
 const AccountButton: FC<AccountButtonProps> = ({
   text,
   setText,
   size = "medium",
-  isActive,
-  setIsActive,
 }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [tempText, setTempText] = useState(
@@ -65,16 +60,9 @@ const AccountButton: FC<AccountButtonProps> = ({
   const inputRef = useRef<HTMLInputElement>(null);
   const containerRef = useRef<HTMLButtonElement>(null);
 
-  const handleClick = () => {
-    if (isEditing) return;
-    setIsActive();
-    console.log(isActive);
-  };
-
   const handleDoubleClick = () => {
     setIsEditing(true);
     setTempText(text);
-    if (!isEditing) setIsActive();
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -114,8 +102,6 @@ const AccountButton: FC<AccountButtonProps> = ({
 
   return (
     <StyledButton
-      onClick={handleClick}
-      $active={isActive}
       $size={size}
       $isEditing={isEditing}
       ref={containerRef}
@@ -123,7 +109,6 @@ const AccountButton: FC<AccountButtonProps> = ({
     >
       {isEditing ? (
         <StyledInput
-          $active={isActive}
           $isEditing={isEditing}
           ref={inputRef}
           type="text"
@@ -132,7 +117,7 @@ const AccountButton: FC<AccountButtonProps> = ({
           onKeyDown={handleKeyDown}
         />
       ) : (
-        <Text $color={isActive ? "#fff" : "#9813D7"}>{text}</Text>
+        <Text $color={"#fff"}>{text}</Text>
       )}
     </StyledButton>
   );

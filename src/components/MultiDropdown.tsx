@@ -1,5 +1,5 @@
 import { AnyObject } from "@type/common";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 
 const StyledButton = styled.button`
@@ -61,15 +61,32 @@ const MultiDropdown: React.FC<
     }
   };
 
+  const dropdownRef = useRef<HTMLUListElement>(null);
+  const handleClickOutside = (e: MouseEvent) => {
+    if (
+      dropdownRef.current &&
+      !dropdownRef.current.contains(e.target as Node)
+    ) {
+      setIsOpen(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   return (
     <div style={{ position: "relative" }}>
       <StyledButton onClick={toggleMultiDropdown}>
         {selectedOptions.length
           ? selectedOptions.map((el) => el.name).join(", ")
-          : "Выберите профили"}
+          : "Выбрать"}
       </StyledButton>
       {isOpen && (
-        <StyledMultiDropdown>
+        <StyledMultiDropdown ref={dropdownRef}>
           {options.map((option) => (
             <li
               key={option.id}

@@ -28,7 +28,7 @@ export const AddingAuditoryModal: FC<AddingModalProps<AuditoryItem>> = ({
   initValue,
   accounts,
 }) => {
-  const [newItem, setNewItem] = useState<Omit<AuditoryItem, "isActive">>(
+  const [newItem, setNewItem] = useState<AuditoryItem>(
     initValue || {
       name: "",
       accounts: [],
@@ -42,7 +42,6 @@ export const AddingAuditoryModal: FC<AddingModalProps<AuditoryItem>> = ({
     const addingItem: AuditoryItem = {
       ...newItem,
       id: newItem.id || new Date().getTime(),
-      isActive: false,
     };
     const validateRes = validateAuditory(addingItem);
     if (validateRes) {
@@ -54,12 +53,13 @@ export const AddingAuditoryModal: FC<AddingModalProps<AuditoryItem>> = ({
   return (
     <StyledModalWrap $size={"default"}>
       <StyledModalContent>
-        <Flex justify="space-between">
-          <Flex>
+        <Flex gap="30px" justify="space-between">
+          <Flex gap="10px">
             <StyledModalTitle $top="xsmall">
               {initValue ? "Изменить аудиторию" : "Новая аудитория"}
             </StyledModalTitle>
             <StyledModalInput
+              placeholder="Введите название..."
               onChange={(e) =>
                 setNewItem((prev) => ({ ...prev, name: e.target.value }))
               }

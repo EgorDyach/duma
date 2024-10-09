@@ -6,6 +6,7 @@ import {
   StyledModalContent,
   StyledModalTitle,
   StyledModalInput,
+  StyledItemTitle,
 } from "../ModalStyles";
 import {
   AuditoryItem,
@@ -16,6 +17,7 @@ import { validateTeacher } from "./helpers";
 import { Text } from "@components/Typography";
 import { Title } from "@components/Title";
 import MultiDropdown from "@components/MultiDropdown";
+import InputWithLabel from "@components/InputWithLabel";
 
 interface AddingModalProps<T> {
   onConfirm: (newItem: T) => void;
@@ -32,9 +34,10 @@ export const AddingTeacherModal: FC<AddingModalProps<TeacherItem>> = ({
   hideModal,
   initValue,
 }) => {
-  const [newItem, setNewItem] = useState<Omit<TeacherItem, "isActive">>(
+  const [newItem, setNewItem] = useState<TeacherItem>(
     initValue || {
       name: "",
+      hours: 0,
       subjects: [],
       id: 0,
     }
@@ -45,7 +48,6 @@ export const AddingTeacherModal: FC<AddingModalProps<TeacherItem>> = ({
     const addingItem: TeacherItem = {
       ...newItem,
       id: newItem.id || new Date().getTime(),
-      isActive: false,
     };
     const validateRes = validateTeacher(addingItem);
     if (validateRes) {
@@ -57,12 +59,13 @@ export const AddingTeacherModal: FC<AddingModalProps<TeacherItem>> = ({
   return (
     <StyledModalWrap $size={"default"}>
       <StyledModalContent>
-        <Flex justify="space-between">
-          <Flex>
+        <Flex gap="30px" justify="space-between">
+          <Flex gap="10px">
             <StyledModalTitle $top="xsmall">
               {initValue ? "Изменить учителя" : "Новый учитель"}
             </StyledModalTitle>
             <StyledModalInput
+              placeholder="Введите ФИО..."
               onChange={(e) =>
                 setNewItem((prev) => ({ ...prev, name: e.target.value }))
               }
@@ -71,6 +74,18 @@ export const AddingTeacherModal: FC<AddingModalProps<TeacherItem>> = ({
           </Flex>
 
           <CloseIcon onClick={hideModal} size={28} />
+        </Flex>
+        <Flex align="start" $top="medium" direction="column">
+          <StyledItemTitle>
+            <span>*</span>Кол-во часов
+            <InputWithLabel
+              value={newItem.hours}
+              label="ак. ч"
+              setValue={(newVal) =>
+                setNewItem((prev) => ({ ...prev, hours: newVal }))
+              }
+            />
+          </StyledItemTitle>
         </Flex>
         <Flex direction="column">
           <Title
@@ -91,6 +106,7 @@ export const AddingTeacherModal: FC<AddingModalProps<TeacherItem>> = ({
           >
             Предмет
           </Title>
+
           <Flex $top="medium" direction="column">
             {newItem.subjects
               .sort((a, b) => a.id - b.id)
@@ -98,7 +114,8 @@ export const AddingTeacherModal: FC<AddingModalProps<TeacherItem>> = ({
                 <Flex gap="16px" key={el.id}>
                   <Flex direction="column">
                     <span>*Название</span>
-                    <input
+                    <StyledModalInput
+                      placeholder="Введите название..."
                       value={el.name}
                       onChange={(v) =>
                         setNewItem((prev) => ({

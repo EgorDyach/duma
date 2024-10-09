@@ -28,7 +28,7 @@ export const AddingClassModal: FC<AddingModalProps<ClassItem>> = ({
   initValue,
   accounts,
 }) => {
-  const [newItem, setNewItem] = useState<Omit<ClassItem, "isActive" | "size">>(
+  const [newItem, setNewItem] = useState<ClassItem>(
     initValue || {
       name: "",
       shift: 1,
@@ -43,7 +43,6 @@ export const AddingClassModal: FC<AddingModalProps<ClassItem>> = ({
     const addingItem: ClassItem = {
       ...newItem,
       id: newItem.id || new Date().getTime(),
-      isActive: false,
     };
     const validateRes = validateClass(addingItem);
     if (validateRes) {
@@ -55,12 +54,13 @@ export const AddingClassModal: FC<AddingModalProps<ClassItem>> = ({
   return (
     <StyledModalWrap $size={"default"}>
       <StyledModalContent>
-        <Flex justify="space-between">
-          <Flex>
+        <Flex gap="30px" justify="space-between">
+          <Flex gap="10px">
             <StyledModalTitle $top="xsmall">
               {initValue ? "Изменить" : "Новый"} класс
             </StyledModalTitle>
             <StyledModalInput
+              placeholder="Введите название..."
               onChange={(e) =>
                 setNewItem((prev) => ({ ...prev, name: e.target.value }))
               }

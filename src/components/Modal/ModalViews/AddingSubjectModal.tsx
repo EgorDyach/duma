@@ -10,24 +10,27 @@ import {
   StyledModalButtons,
   StyledModalButton,
 } from "../ModalStyles";
-import { SubjectItem } from "@modules/rootPage/RootPage";
+import { SubjectItem, TeacherItem } from "@modules/rootPage/RootPage";
 import { validateSubject } from "./helpers";
 import { Text } from "@components/Typography";
 import InputWithLabel from "@components/InputWithLabel";
 import MultiDropdown from "@components/MultiDropdown";
+import Dropdown from "@components/Dropdown";
 
 interface AddingModalProps<T> {
   onConfirm: (newItem: T) => void;
   hideModal: VoidFunction;
   initValue: T | null;
+  teachers: TeacherItem[];
 }
 
 export const AddingSubjectModal: FC<AddingModalProps<SubjectItem>> = ({
   onConfirm,
   hideModal,
   initValue,
+  teachers,
 }) => {
-  const [newItem, setNewItem] = useState<Omit<SubjectItem, "isActive">>(
+  const [newItem, setNewItem] = useState<SubjectItem>(
     initValue || {
       name: "",
       id: 0,
@@ -35,6 +38,7 @@ export const AddingSubjectModal: FC<AddingModalProps<SubjectItem>> = ({
       time: 0,
       room: "",
       type: "practice",
+      teacher: null,
     }
   );
   const [classError, setClassError] = useState("");
@@ -43,7 +47,6 @@ export const AddingSubjectModal: FC<AddingModalProps<SubjectItem>> = ({
     const addingItem: SubjectItem = {
       ...newItem,
       id: newItem.id || new Date().getTime(),
-      isActive: false,
     };
     const validateRes = validateSubject(addingItem);
     if (validateRes) {
@@ -55,12 +58,13 @@ export const AddingSubjectModal: FC<AddingModalProps<SubjectItem>> = ({
   return (
     <StyledModalWrap $size={"default"}>
       <StyledModalContent>
-        <Flex justify="space-between">
-          <Flex>
+        <Flex gap="30px" justify="space-between">
+          <Flex gap="10px">
             <StyledModalTitle $top="xsmall">
               {initValue ? "Изменить дисциплину" : "Новая дисциплина"}
             </StyledModalTitle>
             <StyledModalInput
+              placeholder="Введите название..."
               onChange={(e) =>
                 setNewItem((prev) => ({ ...prev, name: e.target.value }))
               }
@@ -119,6 +123,19 @@ export const AddingSubjectModal: FC<AddingModalProps<SubjectItem>> = ({
               Лекция
             </StyledModalButton>
           </Flex>
+        </StyledModalButtons>
+        <StyledModalButtons $top="small" direction="column" gap="8px">
+          <StyledItemTitle>Учитель</StyledItemTitle>
+          <Dropdown
+            options={teachers}
+            setSelectedOption={(n) =>
+              setNewItem((prev) => ({
+                ...prev,
+                teacher: n as any,
+              }))
+            }
+            selectedOption={newItem.teacher}
+          />
         </StyledModalButtons>
         <StyledModalButtons $top="small" direction="column" gap="8px">
           <StyledItemTitle>Зависимость от</StyledItemTitle>

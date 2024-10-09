@@ -16,17 +16,14 @@ interface TextButtonWithLabelProps {
   text: string;
   setText: (n: string) => void;
   size?: TextButtonWithLabelSize;
-  isActive: boolean;
-  setIsActive: VoidFunction;
   label?: ReactNode;
 }
 
 const StyledButton = styled.button<{
-  $active: boolean;
   $isEditing?: boolean;
   $size: TextButtonWithLabelSize;
 }>`
-  background-color: ${(props) => (props.$active ? "#9813D7" : "#fff")};
+  background-color: ${(props) => (props.$isEditing ? "#fff" : "#9813D7")};
   width: 86px;
   padding: ${(props) => (props.$isEditing ? "7px 11px" : "11px")};
   border-radius: 9px;
@@ -36,11 +33,11 @@ const StyledButton = styled.button<{
     color 0.2s ease-in-out;
   cursor: pointer;
   max-width: ${(props) => txextButtonWithLabelSizes[props.$size]};
-  color: ${(props) => (props.$active ? "#fff" : "#9813D7")};
+  color: ${(props) => (props.$isEditing ? "#9813D7" : "#fff")};
 `;
 
-const StyledInput = styled.input<{ $active: boolean; $isEditing: boolean }>`
-  background-color: ${(props) => (props.$active ? "#9813D7" : "#fff")};
+const StyledInput = styled.input<{ $isEditing: boolean }>`
+  background-color: transparent;
   width: calc(100% - 31px);
   padding: 4px;
   border: none;
@@ -50,15 +47,13 @@ const StyledInput = styled.input<{ $active: boolean; $isEditing: boolean }>`
   height: ${(props) => (props.$isEditing ? "100%" : 0)};
   padding: ${(props) => (props.$isEditing ? 11 : 0)};
   border-bottom-width: ${(props) => (props.$isEditing ? 1.2 : 0)};
-  color: ${(props) => (props.$active ? "#fff" : "#9813D7")};
+  color: ${(props) => (props.$isEditing ? "#9813D7" : "#fff")};
 `;
 
 const TextButtonWithLabel: FC<TextButtonWithLabelProps> = ({
   text,
   setText,
   size = "medium",
-  isActive,
-  setIsActive,
   label,
 }) => {
   const [isEditing, setIsEditing] = useState(false);
@@ -68,16 +63,9 @@ const TextButtonWithLabel: FC<TextButtonWithLabelProps> = ({
   const inputRef = useRef<HTMLInputElement>(null);
   const containerRef = useRef<HTMLButtonElement>(null);
 
-  const handleClick = () => {
-    if (isEditing) return;
-    setIsActive();
-    console.log(isActive);
-  };
-
   const handleDoubleClick = () => {
     setIsEditing(true);
     setTempText(text);
-    if (!isEditing) setIsActive();
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -117,8 +105,6 @@ const TextButtonWithLabel: FC<TextButtonWithLabelProps> = ({
 
   return (
     <StyledButton
-      onClick={handleClick}
-      $active={isActive}
       $size={size}
       $isEditing={isEditing}
       ref={containerRef}
@@ -127,7 +113,6 @@ const TextButtonWithLabel: FC<TextButtonWithLabelProps> = ({
       <Flex justify="center" align="center" gap="3px">
         {isEditing ? (
           <StyledInput
-            $active={isActive}
             $isEditing={isEditing}
             ref={inputRef}
             type="text"
@@ -136,7 +121,7 @@ const TextButtonWithLabel: FC<TextButtonWithLabelProps> = ({
             onKeyDown={handleKeyDown}
           />
         ) : (
-          <Text $size="small" $color={isActive ? "#fff" : "#9813D7"}>
+          <Text $size="small" $color="#fff">
             {text}
           </Text>
         )}

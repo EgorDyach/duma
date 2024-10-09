@@ -1,5 +1,5 @@
 import { AccountItem } from "@modules/rootPage/RootPage";
-import React, { useState } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import styled from "styled-components";
 
 const StyledButton = styled.button`
@@ -47,15 +47,30 @@ const Dropdown: React.FC<DropdownProps> = ({
   setSelectedOption,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
-
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
-
   const handleOptionClick = (option: AccountItem) => {
     setSelectedOption(option);
     setIsOpen(false);
   };
+
+  const dropdownRef = useRef<HTMLUListElement>(null);
+  const handleClickOutside = (e: MouseEvent) => {
+    if (
+      dropdownRef.current &&
+      !dropdownRef.current.contains(e.target as Node)
+    ) {
+      setIsOpen(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   return (
     <div style={{ position: "relative" }}>
@@ -63,7 +78,7 @@ const Dropdown: React.FC<DropdownProps> = ({
         {selectedOption?.name || "Выберите профиль"}
       </StyledButton>
       {isOpen && (
-        <StyledDropdown>
+        <StyledDropdown ref={dropdownRef}>
           {options.map((option) => (
             <li
               key={option.id}

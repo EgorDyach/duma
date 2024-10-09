@@ -59,6 +59,10 @@ export const StyledModalInput = styled.input`
   padding: 3px 24px;
   text-align: left;
   border-radius: 10px;
+  &::placeholder {
+    color: #b982c4;
+    font-size: 13px;
+  }
 `;
 
 export const StyledModalButton = styled.button<{
