@@ -75,7 +75,7 @@ const Dropdown: React.FC<DropdownProps> = ({
   return (
     <div style={{ position: "relative" }}>
       <StyledButton onClick={toggleDropdown}>
-        {selectedOption?.name || "Выберите профиль"}
+        {selectedOption?.name || "Выбрать"}
       </StyledButton>
       {isOpen && (
         <StyledDropdown ref={dropdownRef}>

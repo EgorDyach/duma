@@ -1,7 +1,7 @@
 import Flex from "@components/Flex";
 import TextButton from "@components/TextButton";
 import { Title } from "@components/Title";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Portal from "@components/Portal";
 import { AddingTeacherModal } from "@components/Modal/ModalViews/AddingTeacherModal";
 import { Backdrop, StyledModalButton } from "@components/Modal/ModalStyles";
@@ -13,10 +13,21 @@ import StudyPlanButton from "@components/StudyPlanButton";
 import { AddingSubjectModal } from "@components/Modal/ModalViews/AddingSubjectModal";
 import TextButtonWithLabel from "@components/TextButtonWithLabel";
 import { getDateRange, DateRange } from "@lib/utils/getDateRange";
-import { formatData } from "@lib/utils/formatData";
 import { DateRange as DateRangeComponent } from "@components/DateRange";
-import { requestStudyPlan } from "@lib/api";
-
+import {
+  requestCreateAuditorium,
+  requestCreateCoach,
+  requestCreateGroup,
+  requestCreateSubjects,
+  requestCreateTeacher,
+} from "@lib/api";
+import { formatAuditories } from "@lib/utils/data/formatAuditories";
+import { formatTeachers } from "@lib/utils/data/formatTeacher";
+import { formatGroups } from "@lib/utils/data/formatGroup";
+import { formatSubjects } from "@lib/utils/data/formatSubjects";
+import { formatCoachings } from "@lib/utils/data/formatCoachings";
+// import { requestStudyPlan } from "@lib/api";
+//
 export type Item = {
   name: string;
   id: number;
@@ -47,7 +58,7 @@ export type AccountItem = Item;
 
 export type SubjectItem = Item & {
   time: number;
-  room: string;
+  room: AuditoryItem | null;
   teacher: TeacherItem | null;
   type: "practice" | "lecture";
   dependsOn: [];
@@ -144,41 +155,26 @@ export const RootPage: React.FC = () => {
     setIsSubjectModalOpen(false);
   };
 
-  useEffect(() => {
-    localStorage.setItem("teachers", JSON.stringify(teachers));
-  }, [teachers]);
-  useEffect(() => {
-    localStorage.setItem("classes", JSON.stringify(classes));
-  }, [classes]);
-  useEffect(() => {
-    localStorage.setItem("auditories", JSON.stringify(auditories));
-  }, [auditories]);
-  useEffect(() => {
-    localStorage.setItem("accounts", JSON.stringify(accounts));
-  }, [accounts]);
-  useEffect(() => {
-    localStorage.setItem("subjects", JSON.stringify(subjects));
-  }, [subjects]);
-  useEffect(() => {
-    localStorage.setItem("studyPlan", JSON.stringify(studyPlan));
-  }, [studyPlan]);
-
-  useEffect(() => {
-    localStorage.setItem("period", JSON.stringify(period));
-  }, [period]);
-
-  const handleAddTeacher = (newItem: TeacherItem) => {
-    if (teacherEditValue) {
-      setTeachers((prevItems) => [
-        ...prevItems.filter((el) => el.id !== newItem.id),
-      ]);
-      setTeacherEditValue(null);
+  const handleAddTeacher = async (newItem: TeacherItem) => {
+    try {
+      if (teacherEditValue) {
+        setTeachers((prevItems) => [
+          ...prevItems.filter((el) => el.id !== newItem.id),
+        ]);
+        setTeacherEditValue(null);
+      }
+      setTeachers((prevItems) => [...prevItems, newItem]);
+      closeAllModals();
+    } catch (error) {
+      alert(error);
     }
-    setTeachers((prevItems) => [...prevItems, newItem]);
-    closeAllModals();
   };
 
-  const handleAddClass = (newItem: ClassItem) => {
+  const handleAddClass = async (newItem: ClassItem) => {
+    if (!newItem.account) {
+      alert("Введите профиль!");
+      return;
+    }
     if (classEditValue) {
       setClasses((prevItems) => [
         ...prevItems.filter((el) => el.id !== newItem.id),
@@ -204,15 +200,19 @@ export const RootPage: React.FC = () => {
     closeAllModals();
   };
 
-  const handleAddAuditory = (newItem: AuditoryItem) => {
-    if (auditoryEditValue) {
-      setAuditories((prevItems) => [
-        ...prevItems.filter((el) => el.id !== newItem.id),
-      ]);
-      setAuditoryEditValue(null);
+  const handleAddAuditory = async (newItem: AuditoryItem) => {
+    try {
+      if (auditoryEditValue) {
+        setAuditories((prevItems) => [
+          ...prevItems.filter((el) => el.id !== newItem.id),
+        ]);
+        setAuditoryEditValue(null);
+      }
+      setAuditories((prevItems) => [...prevItems, newItem]);
+      closeAllModals();
+    } catch (e) {
+      alert(e);
     }
-    setAuditories((prevItems) => [...prevItems, newItem]);
-    closeAllModals();
   };
 
   const handleAddSubject = (newItem: SubjectItem) => {
@@ -270,9 +270,10 @@ export const RootPage: React.FC = () => {
         <Portal elementId="overlay">
           <Backdrop />
           <AddingAuditoryModal
-            handleDelete={(id) =>
-              setAuditories((prev) => prev.filter((el) => el.id !== id))
-            }
+            handleDelete={(id) => {
+              setAuditories((prev) => prev.filter((el) => el.id !== id));
+              closeAllModals();
+            }}
             accounts={accounts}
             initValue={auditoryEditValue}
             onConfirm={handleAddAuditory}
@@ -284,6 +285,7 @@ export const RootPage: React.FC = () => {
         <Portal elementId="overlay">
           <Backdrop />
           <AddingSubjectModal
+            auditories={auditories}
             handleDelete={(id) =>
               setSubjects((prev) => prev.filter((el) => el.id !== id))
             }
@@ -597,27 +599,88 @@ export const RootPage: React.FC = () => {
         </Flex>
         <DateRangeComponent>{getDateRange(period)}</DateRangeComponent>
       </Flex>
+      <button>Сгенерировать</button>
       <button
         onClick={async () => {
-          const data = formatData(
-            teachers,
-            classes,
-            auditories,
-            accounts,
-            subjects,
-            studyPlan,
-            period
-          );
-          console.log(data);
-          console.log(JSON.stringify(data));
           try {
-            await requestStudyPlan(data);
+            const savedTeachers: TeacherItem[] = localStorage.getItem(
+              "teachers"
+            )
+              ? JSON.parse(localStorage.getItem("teachers") as string)
+              : [];
+            const savedClasses: ClassItem[] = localStorage.getItem("classes")
+              ? JSON.parse(localStorage.getItem("classes") as string)
+              : [];
+            const savedAuditories: AuditoryItem[] = localStorage.getItem(
+              "auditories"
+            )
+              ? JSON.parse(localStorage.getItem("auditories") as string)
+              : [];
+            const savedSubjects: SubjectItem[] = localStorage.getItem(
+              "subjects"
+            )
+              ? JSON.parse(localStorage.getItem("subjects") as string)
+              : [];
+            const savedStudyPlan: StudyPlan[] = localStorage.getItem(
+              "studyPlan"
+            )
+              ? JSON.parse(localStorage.getItem("studyPlan") as string)
+              : [];
+            // const savedPeriod = localStorage.getItem("period")
+            //   ? JSON.parse(localStorage.getItem("period") as string)
+            //   : "";
+            await requestCreateTeacher(
+              formatTeachers(
+                teachers.filter(
+                  (el) => !savedTeachers.find((item) => item.id === el.id)
+                )
+              )
+            );
+            localStorage.setItem("teachers", JSON.stringify(teachers));
+            await requestCreateGroup(
+              formatGroups(
+                classes.filter(
+                  (el) => !savedClasses.find((item) => item.id === el.id)
+                )
+              )
+            );
+            localStorage.setItem("classes", JSON.stringify(classes));
+            await requestCreateAuditorium(
+              formatAuditories(
+                auditories.filter(
+                  (el) => !savedAuditories.find((item) => item.id === el.id)
+                )
+              )
+            );
+            localStorage.setItem("auditories", JSON.stringify(auditories));
+            await requestCreateSubjects(
+              formatSubjects(
+                subjects.filter(
+                  (el) => !savedSubjects.find((item) => item.id === el.id)
+                )
+              )
+            );
+            localStorage.setItem("subjects", JSON.stringify(subjects));
+            await requestCreateCoach(
+              formatCoachings(
+                subjects.filter(
+                  (el) => !savedSubjects.find((item) => item.id === el.id)
+                ),
+                studyPlan.filter(
+                  (el) => !savedStudyPlan.find((item) => item.id === el.id)
+                )
+              )
+            );
+            localStorage.setItem("studyPlan", JSON.stringify(studyPlan));
+            localStorage.setItem("accounts", JSON.stringify(accounts));
+            localStorage.setItem("period", JSON.stringify(period));
+            // await requestStudyPlan(data);
           } catch (e) {
             alert(e);
           }
         }}
       >
-        Сгенерировать
+        save
       </button>
     </div>
   );

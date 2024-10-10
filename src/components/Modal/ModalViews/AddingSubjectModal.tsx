@@ -10,7 +10,11 @@ import {
   StyledModalButtons,
   StyledModalButton,
 } from "../ModalStyles";
-import { SubjectItem, TeacherItem } from "@modules/rootPage/RootPage";
+import {
+  AuditoryItem,
+  SubjectItem,
+  TeacherItem,
+} from "@modules/rootPage/RootPage";
 import { validateSubject } from "./helpers";
 import { Text } from "@components/Typography";
 import InputWithLabel from "@components/InputWithLabel";
@@ -23,6 +27,7 @@ interface AddingModalProps<T> {
   handleDelete: (id: number) => void;
 
   initValue: T | null;
+  auditories: AuditoryItem[];
   teachers: TeacherItem[];
 }
 
@@ -32,6 +37,7 @@ export const AddingSubjectModal: FC<AddingModalProps<SubjectItem>> = ({
   initValue,
   teachers,
   handleDelete,
+  auditories,
 }) => {
   const [newItem, setNewItem] = useState<SubjectItem>(
     initValue || {
@@ -39,7 +45,7 @@ export const AddingSubjectModal: FC<AddingModalProps<SubjectItem>> = ({
       id: 0,
       dependsOn: [],
       time: 0,
-      room: "",
+      room: null,
       type: "practice",
       teacher: null,
     }
@@ -96,11 +102,16 @@ export const AddingSubjectModal: FC<AddingModalProps<SubjectItem>> = ({
           </StyledItemTitle>
           <StyledItemTitle>
             Аудитория
-            <StyledModalInput
-              value={newItem.room}
-              onChange={(el) =>
-                setNewItem((prev) => ({ ...prev, room: el.target.value }))
-              }
+            <Dropdown
+              options={auditories}
+              setSelectedOption={(n) => {
+                console.log(n);
+                setNewItem((prev) => ({
+                  ...prev,
+                  room: n as any,
+                }));
+              }}
+              selectedOption={newItem.room}
             />
           </StyledItemTitle>
         </StyledModalButtons>

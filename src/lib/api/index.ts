@@ -1,7 +1,52 @@
-import { StudyPlan } from "@type/common";
+import { Auditorium, Coaching, Group, Subject, Teacher } from "@type/common";
 
-export const requestStudyPlan = async (data: StudyPlan): Promise<void> => {
-  await fetch("http://95.163.241.139:8001/api/v1/college/data", {
+export const requestCreateAuditorium = async (
+  auditories: Auditorium[]
+): Promise<void> => {
+  await fetch(
+    "http://puzzlesignlanguage.online:8001/api/v1/create/auditorium",
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      method: "POST",
+      body: JSON.stringify(auditories),
+    }
+  );
+};
+
+export const requestCreateTeacher = async (data: Teacher[]): Promise<void> => {
+  await fetch("http://puzzlesignlanguage.online:8001/api/v1/create/teacher", {
+    headers: {
+      "Content-Type": "application/json",
+    },
+    method: "POST",
+    body: JSON.stringify(data),
+  });
+};
+
+export const requestCreateGroup = async (data: Group[]): Promise<void> => {
+  await fetch("http://puzzlesignlanguage.online:8001/api/v1/create/group", {
+    headers: {
+      "Content-Type": "application/json",
+    },
+    method: "POST",
+    body: JSON.stringify(data),
+  });
+};
+
+export const requestCreateSubjects = async (data: Subject[]): Promise<void> => {
+  await fetch("http://puzzlesignlanguage.online:8001/api/v1/create/subject", {
+    headers: {
+      "Content-Type": "application/json",
+    },
+    method: "POST",
+    body: JSON.stringify(data),
+  });
+};
+
+export const requestCreateCoach = async (data: Coaching[]): Promise<void> => {
+  await fetch("http://puzzlesignlanguage.online:8001/api/v1/create/coach", {
     headers: {
       "Content-Type": "application/json",
     },

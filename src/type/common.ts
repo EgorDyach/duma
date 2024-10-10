@@ -1,3 +1,4 @@
+import { Item } from "@modules/rootPage/RootPage";
 import { ReactNode } from "react";
 
 export type Indent =
@@ -113,4 +114,57 @@ export type StudyPlan = {
     subject_id: number;
   }[];
   users: [];
+};
+
+export type Profile = {
+  id: number;
+  name: string;
+};
+
+export type Auditorium = {
+  capacity: number;
+  id: number;
+  name: string;
+  profiles: Item[];
+};
+
+export type Group = {
+  holidays: {
+    id: number;
+    date: string;
+  }[];
+  id: number;
+  name: string;
+  profile?: Item;
+  profileID: number;
+  shift: number;
+};
+
+export type Subject = {
+  id: number;
+  name: string;
+};
+
+export type Teacher = {
+  fullname: string;
+  holidays: {
+    id: number;
+    date: string;
+  }[];
+  id: number;
+  lessons: string[];
+};
+
+export type Coaching = {
+  auditoriumID: number;
+  groupID: number;
+  subjectID: number;
+  hours: number;
+  id: number;
+};
+
+export type CoachLesson = {
+  id: number;
+  coachingID: number;
+  teacherID: number;
 };
