@@ -164,7 +164,6 @@ export type Coaching = {
 };
 
 export type CoachLesson = {
-  id: number;
   coachingID: number;
   teacherID: number;
 };

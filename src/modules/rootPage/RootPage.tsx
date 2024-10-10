@@ -17,6 +17,7 @@ import { DateRange as DateRangeComponent } from "@components/DateRange";
 import {
   requestCreateAuditorium,
   requestCreateCoach,
+  requestCreateCoachLessons,
   requestCreateGroup,
   requestCreateSubjects,
   requestCreateTeacher,
@@ -26,6 +27,7 @@ import { formatTeachers } from "@lib/utils/data/formatTeacher";
 import { formatGroups } from "@lib/utils/data/formatGroup";
 import { formatSubjects } from "@lib/utils/data/formatSubjects";
 import { formatCoachings } from "@lib/utils/data/formatCoachings";
+import { formatCoachLessons } from "@lib/utils/data/formatCoachLessons";
 // import { requestStudyPlan } from "@lib/api";
 //
 export type Item = {
@@ -663,18 +665,27 @@ export const RootPage: React.FC = () => {
             localStorage.setItem("subjects", JSON.stringify(subjects));
             await requestCreateCoach(
               formatCoachings(
-                subjects.filter(
-                  (el) => !savedSubjects.find((item) => item.id === el.id)
-                ),
+                subjects,
                 studyPlan.filter(
                   (el) => !savedStudyPlan.find((item) => item.id === el.id)
                 )
               )
             );
             localStorage.setItem("studyPlan", JSON.stringify(studyPlan));
+
+            await requestCreateCoachLessons(
+              formatCoachLessons(
+                teachers,
+                studyPlan.filter(
+                  (el) => !savedStudyPlan.find((item) => item.id === el.id)
+                ),
+                subjects
+              )
+            );
             localStorage.setItem("accounts", JSON.stringify(accounts));
             localStorage.setItem("period", JSON.stringify(period));
             // await requestStudyPlan(data);
+            alert("saved!");
           } catch (e) {
             alert(e);
           }

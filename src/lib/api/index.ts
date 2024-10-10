@@ -1,4 +1,11 @@
-import { Auditorium, Coaching, Group, Subject, Teacher } from "@type/common";
+import {
+  Auditorium,
+  Coaching,
+  CoachLesson,
+  Group,
+  Subject,
+  Teacher,
+} from "@type/common";
 
 export const requestCreateAuditorium = async (
   auditories: Auditorium[]
@@ -53,4 +60,19 @@ export const requestCreateCoach = async (data: Coaching[]): Promise<void> => {
     method: "POST",
     body: JSON.stringify(data),
   });
+};
+
+export const requestCreateCoachLessons = async (
+  data: CoachLesson[]
+): Promise<void> => {
+  await fetch(
+    "http://puzzlesignlanguage.online:8001/api/v1/create/coachlesson",
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      method: "POST",
+      body: JSON.stringify(data),
+    }
+  );
 };
