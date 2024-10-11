@@ -1,5 +1,5 @@
 import {
-  Auditorium,
+  Room,
   Coaching,
   CoachLesson,
   Group,
@@ -8,10 +8,8 @@ import {
   Teacher,
 } from "@type/common";
 
-export const requestCreateAuditorium = async (
-  auditories: Auditorium[]
-): Promise<void> => {
-  await fetch("https://puzzlesignlanguage.online/api/v1/create/auditorium", {
+export const requestCreateRoom = async (auditories: Room[]): Promise<void> => {
+  await fetch("https://puzzlesignlanguage.online/api/v1/create/Room", {
     headers: {
       "Content-Type": "application/json",
     },
@@ -20,7 +18,17 @@ export const requestCreateAuditorium = async (
   });
 };
 
-export const requestAllAuditorium = async (): Promise<
+export const requestUpdateRoom = async (auditories: Room[]): Promise<void> => {
+  await fetch("https://puzzlesignlanguage.online/api/v1/update/Room", {
+    headers: {
+      "Content-Type": "application/json",
+    },
+    method: "PUT",
+    body: JSON.stringify(auditories),
+  });
+};
+
+export const requestAllRoom = async (): Promise<
   Response<
     {
       CreatedAt: string;
@@ -33,16 +41,15 @@ export const requestAllAuditorium = async (): Promise<
     }[]
   >
 > => {
-  return await fetch(
-    "https://puzzlesignlanguage.online/api/v1/Get/auditorium",
-    {
-      headers: {
-        "Content-Type": "application/json",
-      },
-      method: "GET",
-    }
-  ).then(async (res) => await res.json());
+  return await fetch("https://puzzlesignlanguage.online/api/v1/Get/Room", {
+    headers: {
+      "Content-Type": "application/json",
+    },
+    method: "GET",
+  }).then(async (res) => await res.json());
 };
+
+//
 
 export const requestCreateTeacher = async (data: Teacher[]): Promise<void> => {
   await fetch("https://puzzlesignlanguage.online/api/v1/create/teacher", {
@@ -50,6 +57,16 @@ export const requestCreateTeacher = async (data: Teacher[]): Promise<void> => {
       "Content-Type": "application/json",
     },
     method: "POST",
+    body: JSON.stringify(data),
+  });
+};
+
+export const requestUpdateTeacher = async (data: Teacher[]): Promise<void> => {
+  await fetch("https://puzzlesignlanguage.online/api/v1/update/teacher", {
+    headers: {
+      "Content-Type": "application/json",
+    },
+    method: "PUT",
     body: JSON.stringify(data),
   });
 };
@@ -85,12 +102,23 @@ export const requestCreateGroup = async (data: Group[]): Promise<void> => {
   });
 };
 
+export const requestUpdateGroup = async (data: Group[]): Promise<void> => {
+  await fetch("https://puzzlesignlanguage.online/api/v1/update/group", {
+    headers: {
+      "Content-Type": "application/json",
+    },
+    method: "PUT",
+    body: JSON.stringify(data),
+  });
+};
+
 export const requestAllGroups = async (): Promise<
   Response<
     {
       CreatedAt: string;
       UpdatedAt: string;
       DeletedAt: null;
+      Count: number;
       ID: number;
       Name: string;
       Shift: number;
@@ -114,6 +142,16 @@ export const requestCreateSubjects = async (data: Subject[]): Promise<void> => {
       "Content-Type": "application/json",
     },
     method: "POST",
+    body: JSON.stringify(data),
+  });
+};
+
+export const requestUpdateSubjects = async (data: Subject[]): Promise<void> => {
+  await fetch("https://puzzlesignlanguage.online/api/v1/update/subject", {
+    headers: {
+      "Content-Type": "application/json",
+    },
+    method: "PUT",
     body: JSON.stringify(data),
   });
 };
@@ -147,6 +185,16 @@ export const requestCreateCoach = async (data: Coaching[]): Promise<void> => {
   });
 };
 
+export const requestUpdateCoach = async (data: Coaching[]): Promise<void> => {
+  await fetch("https://puzzlesignlanguage.online/api/v1/update/coach", {
+    headers: {
+      "Content-Type": "application/json",
+    },
+    method: "PUT",
+    body: JSON.stringify(data),
+  });
+};
+
 export const requestAllCoaches = async (): Promise<
   Response<
     {
@@ -157,7 +205,7 @@ export const requestAllCoaches = async (): Promise<
       SubjectID: number;
       Hours: number;
       depends_on: [];
-      AuditoriumID: number;
+      RoomID: number;
       GroupID: number;
     }[]
   >

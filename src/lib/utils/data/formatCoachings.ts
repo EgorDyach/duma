@@ -12,10 +12,9 @@ export const formatCoachings = (
       hours: item.value,
       ...(subjects.find((el) => el.id === item.subjectId)?.room?.id
         ? {
-            auditoriumID: subjects.find((el) => el.id === item.subjectId)?.room
-              ?.id,
+            RoomID: subjects.find((el) => el.id === item.subjectId)?.room?.id,
           }
-        : {}),
+        : { RoomID: 666 }),
       groupID: item.classId,
       subjectID: item.subjectId as number,
     }));

@@ -14,6 +14,7 @@ import { AccountItem, ClassItem } from "@modules/rootPage/RootPage";
 import { validateClass } from "./helpers";
 import { Text } from "@components/Typography";
 import Dropdown from "@components/Dropdown";
+import InputWithLabel from "@components/InputWithLabel";
 
 interface AddingModalProps<T> {
   onConfirm: (newItem: T) => void;
@@ -36,6 +37,7 @@ export const AddingClassModal: FC<AddingModalProps<ClassItem>> = ({
       shift: 1,
       schoolWeek: 5,
       account: null,
+      count: 0,
       id: 0,
     }
   );
@@ -117,16 +119,38 @@ export const AddingClassModal: FC<AddingModalProps<ClassItem>> = ({
             </Flex>
           </StyledModalButtons>
         </Flex>
-        <StyledModalButtons $top="small" direction="column" gap="8px">
-          <StyledItemTitle>Профиль/факультет</StyledItemTitle>
-          <Dropdown
-            options={accounts}
-            setSelectedOption={(n) =>
-              setNewItem((prev) => ({ ...prev, account: n }))
-            }
-            selectedOption={newItem.account}
-          />
-        </StyledModalButtons>
+        <Flex gap="8px">
+          <StyledModalButtons $top="small" direction="column" gap="8px">
+            <StyledItemTitle>Профиль/факультет</StyledItemTitle>
+            <Dropdown
+              options={accounts}
+              setSelectedOption={(n) =>
+                setNewItem((prev) => ({ ...prev, account: n }))
+              }
+              selectedOption={newItem.account}
+            />
+          </StyledModalButtons>
+          <StyledModalButtons
+            align="start"
+            $top="medium"
+            direction="column"
+            gap="8px"
+          >
+            <StyledItemTitle>
+              <span>*</span>Кол-во человек
+              <InputWithLabel
+                value={newItem.count}
+                label=""
+                setValue={(newVal) =>
+                  setNewItem((prev) => ({
+                    ...prev,
+                    count: newVal as number,
+                  }))
+                }
+              />
+            </StyledItemTitle>
+          </StyledModalButtons>
+        </Flex>
         <Flex justify="start">
           <Flex direction="column">
             <Text $color="red">{classError}</Text>

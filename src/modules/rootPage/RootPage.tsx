@@ -15,17 +15,22 @@ import TextButtonWithLabel from "@components/TextButtonWithLabel";
 import { getDateRange, DateRange } from "@lib/utils/getDateRange";
 import { DateRange as DateRangeComponent } from "@components/DateRange";
 import {
-  requestAllAuditorium,
+  requestAllRoom,
   requestAllCoaches,
   requestAllGroups,
   requestAllSubjects,
   requestAllTeacher,
-  requestCreateAuditorium,
+  requestCreateRoom,
   requestCreateCoach,
   requestCreateCoachLessons,
   requestCreateGroup,
   requestCreateSubjects,
   requestCreateTeacher,
+  requestUpdateRoom,
+  requestUpdateCoach,
+  requestUpdateGroup,
+  requestUpdateSubjects,
+  requestUpdateTeacher,
 } from "@lib/api";
 import { formatAuditories } from "@lib/utils/data/formatAuditories";
 import { formatTeachers } from "@lib/utils/data/formatTeacher";
@@ -53,6 +58,7 @@ export type TeacherItem = Item & {
 export type ClassItem = Item & {
   shift: 1 | 2;
   schoolWeek: 5 | 6;
+  count: number;
   account: AccountItem | null;
 };
 
@@ -149,7 +155,7 @@ export const RootPage: React.FC = () => {
     (async () => {
       setAreAuditoriesLoading(true);
       try {
-        const res = await requestAllAuditorium();
+        const res = await requestAllRoom();
         setAuditories(
           res.message.map((el) => ({
             id: el.ID,
@@ -168,12 +174,13 @@ export const RootPage: React.FC = () => {
 
   useEffect(() => {
     (async () => {
+      console.log(123);
       setAreTeachersLoading(true);
       setAreClassesLoading(true);
       setAreSubjectsLoading(true);
       setAreAuditoriesLoading(true);
       try {
-        const resAuditories = await requestAllAuditorium();
+        const resAuditories = await requestAllRoom();
         const newAuditories = resAuditories.message.map((el) => ({
           id: el.ID,
           capacity: el.Capacity,
@@ -190,6 +197,7 @@ export const RootPage: React.FC = () => {
           name: el.Name,
           shift: el.Shift as 1 | 2,
           schoolWeek: 5 as 5 | 6,
+          count: el.Count,
           account: null,
         }));
         setClasses(newClasses);
@@ -214,7 +222,7 @@ export const RootPage: React.FC = () => {
           name: el.Name,
           room: (() => {
             const room = resAuditories.message.find((item) =>
-              resCoaches.message.find((coach) => coach.AuditoriumID === item.ID)
+              resCoaches.message.find((coach) => coach.RoomID === item.ID)
             );
             if (!room) return null;
             return {
@@ -308,21 +316,22 @@ export const RootPage: React.FC = () => {
       setClassEditValue(null);
     }
     setClasses((prevItems) => [...prevItems, newItem]);
-    setStudyPlan((prev) => [
-      ...prev,
-      ...subjects.map((subject, index) => ({
-        classId: newItem.id,
-        subjectId: subject.id,
-        value: 0,
-        id: new Date().getTime() + index,
-      })),
-      {
-        classId: newItem.id,
-        subjectId: "total",
-        id: 0,
-        value: 0,
-      },
-    ]);
+    if (!classEditValue)
+      setStudyPlan((prev) => [
+        ...prev,
+        ...subjects.map((subject, index) => ({
+          classId: newItem.id,
+          subjectId: subject.id,
+          value: 0,
+          id: new Date().getTime() + index,
+        })),
+        {
+          classId: newItem.id,
+          subjectId: "total",
+          id: 0,
+          value: 0,
+        },
+      ]);
     closeAllModals();
   };
 
@@ -334,6 +343,7 @@ export const RootPage: React.FC = () => {
         ]);
         setAuditoryEditValue(null);
       }
+
       setAuditories((prevItems) => [...prevItems, newItem]);
       closeAllModals();
     } catch (e) {
@@ -349,15 +359,16 @@ export const RootPage: React.FC = () => {
       setSubjectEditValue(null);
     }
     setSubjects((prevItems) => [...prevItems, newItem]);
-    setStudyPlan((prev) => [
-      ...prev,
-      ...classes.map((el, index) => ({
-        classId: el.id,
-        subjectId: newItem.id,
-        value: 0,
-        id: new Date().getTime() + index,
-      })),
-    ]);
+    if (!subjectEditValue)
+      setStudyPlan((prev) => [
+        ...prev,
+        ...classes.map((el, index) => ({
+          classId: el.id,
+          subjectId: newItem.id,
+          value: 0,
+          id: new Date().getTime() + index,
+        })),
+      ]);
     closeAllModals();
   };
 
@@ -768,7 +779,7 @@ export const RootPage: React.FC = () => {
 
             //
 
-            await requestCreateAuditorium(
+            await requestCreateRoom(
               formatAuditories(
                 auditories.filter(
                   (el) => !initialAuditories.find((item) => item.id === el.id)
@@ -811,9 +822,78 @@ export const RootPage: React.FC = () => {
                 subjects
               )
             );
+
             localStorage.setItem("accounts", JSON.stringify(accounts));
             localStorage.setItem("period", JSON.stringify(period));
-            // await requestStudyPlan(data);
+
+            //
+            //
+            //
+            //
+            //
+            if (initialTeachers.length)
+              await requestUpdateTeacher(
+                formatTeachers(
+                  teachers.filter((el) =>
+                    initialTeachers.find((item) => item.id === el.id)
+                  )
+                )
+              );
+            localStorage.setItem("teachers", JSON.stringify(teachers));
+
+            //
+            console.log(
+              classes.filter((el) =>
+                initialClasses.find((item) => item.id === el.id)
+              )
+            );
+            if (initialClasses.length)
+              await requestUpdateGroup(
+                formatGroups(
+                  classes.filter((el) =>
+                    initialClasses.find((item) => item.id === el.id)
+                  )
+                )
+              );
+            localStorage.setItem("classes", JSON.stringify(classes));
+
+            //
+
+            if (initialAuditories.length)
+              await requestUpdateRoom(
+                formatAuditories(
+                  auditories.filter((el) =>
+                    initialAuditories.find((item) => item.id === el.id)
+                  )
+                )
+              );
+            localStorage.setItem("auditories", JSON.stringify(auditories));
+
+            //
+            if (initialSubjects.length)
+              await requestUpdateSubjects(
+                formatSubjects(
+                  subjects.filter((el) =>
+                    initialSubjects.find((item) => item.id === el.id)
+                  )
+                )
+              );
+            localStorage.setItem("subjects", JSON.stringify(subjects));
+
+            //
+            if (initialStudyPlan)
+              await requestUpdateCoach(
+                formatCoachings(
+                  subjects,
+                  studyPlan.filter((el) =>
+                    initialStudyPlan.find((item) => item.id === el.id)
+                  )
+                )
+              );
+            localStorage.setItem("studyPlan", JSON.stringify(studyPlan));
+
+            //
+
             alert("saved!");
           } catch (e) {
             alert(e);

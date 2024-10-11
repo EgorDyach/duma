@@ -1,6 +1,6 @@
 import { AuditoryItem } from "@modules/rootPage/RootPage";
 
-export const formatAuditories = (auditories: AuditoryItem[]): Auditorium[] => {
+export const formatAuditories = (auditories: AuditoryItem[]): Room[] => {
   return auditories.map(({ capacity, id, name, accounts }) => ({
     capacity,
     id,
@@ -9,7 +9,7 @@ export const formatAuditories = (auditories: AuditoryItem[]): Auditorium[] => {
   }));
 };
 
-type Auditorium = {
+type Room = {
   capacity: number;
   id: number;
   name: string;

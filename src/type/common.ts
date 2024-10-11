@@ -126,7 +126,7 @@ export type Profile = {
   name: string;
 };
 
-export type Auditorium = {
+export type Room = {
   capacity: number;
   id: number;
   name: string;
@@ -161,7 +161,7 @@ export type Teacher = {
 };
 
 export type Coaching = {
-  auditoriumID?: number;
+  RoomID?: number;
   groupID: number;
   subjectID: number;
   hours: number;

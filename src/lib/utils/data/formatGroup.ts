@@ -8,6 +8,6 @@ export const formatGroups = (classes: ClassItem[]): Group[] => {
     holidays: [],
     shift,
     profile: account || undefined,
-    profileID: account!.id,
+    profileID: account?.id || 0,
   }));
 };
