@@ -1,5 +1,5 @@
 import { FC } from "react";
-import styled from "styled-components";
+import styled, { CSSProperties } from "styled-components";
 import { Text } from "./Typography";
 
 const textButtonSizes: Record<TextButtonSize, string> = {
@@ -7,14 +7,16 @@ const textButtonSizes: Record<TextButtonSize, string> = {
   medium: "180px",
   large: "240px",
   fullSize: "100%",
+  fit: "fit-content",
 };
 
-type TextButtonSize = "small" | "medium" | "large" | "fullSize";
+type TextButtonSize = "small" | "medium" | "large" | "fullSize" | "fit";
 
 interface TextButtonProps {
   text: string;
   openEditing: VoidFunction;
   size?: TextButtonSize;
+  style?: CSSProperties;
 }
 
 const StyledButton = styled.button<{
@@ -24,7 +26,7 @@ const StyledButton = styled.button<{
   width: 100%;
   padding: 11px;
   border-radius: 9px;
-  border: 1.2px solid #9813d7;
+  border: 1.2px solid #641aee;
   transition:
     background-color 0.2s ease-in-out,
     color 0.2s ease-in-out;
@@ -36,11 +38,12 @@ const StyledButton = styled.button<{
 const TextButton: FC<TextButtonProps> = ({
   text,
   openEditing,
+  style,
   size = "fullSize",
 }) => {
   return (
-    <StyledButton $size={size} onDoubleClick={openEditing}>
-      <Text $color={"#9813D7"}>{text}</Text>
+    <StyledButton style={style} $size={size} onDoubleClick={openEditing}>
+      <Text $color={"#641AEE"}>{text}</Text>
     </StyledButton>
   );
 };

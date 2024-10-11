@@ -26,7 +26,6 @@ export const validateAuditory = (item: AuditoryItem): string => {
 
 export const validateSubject = (item: SubjectItem): string => {
   if (!item.name) return "Введите название дисциплины!";
-  if (!item.room) return "Введите название аудитории!";
   if (item.time <= 0) return "Введите время урока!";
   return "";
 };

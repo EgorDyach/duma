@@ -65,6 +65,11 @@ export interface CategoryItem {
   title: string;
 }
 
+export type Response<T> = {
+  message: T;
+  statusCode: number;
+};
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type AnyObject = Record<string, any>;
 
@@ -156,7 +161,7 @@ export type Teacher = {
 };
 
 export type Coaching = {
-  auditoriumID: number;
+  auditoriumID?: number;
   groupID: number;
   subjectID: number;
   hours: number;

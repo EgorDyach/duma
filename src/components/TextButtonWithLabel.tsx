@@ -23,17 +23,18 @@ const StyledButton = styled.button<{
   $isEditing?: boolean;
   $size: TextButtonWithLabelSize;
 }>`
-  background-color: ${(props) => (props.$isEditing ? "#fff" : "#9813D7")};
+  background-color: ${(props) => (props.$isEditing ? "#fff" : "#641AEE")};
   width: 86px;
   padding: ${(props) => (props.$isEditing ? "7px 11px" : "11px")};
   border-radius: 9px;
-  border: 1.2px solid #9813d7;
+  border: 1.2px solid #641aee;
   transition:
     background-color 0.2s ease-in-out,
     color 0.2s ease-in-out;
   cursor: pointer;
   max-width: ${(props) => txextButtonWithLabelSizes[props.$size]};
-  color: ${(props) => (props.$isEditing ? "#9813D7" : "#fff")};
+  color: ${(props) => (props.$isEditing ? "#641AEE" : "#fff")};
+  flex: 1;
 `;
 
 const StyledInput = styled.input<{ $isEditing: boolean }>`
@@ -47,7 +48,7 @@ const StyledInput = styled.input<{ $isEditing: boolean }>`
   height: ${(props) => (props.$isEditing ? "100%" : 0)};
   padding: ${(props) => (props.$isEditing ? 11 : 0)};
   border-bottom-width: ${(props) => (props.$isEditing ? 1.2 : 0)};
-  color: ${(props) => (props.$isEditing ? "#9813D7" : "#fff")};
+  color: ${(props) => (props.$isEditing ? "#641AEE" : "#fff")};
 `;
 
 const TextButtonWithLabel: FC<TextButtonWithLabelProps> = ({

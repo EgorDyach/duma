@@ -8,7 +8,7 @@ const Icon: FC = (props: SVGProps<SVGSVGElement>) => (
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
   >
-    <rect width="27.3794" height="27.3794" rx="13.6897" fill="#9813D7" />
+    <rect width="27.3794" height="27.3794" rx="13.6897" fill="#641AEE" />
     <path
       d="M9.15283 18.8804L19.2714 9"
       stroke="white"

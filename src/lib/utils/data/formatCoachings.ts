@@ -10,7 +10,12 @@ export const formatCoachings = (
     .map((item) => ({
       id: item.id,
       hours: item.value,
-      auditoriumID: subjects.find((el) => el.id === item.subjectId)!.room!.id,
+      ...(subjects.find((el) => el.id === item.subjectId)?.room?.id
+        ? {
+            auditoriumID: subjects.find((el) => el.id === item.subjectId)?.room
+              ?.id,
+          }
+        : {}),
       groupID: item.classId,
       subjectID: item.subjectId as number,
     }));

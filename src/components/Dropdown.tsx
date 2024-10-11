@@ -6,14 +6,14 @@ const StyledButton = styled.button`
   background-color: #fff;
   padding: 6px;
   border-radius: 9px;
-  border: 1.2px solid #9813d7;
+  border: 1.2px solid #641aee;
   transition:
     background-color 0.2s ease-in-out,
     color 0.2s ease-in-out;
   cursor: pointer;
   max-width: 120px;
   width: 100%;
-  color: #9813d7;
+  color: #641aee;
 `;
 
 const StyledDropdown = styled.ul`

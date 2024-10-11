@@ -54,7 +54,7 @@ export const StyledModalInput = styled.input`
   font-size: 16px;
   border: none;
   outline: none;
-  background-color: #9813d7;
+  background-color: #641aee;
   color: #fff;
   padding: 3px 24px;
   text-align: left;
@@ -68,17 +68,17 @@ export const StyledModalInput = styled.input`
 export const StyledModalButton = styled.button<{
   $active: boolean;
 }>`
-  background-color: ${(props) => (props.$active ? "#9813D7" : "#fff")};
+  background-color: ${(props) => (props.$active ? "#641AEE" : "#fff")};
   width: 100%;
   padding: 6px;
   border-radius: 9px;
-  border: 1.2px solid #9813d7;
+  border: 1.2px solid #641aee;
   transition:
     background-color 0.2s ease-in-out,
     color 0.2s ease-in-out;
   cursor: pointer;
   max-width: 80px;
-  color: ${(props) => (props.$active ? "#fff" : "#9813D7")};
+  color: ${(props) => (props.$active ? "#fff" : "#641AEE")};
 `;
 
 export const StyledItemTitle = styled(ItemTitle)`

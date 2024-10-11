@@ -7,9 +7,10 @@ const studyPlanButtonSizes: Record<StudyPlanButtonSize, string> = {
   medium: "180px",
   large: "240px",
   fullSize: "100%",
+  fit: "fit-content",
 };
 
-type StudyPlanButtonSize = "small" | "medium" | "large" | "fullSize";
+type StudyPlanButtonSize = "small" | "medium" | "large" | "fullSize" | "fit";
 
 interface StudyPlanButtonProps {
   text: string;
@@ -24,31 +25,32 @@ const StyledButton = styled.button<{
   $isEditing?: boolean;
   $size: StudyPlanButtonSize;
 }>`
-  background-color: ${(props) => (props.$active ? "#9813D7" : "#fff")};
+  background-color: ${(props) => (props.$active ? "#641AEE" : "#fff")};
   width: 248px;
   padding: ${(props) => (props.$isEditing ? "7px 11px" : "11px")};
   border-radius: 9px;
-  border: 1.2px solid #9813d7;
+  border: 1.2px solid #641aee;
   transition:
     background-color 0.2s ease-in-out,
     color 0.2s ease-in-out;
   cursor: pointer;
   max-width: ${(props) => studyPlanButtonSizes[props.$size]};
-  color: ${(props) => (props.$active ? "#fff" : "#9813D7")};
+  color: ${(props) => (props.$active ? "#fff" : "#641AEE")};
+  flex: 10;
 `;
 
 const StyledInput = styled.input<{ $active: boolean; $isEditing: boolean }>`
-  background-color: ${(props) => (props.$active ? "#9813D7" : "#fff")};
+  background-color: ${(props) => (props.$active ? "#641AEE" : "#fff")};
   width: calc(100% - 20px);
   padding: 4px;
   border: none;
-  border-bottom: 1.2px solid ${(props) => (props.$active ? "#fff" : "#9813D7")};
+  border-bottom: 1.2px solid ${(props) => (props.$active ? "#fff" : "#641AEE")};
   outline: none;
   transition: 0.2s ease-in-out;
   height: ${(props) => (props.$isEditing ? "100%" : 0)};
   padding: ${(props) => (props.$isEditing ? 11 : 0)};
   border-bottom-width: ${(props) => (props.$isEditing ? 1.2 : 0)};
-  color: ${(props) => (props.$active ? "#fff" : "#9813D7")};
+  color: ${(props) => (props.$active ? "#fff" : "#641AEE")};
 `;
 
 const StudyPlanButton: FC<StudyPlanButtonProps> = ({
@@ -133,7 +135,7 @@ const StudyPlanButton: FC<StudyPlanButtonProps> = ({
           onKeyDown={handleKeyDown}
         />
       ) : (
-        <Text $color={isActive ? "#fff" : "#9813D7"}>{text}</Text>
+        <Text $color={isActive ? "#fff" : "#641AEE"}>{text}</Text>
       )}
     </StyledButton>
   );

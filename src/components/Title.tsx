@@ -11,7 +11,7 @@ export const Title: FC<TitleProps> = ({ children, action }) => {
   return (
     <Flex align="center" gap="9px">
       <SubHeader>{children}</SubHeader>
-      {action && <PlusIcon color="#9813D7" onClick={action} size={16} />}
+      {action && <PlusIcon color="#641AEE" onClick={action} size={16} />}
     </Flex>
   );
 };

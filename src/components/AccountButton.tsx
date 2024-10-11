@@ -21,21 +21,22 @@ const StyledButton = styled.button<{
   $isEditing?: boolean;
   $size: AccountButtonSize;
 }>`
-  background-color: #9813d7;
+  background-color: #641aee;
   width: 100%;
   padding: ${(props) => (props.$isEditing ? "7px 11px" : "11px")};
   border-radius: 9px;
-  border: 1.2px solid #9813d7;
+  border: 1.2px solid #641aee;
   transition:
     background-color 0.2s ease-in-out,
     color 0.2s ease-in-out;
   cursor: pointer;
   max-width: ${(props) => accountButtonSizes[props.$size]};
   color: #fff;
+  flex: 1;
 `;
 
 const StyledInput = styled.input<{ $isEditing: boolean }>`
-  background-color: #9813d7;
+  background-color: #641aee;
   width: calc(100% - 20px);
   padding: 4px;
   border: none;

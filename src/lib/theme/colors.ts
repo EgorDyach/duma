@@ -5,7 +5,7 @@ export const boxShadow = {
 export type ContentColors = keyof typeof content;
 
 export const content = {
-  primary: "#F49200",
+  primary: "#641AEE",
   secondary: "#555F6D",
   tertiary: "#7E8C9A",
   error: "#C53434",
