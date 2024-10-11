@@ -34,8 +34,6 @@ import { formatSubjects } from "@lib/utils/data/formatSubjects";
 import { formatCoachings } from "@lib/utils/data/formatCoachings";
 import { formatCoachLessons } from "@lib/utils/data/formatCoachLessons";
 import ContentLoader from "@components/ContentLoader";
-import Grid from "@components/Grid";
-// import { requestStudyPlan } from "@lib/api";
 //
 export type Item = {
   name: string;
@@ -106,7 +104,7 @@ export const RootPage: React.FC = () => {
     []
   );
   const [auditories, setAuditories] = useState<AuditoryItem[]>([]);
-  const [initialAccounts, setInitialAccounts] = useState<Item[]>([]);
+  // const [initialAccounts, setInitialAccounts] = useState<Item[]>([]);
   const [accounts, setAccounts] = useState<Item[]>([]);
 
   const [initialSubjects, setInitialSubjects] = useState<SubjectItem[]>([]);
