@@ -17,7 +17,6 @@ import {
 } from "@modules/rootPage/RootPage";
 import { validateSubject } from "./helpers";
 import { Text } from "@components/Typography";
-import InputWithLabel from "@components/InputWithLabel";
 import MultiDropdown from "@components/MultiDropdown";
 import Dropdown from "@components/Dropdown";
 
@@ -44,7 +43,6 @@ export const AddingSubjectModal: FC<AddingModalProps<SubjectItem>> = ({
       name: "",
       id: 0,
       dependsOn: [],
-      time: 0,
       room: null,
       type: "practice",
       teacher: null,
@@ -81,7 +79,7 @@ export const AddingSubjectModal: FC<AddingModalProps<SubjectItem>> = ({
             />
           </Flex>
 
-          <CloseIcon onClick={hideModal} size={28} />
+          <CloseIcon color={"#641AEE"} onClick={hideModal} size={28} />
         </Flex>
 
         <StyledModalButtons
@@ -90,16 +88,6 @@ export const AddingSubjectModal: FC<AddingModalProps<SubjectItem>> = ({
           direction="column"
           gap="8px"
         >
-          <StyledItemTitle>
-            <span>*</span>Время
-            <InputWithLabel
-              value={newItem.time}
-              label={"мин."}
-              setValue={(newVal) =>
-                setNewItem((prev) => ({ ...prev, time: newVal }))
-              }
-            />
-          </StyledItemTitle>
           <StyledItemTitle>
             Аудитория
             <Dropdown
@@ -140,15 +128,15 @@ export const AddingSubjectModal: FC<AddingModalProps<SubjectItem>> = ({
         </StyledModalButtons>
         <StyledModalButtons $top="small" direction="column" gap="8px">
           <StyledItemTitle>Учитель</StyledItemTitle>
-          <Dropdown
+          <MultiDropdown
             options={teachers}
-            setSelectedOption={(n) =>
+            setSelectedOptions={(n) =>
               setNewItem((prev) => ({
                 ...prev,
                 teacher: n as any,
               }))
             }
-            selectedOption={newItem.teacher}
+            selectedOptions={newItem.teacher || []}
           />
         </StyledModalButtons>
         <StyledModalButtons $top="small" direction="column" gap="8px">

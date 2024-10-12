@@ -31,14 +31,22 @@ import {
   requestUpdateGroup,
   requestUpdateSubjects,
   requestUpdateTeacher,
+  requestAllCoachLessons,
+  requestAllAccounts,
+  requestCreateAccounts,
+  requestUpdateAccounts,
 } from "@lib/api";
 import { formatAuditories } from "@lib/utils/data/formatAuditories";
+
 import { formatTeachers } from "@lib/utils/data/formatTeacher";
 import { formatGroups } from "@lib/utils/data/formatGroup";
 import { formatSubjects } from "@lib/utils/data/formatSubjects";
 import { formatCoachings } from "@lib/utils/data/formatCoachings";
 import { formatCoachLessons } from "@lib/utils/data/formatCoachLessons";
 import ContentLoader from "@components/ContentLoader";
+import { removeDuplicates } from "@lib/utils/removeDublicates";
+import { formatAccounts } from "@lib/utils/data/formatAccounts";
+import { formatCoachingsUpdate } from "@lib/utils/data/formatCoachingsUpdate";
 //
 export type Item = {
   name: string;
@@ -49,9 +57,10 @@ export type TeacherItem = Item & {
   hours: number;
   subjects: {
     name: string;
-    auditory: AuditoryItem[];
-    classes: ClassItem[];
+    room: AuditoryItem | null;
     id: number;
+    time: number;
+    type: "practice" | "lecture";
   }[];
 };
 
@@ -70,9 +79,8 @@ export type AuditoryItem = Item & {
 export type AccountItem = Item;
 
 export type SubjectItem = Item & {
-  time: number;
   room: AuditoryItem | null;
-  teacher: TeacherItem | null;
+  teacher: TeacherItem[] | null;
   type: "practice" | "lecture";
   dependsOn: [];
 };
@@ -85,6 +93,7 @@ export type StudyPlan = {
 };
 
 export const RootPage: React.FC = () => {
+  const [error, setError] = useState("");
   const [isTeacherModalOpen, setIsTeacherModalOpen] = useState(false);
   const [isClassModalOpen, setIsClassModalOpen] = useState(false);
   const [isAuditoryModalOpen, setIsAuditoryModalOpen] = useState(false);
@@ -93,6 +102,7 @@ export const RootPage: React.FC = () => {
   const [areClassesLoading, setAreClassesLoading] = useState(false);
   const [areAuditoriesLoading, setAreAuditoriesLoading] = useState(false);
   const [areSubjectsLoading, setAreSubjectsLoading] = useState(false);
+  const [areAccountsLoading, setAreAccountsLoading] = useState(false);
   const [teacherEditValue, setTeacherEditValue] = useState<null | TeacherItem>(
     null
   );
@@ -110,12 +120,37 @@ export const RootPage: React.FC = () => {
     []
   );
   const [auditories, setAuditories] = useState<AuditoryItem[]>([]);
-  // const [initialAccounts, setInitialAccounts] = useState<Item[]>([]);
+  const [initialAccounts, setInitialAccounts] = useState<Item[]>([]);
   const [accounts, setAccounts] = useState<Item[]>([]);
 
   const [initialSubjects, setInitialSubjects] = useState<SubjectItem[]>([]);
   const [subjects, setSubjects] = useState<SubjectItem[]>([]);
 
+  const [serverCoachLessons, setServerCoachLessons] = useState<
+    {
+      ID: number;
+      CreatedAt: string;
+      UpdatedAt: string;
+      TeacherID: number;
+      CoachingID: number;
+    }[]
+  >([]);
+
+  const [serverCoach, setServerCoach] = useState<
+    {
+      CreatedAt: string;
+      UpdatedAt: string;
+      DeletedAt: null;
+      ID: number;
+      SubjectID: number;
+      Hours: number;
+      depends_on: [];
+      RoomID: number;
+      GroupID: number;
+    }[]
+  >([]);
+
+  const [serverStudyPlan, setServerStudyPlan] = useState<StudyPlan[]>([]);
   const [initialStudyPlan, setInitialStudyPlan] = useState<StudyPlan[]>([
     ...(() => {
       const initSubjects: StudyPlan[][] = [];
@@ -153,40 +188,30 @@ export const RootPage: React.FC = () => {
 
   useEffect(() => {
     (async () => {
-      setAreAuditoriesLoading(true);
-      try {
-        const res = await requestAllRoom();
-        setAuditories(
-          res.message.map((el) => ({
-            id: el.ID,
-            capacity: el.Capacity,
-            name: el.Name,
-            accounts: [],
-          }))
-        );
-      } catch (e) {
-        alert(e);
-      } finally {
-        setAreAuditoriesLoading(false);
-      }
-    })();
-  }, []);
-
-  useEffect(() => {
-    (async () => {
-      console.log(123);
       setAreTeachersLoading(true);
       setAreClassesLoading(true);
       setAreSubjectsLoading(true);
       setAreAuditoriesLoading(true);
+      setAreAccountsLoading(true);
       try {
-        const resAuditories = await requestAllRoom();
-        const newAuditories = resAuditories.message.map((el) => ({
+        const res = await requestAllAccounts();
+        const newAccounts = res.message.map((el) => ({
           id: el.ID,
-          capacity: el.Capacity,
-          name: el.Name,
-          accounts: [],
+          name: el.name,
         }));
+        setAccounts(newAccounts);
+        setInitialAccounts(newAccounts);
+        setAreAccountsLoading(false);
+        const resAuditories = await requestAllRoom();
+        console.log(resAuditories.message.filter((el) => el.ID !== 666));
+        const newAuditories = resAuditories.message
+          .filter((el) => el.ID !== 666)
+          .map((el) => ({
+            id: el.ID,
+            capacity: el.Capacity,
+            name: el.Name,
+            accounts: newAccounts.filter((acc) => acc.id === el.profileID),
+          }));
         setAuditories(newAuditories);
         setInitialAuditories(newAuditories);
         setAreAuditoriesLoading(false);
@@ -198,28 +223,28 @@ export const RootPage: React.FC = () => {
           shift: el.Shift as 1 | 2,
           schoolWeek: 5 as 5 | 6,
           count: el.Count,
-          account: null,
+          account: newAccounts.find((acc) => acc.id === el.ProfileID) || null,
         }));
+        console.log(resGroups, newClasses, newAccounts);
         setClasses(newClasses);
         setInitialClasses(newClasses);
         setAreClassesLoading(false);
 
         const resTeachers = await requestAllTeacher();
+        const resSubjects = await requestAllSubjects();
+        const resCoaches = await requestAllCoaches();
+        setServerCoach(resCoaches.message);
+        const resCoachLessons = await requestAllCoachLessons();
+        setServerCoachLessons(resCoachLessons.message);
         const newTeachers = resTeachers.message.map((el) => ({
           id: el.ID,
           name: el.Fullname,
           hours: 0,
           subjects: [],
         }));
-        setTeachers(newTeachers);
-        setInitialTeachers(newTeachers);
-        setAreTeachersLoading(false);
-
-        const resSubjects = await requestAllSubjects();
-        const resCoaches = await requestAllCoaches();
-        const newSubjects = resSubjects.message.map((el) => ({
-          id: el.ID,
-          name: el.Name,
+        const newSubjects = resSubjects.message.map((subject) => ({
+          id: subject.ID,
+          name: subject.Name,
           room: (() => {
             const room = resAuditories.message.find((item) =>
               resCoaches.message.find((coach) => coach.RoomID === item.ID)
@@ -233,14 +258,44 @@ export const RootPage: React.FC = () => {
             };
           })(),
           time:
-            resCoaches.message.find((coach) => coach.SubjectID === el.ID)
+            resCoaches.message.find((coach) => coach.SubjectID === subject.ID)
               ?.Hours || 0,
-          teacher: null,
+          teacher: removeDuplicates(
+            resCoachLessons.message
+              .filter((cl) => {
+                return resCoaches.message.find(
+                  (coach) =>
+                    subject.ID === coach.SubjectID && cl.CoachingID === coach.ID
+                );
+              })
+              .map((cl) => cl.TeacherID)
+              .map((el) => newTeachers.find((item) => item.id === el))
+              .flat()
+              .filter((t) => !!t)
+          ),
           type: "practice" as "practice" | "lecture",
           dependsOn: [] as [],
         }));
         setSubjects(newSubjects);
         setInitialSubjects(newSubjects);
+        console.log();
+        const updatedTeachers = newTeachers.map((teacher) => ({
+          ...teacher,
+          subjects: newSubjects.filter((subject) =>
+            subject.teacher.find((t) => t.id === teacher.id)
+          ),
+        }));
+        setTeachers(updatedTeachers);
+        setInitialTeachers(updatedTeachers);
+        setAreTeachersLoading(false);
+        setServerStudyPlan(
+          resCoaches.message.map((coach) => ({
+            subjectId: coach.SubjectID,
+            classId: coach.GroupID,
+            id: coach.ID,
+            value: coach.Hours,
+          }))
+        );
         const studyPlan = resSubjects.message
           .map((subject, index2) => {
             const res: StudyPlan[] = [];
@@ -273,6 +328,7 @@ export const RootPage: React.FC = () => {
         setAreSubjectsLoading(false);
         setAreTeachersLoading(false);
         setAreAuditoriesLoading(false);
+        setAreAccountsLoading(false);
         setAreClassesLoading(false);
       }
     })();
@@ -298,6 +354,33 @@ export const RootPage: React.FC = () => {
         setTeacherEditValue(null);
       }
       setTeachers((prevItems) => [...prevItems, newItem]);
+
+      setSubjects((prev) => [
+        ...prev.filter((el) => el.id !== newItem.id),
+        ...newItem.subjects.map((subject) => ({
+          ...subject,
+          teacher: [newItem],
+          dependsOn: [] as [],
+        })),
+      ]);
+      if (!teacherEditValue)
+        setStudyPlan((prev) => [
+          ...prev,
+          ...newItem.subjects
+            .map((subject, index2) => {
+              const items: StudyPlan[] = [];
+              items.push(
+                ...classes.map((el, index) => ({
+                  classId: el.id,
+                  subjectId: subject.id,
+                  value: 0,
+                  id: new Date().getTime() + index + index2 + index2 + 2,
+                }))
+              );
+              return items;
+            })
+            .flat(),
+        ]);
       closeAllModals();
     } catch (error) {
       alert(error);
@@ -352,14 +435,18 @@ export const RootPage: React.FC = () => {
   };
 
   const handleAddSubject = (newItem: SubjectItem) => {
-    if (subjectEditValue) {
-      setSubjects((prevItems) => [
-        ...prevItems.filter((el) => el.id !== newItem.id),
-      ]);
-      setSubjectEditValue(null);
-    }
-    setSubjects((prevItems) => [...prevItems, newItem]);
-    if (!subjectEditValue)
+    // if (subjectEditValue) {
+    //   console.log(newItem, subjects);
+    //   setSubjects((prevItems) => [
+    //     ...prevItems.filter((el) => el.id !== newItem.id),
+    //   ]);
+    //   setSubjectEditValue(null);
+    // }
+    setSubjects((prevItems) => [
+      ...prevItems.filter((el) => el.id !== newItem.id),
+      newItem,
+    ]);
+    if (!subjectEditValue) {
       setStudyPlan((prev) => [
         ...prev,
         ...classes.map((el, index) => ({
@@ -369,6 +456,7 @@ export const RootPage: React.FC = () => {
           id: new Date().getTime() + index,
         })),
       ]);
+    }
     closeAllModals();
   };
 
@@ -385,7 +473,6 @@ export const RootPage: React.FC = () => {
             onConfirm={handleAddTeacher}
             hideModal={closeAllModals}
             auditories={auditories}
-            classes={classes}
           />
         </Portal>
       )}
@@ -435,45 +522,50 @@ export const RootPage: React.FC = () => {
       )}
       <Flex>
         <Flex flex="1" direction="column">
-          <Title>Профили ({accounts.length})</Title>
-          <Flex
-            style={{
-              marginBottom: 11,
-              display: "flex",
-              flexDirection: "column",
-              maxHeight: "calc(2.5 * 42px + 2 * 11px)",
-              overflowY: "auto",
-              alignContent: "start",
-            }}
-            justify="start"
-            basis="100%"
-            gap="11px"
-          >
-            {accounts
-              .sort((a, b) => a.id - b.id)
-              .map((item) => (
-                <AccountButton
-                  key={item.id}
-                  text={item.name}
-                  size="large"
-                  setText={(newText) =>
-                    setAccounts((prev) => [
-                      ...prev.filter((el) => el.id !== item.id),
-                      { ...item, name: newText },
-                    ])
-                  }
-                />
-              ))}
-          </Flex>
-          <ActionButton
-            size="large"
-            handleClick={() =>
-              setAccounts((prev) => [
-                ...prev,
-                { name: "Название", id: new Date().getTime() },
-              ])
-            }
-          />
+          <Title>Профили {accounts.length ? `(${accounts.length})` : ""}</Title>
+          {areAccountsLoading && <ContentLoader size={32} />}
+          {!areAccountsLoading && (
+            <>
+              <Flex
+                style={{
+                  marginBottom: 11,
+                  display: "flex",
+                  flexDirection: "column",
+                  maxHeight: "calc(2.5 * 42px + 2 * 11px)",
+                  overflowY: "auto",
+                  alignContent: "start",
+                }}
+                justify="start"
+                basis="100%"
+                gap="11px"
+              >
+                {accounts
+                  .sort((a, b) => a.id - b.id)
+                  .map((item) => (
+                    <AccountButton
+                      key={item.id}
+                      text={item.name}
+                      size="large"
+                      setText={(newText) =>
+                        setAccounts((prev) => [
+                          ...prev.filter((el) => el.id !== item.id),
+                          { ...item, name: newText },
+                        ])
+                      }
+                    />
+                  ))}
+              </Flex>
+              <ActionButton
+                size="large"
+                handleClick={() =>
+                  setAccounts((prev) => [
+                    ...prev,
+                    { name: "Название", id: new Date().getTime() },
+                  ])
+                }
+              />
+            </>
+          )}
         </Flex>
         <Flex flex="2" direction="column" gap="8px" align="start">
           <Title action={() => setIsAuditoryModalOpen(true)}>Аудитории</Title>
@@ -495,6 +587,7 @@ export const RootPage: React.FC = () => {
             >
               {auditories
                 .sort((a, b) => a.id - b.id)
+                .filter((el) => el.id !== 666)
                 .map((item) => (
                   <TextButton
                     key={item.id}
@@ -532,11 +625,12 @@ export const RootPage: React.FC = () => {
         >
           {classes
             .sort((a, b) => a.id - b.id)
+
             .map((item) => (
               <TextButton
                 key={item.id}
                 text={item.name}
-                size="fit"
+                size="small"
                 openEditing={() => {
                   setIsClassModalOpen(true);
                   setClassEditValue(item);
@@ -586,7 +680,11 @@ export const RootPage: React.FC = () => {
 
       {!areSubjectsLoading && (
         <>
-          <Flex direction="column" gap="7px" style={{ width: "fit-content" }}>
+          <Flex
+            direction="column"
+            gap="7px"
+            style={{ width: "fit-content", position: "relative" }}
+          >
             <Flex gap="7px">
               <StudyPlanButton
                 text={"Дисциплина\\Класс"}
@@ -597,7 +695,7 @@ export const RootPage: React.FC = () => {
                 <TextButton
                   style={{ flex: 1 }}
                   text={el.name}
-                  size="fit"
+                  size="fullSize"
                   openEditing={() => {
                     setIsClassModalOpen(true);
                     setClassEditValue(el);
@@ -606,68 +704,80 @@ export const RootPage: React.FC = () => {
               ))}
             </Flex>
             <Flex direction="column" gap="7px">
-              {subjects.map((subject) => (
-                <Flex gap="7px">
-                  <TextButton
-                    style={{ flex: 10 }}
-                    text={subject.name}
-                    size="large"
-                    openEditing={() => {
-                      setIsSubjectModalOpen(true);
-                      setSubjectEditValue(subject);
-                    }}
-                  />
-                  {classes.map((el) => (
-                    <TextButtonWithLabel
-                      key={subject.id}
-                      label="ак. ч"
-                      setText={(n) => {
-                        const val = studyPlan.find(
-                          (item) =>
-                            item.classId === el.id &&
-                            item.subjectId === subject.id
-                        );
-                        if (!val) {
-                          setStudyPlan((prev) => [
-                            ...prev,
-                            {
-                              classId: el.id,
-                              subjectId: subject.id,
-                              value: 0,
-                              isActive: false,
-                              id: new Date().getTime(),
-                            },
-                          ]);
-                          return;
-                        }
-                        let newVal = 0;
-                        if (n === "" || /^[0-9]*$/.test(n)) {
-                          newVal = n === "" ? 0 : Number(n);
-                        } else {
-                          return;
-                        }
-                        setStudyPlan((prev) => [
-                          ...prev.filter(
-                            (p) =>
-                              !(
-                                p.classId === val.classId &&
-                                p.subjectId === val.subjectId
-                              )
-                          ),
-                          { ...val, value: newVal },
-                        ]);
+              {subjects
+                .sort((a, b) => a.id - b.id)
+                .map((subject) => (
+                  <Flex gap="7px">
+                    <TextButton
+                      style={{ flex: 10 }}
+                      text={subject.name}
+                      size="large"
+                      openEditing={() => {
+                        setIsSubjectModalOpen(true);
+                        setSubjectEditValue(subject);
                       }}
-                      text={
-                        studyPlan.find(
-                          (item) =>
-                            item.classId === el.id &&
-                            item.subjectId === subject.id
-                        )?.value + ""
-                      }
                     />
-                  ))}
-                </Flex>
-              ))}
+                    {classes.map((el) => (
+                      <TextButtonWithLabel
+                        id={(() => {
+                          const val = studyPlan.find(
+                            (item) =>
+                              item.classId === el.id &&
+                              item.subjectId === subject.id
+                          );
+                          if (!val) return undefined;
+                          return val.id;
+                        })()}
+                        key={subject.id}
+                        label="ак. ч"
+                        setText={(n) => {
+                          const val = studyPlan.find(
+                            (item) =>
+                              item.classId === el.id &&
+                              item.subjectId === subject.id
+                          );
+                          console.log(val, subject, el);
+                          if (!val) {
+                            setStudyPlan((prev) => [
+                              ...prev,
+                              {
+                                classId: el.id,
+                                subjectId: subject.id,
+                                value: 0,
+                                isActive: false,
+                                id: new Date().getTime(),
+                              },
+                            ]);
+                            return;
+                          }
+                          let newVal = 0;
+                          if (n === "" || /^[0-9]*$/.test(n)) {
+                            newVal = n === "" ? 0 : Number(n);
+                          } else {
+                            return;
+                          }
+                          setStudyPlan((prev) => [
+                            ...prev.filter(
+                              (p) =>
+                                !(
+                                  p.classId === val.classId &&
+                                  p.subjectId === val.subjectId
+                                )
+                            ),
+                            { ...val, value: newVal },
+                          ]);
+                        }}
+                        text={
+                          studyPlan.find(
+                            (item) =>
+                              item.classId === el.id &&
+                              item.subjectId === subject.id
+                          )?.value + ""
+                        }
+                      />
+                    ))}
+                  </Flex>
+                ))}
               <Flex gap="7px">
                 <StudyPlanButton
                   text={`Все дисциплины (${subjects.length})`}
@@ -727,36 +837,57 @@ export const RootPage: React.FC = () => {
         </Flex>
         <DateRangeComponent>{getDateRange(period)}</DateRangeComponent>
       </Flex>
-      <button>Сгенерировать</button>
+      <button
+        onClick={() => {
+          const coaches = serverCoach.map((el) => ({
+            RoomID: el.RoomID,
+            groupID: el.GroupID,
+            subjectID: el.SubjectID,
+            hours: el.Hours,
+            id: el.ID,
+          }));
+          console.log(
+            studyPlan
+              .map((studyPlan) => {
+                const coach = coaches.find(
+                  (el) =>
+                    el.subjectID === studyPlan.subjectId &&
+                    el.groupID === studyPlan.classId
+                );
+                if (!coach) return;
+                return {
+                  ...studyPlan,
+                  id: coach.id,
+                };
+              })
+              .filter((el) => !!el)
+          );
+        }}
+      >
+        Сгенерировать
+      </button>
       <button
         onClick={async () => {
+          const errors: SubjectItem[] = [];
+          subjects.forEach((el) => {
+            if (!el.teacher || !el.teacher.length) errors.push(el);
+          });
+          if (errors.length) {
+            setError(
+              `Необходимо прикрепить учителя к следующим предметам: ${errors.map((el) => el.name).join(", ")}`
+            );
+            return;
+          }
           try {
-            // const savedTeachers: TeacherItem[] = localStorage.getItem(
-            //   "teachers"
-            // )
-            //   ? JSON.parse(localStorage.getItem("teachers") as string)
-            //   : [];
-            // const savedClasses: ClassItem[] = localStorage.getItem("classes")
-            //   ? JSON.parse(localStorage.getItem("classes") as string)
-            //   : [];
-            // const savedAuditories: AuditoryItem[] = localStorage.getItem(
-            //   "auditories"
-            // )
-            //   ? JSON.parse(localStorage.getItem("auditories") as string)
-            //   : [];
-            // const savedSubjects: SubjectItem[] = localStorage.getItem(
-            //   "subjects"
-            // )
-            //   ? JSON.parse(localStorage.getItem("subjects") as string)
-            //   : [];
-            // const savedStudyPlan: StudyPlan[] = localStorage.getItem(
-            //   "studyPlan"
-            // )
-            //   ? JSON.parse(localStorage.getItem("studyPlan") as string)
-            //   : [];
-            // const savedPeriod = localStorage.getItem("period")
-            //   ? JSON.parse(localStorage.getItem("period") as string)
-            //   : "";
+            await requestCreateAccounts(
+              formatAccounts(
+                accounts.filter(
+                  (el) => !initialAccounts.find((acc) => acc.id === el.id)
+                )
+              )
+            );
+            localStorage.setItem("accounts", JSON.stringify(accounts));
+
             await requestCreateTeacher(
               formatTeachers(
                 teachers.filter(
@@ -799,31 +930,46 @@ export const RootPage: React.FC = () => {
             );
             localStorage.setItem("subjects", JSON.stringify(subjects));
 
-            //
-
-            await requestCreateCoach(
-              formatCoachings(
-                subjects,
-                studyPlan.filter(
-                  (el) => !initialStudyPlan.find((item) => item.id === el.id)
-                )
+            const formatPlan = formatCoachings(
+              subjects,
+              studyPlan.filter(
+                (el) => !serverStudyPlan.find((item) => item.id === el.id)
               )
             );
+
+            await requestCreateCoach(formatPlan);
             localStorage.setItem("studyPlan", JSON.stringify(studyPlan));
 
-            //
+            const coaches = serverCoach.map((el) => ({
+              RoomID: el.RoomID,
+              groupID: el.GroupID,
+              subjectID: el.SubjectID,
+              hours: el.Hours,
+              id: el.ID,
+            }));
+
+            const resCoaches = formatPlan.length ? formatPlan : coaches;
+
+            formatCoachLessons(studyPlan, subjects, resCoaches).filter(
+              (el) =>
+                !serverCoachLessons.find(
+                  (scl) =>
+                    scl.CoachingID === el.coachingID &&
+                    el.teacherID === scl.TeacherID
+                )
+            );
 
             await requestCreateCoachLessons(
-              formatCoachLessons(
-                teachers,
-                studyPlan.filter(
-                  (el) => !initialStudyPlan.find((item) => item.id === el.id)
-                ),
-                subjects
+              formatCoachLessons(studyPlan, subjects, resCoaches).filter(
+                (el) =>
+                  !serverCoachLessons.find(
+                    (scl) =>
+                      scl.CoachingID === el.coachingID &&
+                      el.teacherID === scl.TeacherID
+                  )
               )
             );
 
-            localStorage.setItem("accounts", JSON.stringify(accounts));
             localStorage.setItem("period", JSON.stringify(period));
 
             //
@@ -831,6 +977,11 @@ export const RootPage: React.FC = () => {
             //
             //
             //
+
+            if (initialAccounts.length)
+              await requestUpdateAccounts(formatAccounts(accounts));
+            localStorage.setItem("accounts", JSON.stringify(accounts));
+
             if (initialTeachers.length)
               await requestUpdateTeacher(
                 formatTeachers(
@@ -881,13 +1032,25 @@ export const RootPage: React.FC = () => {
             localStorage.setItem("subjects", JSON.stringify(subjects));
 
             //
-            if (initialStudyPlan)
+
+            if (initialStudyPlan.length)
               await requestUpdateCoach(
-                formatCoachings(
+                formatCoachingsUpdate(
                   subjects,
-                  studyPlan.filter((el) =>
-                    initialStudyPlan.find((item) => item.id === el.id)
-                  )
+                  studyPlan
+                    .map((studyPlan) => {
+                      const coach = coaches.find(
+                        (el) =>
+                          el.subjectID === studyPlan.subjectId &&
+                          el.groupID === studyPlan.classId
+                      );
+                      if (!coach) return null;
+                      return {
+                        ...studyPlan,
+                        id: coach.id,
+                      };
+                    })
+                    .filter((el) => !!el)
                 )
               );
             localStorage.setItem("studyPlan", JSON.stringify(studyPlan));
@@ -902,6 +1065,12 @@ export const RootPage: React.FC = () => {
       >
         save
       </button>
+      {error && <span color="red">{error}</span>}
     </div>
   );
 };
+
+// serov 1 2
+// golovin 3
+//
+// math serov

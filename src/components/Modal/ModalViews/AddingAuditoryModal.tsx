@@ -69,7 +69,7 @@ export const AddingAuditoryModal: FC<AddingModalProps<AuditoryItem>> = ({
             />
           </Flex>
 
-          <CloseIcon onClick={hideModal} size={28} />
+          <CloseIcon color={"#641AEE"} onClick={hideModal} size={28} />
         </Flex>
 
         <StyledModalButtons

@@ -17,6 +17,7 @@ interface TextButtonWithLabelProps {
   setText: (n: string) => void;
   size?: TextButtonWithLabelSize;
   label?: ReactNode;
+  id?: number;
 }
 
 const StyledButton = styled.button<{
@@ -53,6 +54,7 @@ const StyledInput = styled.input<{ $isEditing: boolean }>`
 
 const TextButtonWithLabel: FC<TextButtonWithLabelProps> = ({
   text,
+  id,
   setText,
   size = "medium",
   label,
@@ -110,6 +112,7 @@ const TextButtonWithLabel: FC<TextButtonWithLabelProps> = ({
       $isEditing={isEditing}
       ref={containerRef}
       onDoubleClick={handleDoubleClick}
+      id={id + ""}
     >
       <Flex justify="center" align="center" gap="3px">
         {isEditing ? (

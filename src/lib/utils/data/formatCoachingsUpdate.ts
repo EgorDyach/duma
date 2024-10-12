@@ -1,19 +1,14 @@
 import { StudyPlan, SubjectItem } from "@modules/rootPage/RootPage";
 import { Coaching } from "@type/common";
-import { generateIds } from "../generateIds";
 
-export const formatCoachings = (
+export const formatCoachingsUpdate = (
   subjects: SubjectItem[],
   studyPlan: StudyPlan[]
 ): Coaching[] => {
-  const ids = generateIds(
-    studyPlan.filter((el) => el.subjectId !== "total").length,
-    new Date().getTime()
-  );
   return studyPlan
     .filter((el) => el.subjectId !== "total")
-    .map((item, index) => ({
-      id: ids[index],
+    .map((item) => ({
+      id: item.id,
       hours: item.value,
       ...(subjects.find((el) => el.id === item.subjectId)?.room?.id
         ? {

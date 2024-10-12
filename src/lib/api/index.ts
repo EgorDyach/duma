@@ -1,3 +1,4 @@
+import { Account } from "@lib/utils/data/formatAccounts";
 import {
   Room,
   Coaching,
@@ -37,6 +38,7 @@ export const requestAllRoom = async (): Promise<
       ID: number;
       Name: string;
       Capacity: number;
+      profileID: number;
       profiles: null;
     }[]
   >
@@ -228,4 +230,77 @@ export const requestCreateCoachLessons = async (
     method: "POST",
     body: JSON.stringify(data),
   });
+};
+
+export const requestUpdateCoachLessons = async (
+  data: CoachLesson[]
+): Promise<void> => {
+  await fetch("https://puzzlesignlanguage.online/api/v1/update/coachlesson", {
+    headers: {
+      "Content-Type": "application/json",
+    },
+    method: "PUT",
+    body: JSON.stringify(data),
+  });
+};
+
+export const requestAllCoachLessons = async (): Promise<
+  Response<
+    {
+      ID: number;
+      CreatedAt: string;
+      UpdatedAt: string;
+      TeacherID: number;
+      CoachingID: number;
+    }[]
+  >
+> => {
+  return await fetch(
+    "https://puzzlesignlanguage.online/api/v1/get/coachlesson",
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      method: "GET",
+    }
+  ).then(async (res) => await res.json());
+};
+
+export const requestCreateAccounts = async (data: Account[]): Promise<void> => {
+  await fetch("https://puzzlesignlanguage.online/api/v1/create/profile", {
+    headers: {
+      "Content-Type": "application/json",
+    },
+    method: "POST",
+    body: JSON.stringify(data),
+  });
+};
+
+export const requestUpdateAccounts = async (data: Account[]): Promise<void> => {
+  await fetch("https://puzzlesignlanguage.online/api/v1/update/profile", {
+    headers: {
+      "Content-Type": "application/json",
+    },
+    method: "PUT",
+    body: JSON.stringify(data),
+  });
+};
+
+export const requestAllAccounts = async (): Promise<
+  Response<
+    {
+      ID: number;
+      CreatedAt: string;
+      UpdatedAt: string;
+      name: string;
+      classes: null | [];
+    }[]
+  >
+> => {
+  return await fetch("https://puzzlesignlanguage.online/api/v1/get/profile", {
+    headers: {
+      "Content-Type": "application/json",
+    },
+    method: "GET",
+  }).then(async (res) => await res.json());
 };

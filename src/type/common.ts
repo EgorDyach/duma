@@ -138,6 +138,7 @@ export type Group = {
     id: number;
     date: string;
   }[];
+  count: number;
   id: number;
   name: string;
   profile?: Item;

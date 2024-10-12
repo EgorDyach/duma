@@ -72,7 +72,7 @@ export const AddingClassModal: FC<AddingModalProps<ClassItem>> = ({
             />
           </Flex>
 
-          <CloseIcon onClick={hideModal} size={28} />
+          <CloseIcon color={"#641AEE"} onClick={hideModal} size={28} />
         </Flex>
 
         <Flex gap="16px" $top="medium">

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, FC } from "react";
-import styled from "styled-components";
+import styled, { CSSProperties } from "styled-components";
 import { Text } from "./Typography";
 
 const studyPlanButtonSizes: Record<StudyPlanButtonSize, string> = {
@@ -18,6 +18,7 @@ interface StudyPlanButtonProps {
   size?: StudyPlanButtonSize;
   isActive: boolean;
   setIsActive?: VoidFunction;
+  style?: CSSProperties;
 }
 
 const StyledButton = styled.button<{
@@ -56,6 +57,7 @@ const StyledInput = styled.input<{ $active: boolean; $isEditing: boolean }>`
 const StudyPlanButton: FC<StudyPlanButtonProps> = ({
   text,
   setText,
+  style,
   size = "medium",
   isActive,
   setIsActive,
@@ -122,6 +124,7 @@ const StudyPlanButton: FC<StudyPlanButtonProps> = ({
       $size={size}
       $isEditing={isEditing}
       ref={containerRef}
+      style={style}
       onDoubleClick={handleDoubleClick}
     >
       {isEditing ? (

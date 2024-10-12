@@ -1,5 +1,4 @@
-import { AccountItem } from "@modules/rootPage/RootPage";
-import React, { useRef, useEffect, useState } from "react";
+import { useRef, useEffect, useState } from "react";
 import styled from "styled-components";
 
 const StyledButton = styled.button`
@@ -35,22 +34,22 @@ const StyledDropdown = styled.ul`
   z-index: 1000;
 `;
 
-interface DropdownProps {
-  options: AccountItem[];
-  selectedOption: AccountItem | null;
-  setSelectedOption: (n: AccountItem) => void;
+interface DropdownProps<T> {
+  options: T[];
+  selectedOption: T | null;
+  setSelectedOption: (n: T) => void;
 }
 
-const Dropdown: React.FC<DropdownProps> = ({
+const Dropdown = <T extends { id: number; name: string }>({
   options = [],
   selectedOption,
   setSelectedOption,
-}) => {
+}: DropdownProps<T>) => {
   const [isOpen, setIsOpen] = useState(false);
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
-  const handleOptionClick = (option: AccountItem) => {
+  const handleOptionClick = (option: T) => {
     setSelectedOption(option);
     setIsOpen(false);
   };

@@ -7,32 +7,25 @@ import {
   StyledModalTitle,
   StyledModalInput,
   StyledItemTitle,
+  StyledModalButton,
 } from "../ModalStyles";
-import {
-  AuditoryItem,
-  ClassItem,
-  TeacherItem,
-} from "@modules/rootPage/RootPage";
+import { AuditoryItem, TeacherItem } from "@modules/rootPage/RootPage";
 import { validateTeacher } from "./helpers";
 import { Text } from "@components/Typography";
 import { Title } from "@components/Title";
-import MultiDropdown from "@components/MultiDropdown";
-import InputWithLabel from "@components/InputWithLabel";
+import Dropdown from "@components/Dropdown";
 
 interface AddingModalProps<T> {
   onConfirm: (newItem: T) => void;
   hideModal: VoidFunction;
   initValue: T | null;
   handleDelete: (id: number) => void;
-
   auditories: AuditoryItem[];
-  classes: ClassItem[];
 }
 
 export const AddingTeacherModal: FC<AddingModalProps<TeacherItem>> = ({
   onConfirm,
   auditories,
-  classes,
   hideModal,
   initValue,
   handleDelete,
@@ -76,20 +69,9 @@ export const AddingTeacherModal: FC<AddingModalProps<TeacherItem>> = ({
             />
           </Flex>
 
-          <CloseIcon onClick={hideModal} size={28} />
+          <CloseIcon color={"#641AEE"} onClick={hideModal} size={28} />
         </Flex>
-        <Flex align="start" $top="medium" direction="column">
-          <StyledItemTitle>
-            <span>*</span>Кол-во часов
-            <InputWithLabel
-              value={newItem.hours}
-              label="ак. ч"
-              setValue={(newVal) =>
-                setNewItem((prev) => ({ ...prev, hours: newVal }))
-              }
-            />
-          </StyledItemTitle>
-        </Flex>
+        <Flex align="start" $top="medium" direction="column"></Flex>
         <Flex direction="column">
           <Title
             action={() => {
@@ -102,6 +84,9 @@ export const AddingTeacherModal: FC<AddingModalProps<TeacherItem>> = ({
                     name: "",
                     classes: [],
                     id: new Date().getTime(),
+                    room: null,
+                    time: 0,
+                    type: "practice",
                   },
                 ],
               }));
@@ -109,68 +94,110 @@ export const AddingTeacherModal: FC<AddingModalProps<TeacherItem>> = ({
           >
             Предмет
           </Title>
-
-          <Flex $top="medium" direction="column">
-            {newItem.subjects
-              .sort((a, b) => a.id - b.id)
-              .map((el) => (
-                <Flex gap="16px" key={el.id}>
-                  <Flex direction="column">
-                    <span>*Название</span>
-                    <StyledModalInput
-                      placeholder="Введите название..."
-                      value={el.name}
-                      onChange={(v) =>
+          <Flex $top="small" gap="8px">
+            <Flex direction="column">
+              {newItem.subjects
+                .sort((a, b) => a.id - b.id)
+                .map((el) => (
+                  <Flex gap="16px" key={el.id}>
+                    <CloseIcon
+                      onClick={() =>
                         setNewItem((prev) => ({
                           ...prev,
-                          subjects: [
-                            ...prev.subjects.filter(
-                              (item) => item.id !== el.id
-                            ),
-                            { ...el, name: v.target.value },
-                          ],
+                          subjects: prev.subjects.filter(
+                            (item) => item.id !== el.id
+                          ),
                         }))
                       }
+                      color="red"
+                      size={16}
                     />
+                    <Flex align="start" direction="column" gap="8px">
+                      <Flex direction="column" gap="8px">
+                        <span>*Название</span>
+                        <StyledModalInput
+                          placeholder="Введите название..."
+                          value={el.name}
+                          onChange={(v) =>
+                            setNewItem((prev) => ({
+                              ...prev,
+                              subjects: [
+                                ...prev.subjects.filter(
+                                  (item) => item.id !== el.id
+                                ),
+                                { ...el, name: v.target.value },
+                              ],
+                            }))
+                          }
+                        />
+                      </Flex>
+                      <Flex direction="column" gap="8px">
+                        <StyledItemTitle>
+                          <span>*</span>Тип
+                        </StyledItemTitle>
+                        <Flex gap="10px">
+                          <StyledModalButton
+                            onClick={() =>
+                              setNewItem((prev) => ({
+                                ...prev,
+                                subjects: [
+                                  ...prev.subjects.filter(
+                                    (subject) => subject.id !== el.id
+                                  ),
+                                  {
+                                    ...el,
+                                    type: "lecture",
+                                  },
+                                ],
+                              }))
+                            }
+                            $active={el.type === "practice"}
+                          >
+                            Практика
+                          </StyledModalButton>
+                          <StyledModalButton
+                            onClick={() =>
+                              setNewItem((prev) => ({
+                                ...prev,
+                                subjects: [
+                                  ...prev.subjects.filter(
+                                    (subject) => subject.id !== el.id
+                                  ),
+                                  {
+                                    ...el,
+                                    type: "lecture",
+                                  },
+                                ],
+                              }))
+                            }
+                            $active={el.type === "lecture"}
+                          >
+                            Лекция
+                          </StyledModalButton>
+                        </Flex>
+                      </Flex>
+                      <StyledItemTitle>
+                        Аудитория
+                        <Dropdown
+                          options={auditories}
+                          setSelectedOption={(n) =>
+                            setNewItem((prev) => ({
+                              ...prev,
+                              subjects: [
+                                ...prev.subjects.filter(
+                                  (item) => item.id !== el.id
+                                ),
+                                { ...el, room: n },
+                              ],
+                            }))
+                          }
+                          selectedOption={el.room}
+                        />
+                      </StyledItemTitle>
+                    </Flex>
                   </Flex>
-                  <Flex direction="column">
-                    <span>Аудитории</span>
-                    <MultiDropdown
-                      options={auditories}
-                      selectedOptions={el.auditory}
-                      setSelectedOptions={(n) =>
-                        setNewItem((prev) => ({
-                          ...prev,
-                          subjects: [
-                            ...prev.subjects.filter(
-                              (item) => item.id !== el.id
-                            ),
-                            { ...el, auditory: n as AuditoryItem[] },
-                          ],
-                        }))
-                      }
-                    />
-                  </Flex>
-                  <Flex direction="column">
-                    <span>*Классы</span>
-                    <MultiDropdown
-                      options={classes}
-                      selectedOptions={el.classes}
-                      setSelectedOptions={(n) =>
-                        setNewItem((prev) => ({
-                          ...prev,
-                          subjects: [
-                            ...prev.subjects.filter(
-                              (item) => item.id !== el.id
-                            ),
-                            { ...el, classes: n as ClassItem[] },
-                          ],
-                        }))
-                      }
-                    />
-                  </Flex>
-                </Flex>
-              ))}
+                ))}
+            </Flex>
           </Flex>
         </Flex>
         <Flex justify="flex-end">

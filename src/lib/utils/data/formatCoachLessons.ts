@@ -1,23 +1,37 @@
-import {
-  StudyPlan,
-  SubjectItem,
-  TeacherItem,
-} from "@modules/rootPage/RootPage";
-import { CoachLesson } from "@type/common";
-import { formatCoachings } from "./formatCoachings";
+import { StudyPlan, SubjectItem } from "@modules/rootPage/RootPage";
+import { Coaching, CoachLesson } from "@type/common";
 
 export const formatCoachLessons = (
-  teachers: TeacherItem[],
   studyPlan: StudyPlan[],
-  subjects: SubjectItem[]
+  subjects: SubjectItem[],
+  coachings: Coaching[]
 ): CoachLesson[] => {
-  return formatCoachings(subjects, studyPlan)
-    .map((coaching) => {
-      const res: CoachLesson[] = [];
-      teachers.forEach((teacher) =>
-        res.push({ teacherID: teacher.id, coachingID: coaching.id })
+  return studyPlan
+    .filter((el) => el.subjectId !== "total")
+    .map((item) => {
+      const subject = subjects.find((el) => el.id === item.subjectId);
+      if (!subject || !subject.teacher) return null;
+      const coach = coachings.find(
+        (el) => el.subjectID == subject.id && item.classId === el.groupID
       );
-      return res;
+      if (!coach) return;
+      return {
+        id: coach.id,
+        hours: item.value,
+        ...(subjects.find((el) => el.id === item.subjectId)?.room?.id
+          ? {
+              RoomID: subjects.find((el) => el.id === item.subjectId)?.room?.id,
+            }
+          : { RoomID: 666 }),
+        groupID: item.classId,
+        teacherID: subject.teacher.map((el) => el.id)[0],
+        subjectID: item.subjectId as number,
+      };
     })
-    .flat();
+    .flat()
+    .filter((el) => !!el)
+    .map((coaching) => ({
+      teacherID: coaching.teacherID,
+      coachingID: coaching.id,
+    }));
 };
