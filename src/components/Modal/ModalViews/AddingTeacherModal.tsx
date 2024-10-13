@@ -29,6 +29,7 @@ export const AddingTeacherModal: FC<AddingModalProps<TeacherItem>> = ({
   auditories,
   hideModal,
   initValue,
+  handleDelete,
 }) => {
   const [newItem, setNewItem] = useState<TeacherItem>(
     initValue || {
@@ -118,20 +119,18 @@ export const AddingTeacherModal: FC<AddingModalProps<TeacherItem>> = ({
                 .sort((a, b) => a.id - b.id)
                 .map((el) => (
                   <Flex gap="16px" key={el.id}>
-                    {!initValue && (
-                      <CloseIcon
-                        onClick={() =>
-                          setNewItem((prev) => ({
-                            ...prev,
-                            subjects: prev.subjects.filter(
-                              (item) => item.id !== el.id
-                            ),
-                          }))
-                        }
-                        color="red"
-                        size={16}
-                      />
-                    )}
+                    <CloseIcon
+                      onClick={() =>
+                        setNewItem((prev) => ({
+                          ...prev,
+                          subjects: prev.subjects.filter(
+                            (item) => item.id !== el.id
+                          ),
+                        }))
+                      }
+                      color="red"
+                      size={16}
+                    />
                     <Flex align="start" direction="column" gap="8px">
                       <Flex direction="column" gap="8px">
                         <span>*Название</span>
@@ -227,11 +226,11 @@ export const AddingTeacherModal: FC<AddingModalProps<TeacherItem>> = ({
               <StyledModalAdd onClick={handleAdd}>
                 {initValue ? "Изменить" : "Добавить"}
               </StyledModalAdd>
-              {/* {initValue && (
-                <button onClick={() => handleDelete(initValue.id)}>
+              {initValue && (
+                <StyledModalAdd onClick={() => handleDelete(initValue.id)}>
                   Удалить
-                </button>
-              )} */}
+                </StyledModalAdd>
+              )}
             </Flex>
           </Flex>
         </Flex>

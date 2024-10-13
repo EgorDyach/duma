@@ -29,6 +29,16 @@ export const requestUpdateRoom = async (auditories: Room[]): Promise<void> => {
   });
 };
 
+export const requestDeleteRoom = async (auditories: Room[]): Promise<void> => {
+  await fetch("https://puzzlesignlanguage.online/api/v1/delete/room", {
+    headers: {
+      "Content-Type": "application/json",
+    },
+    method: "DELETE",
+    body: JSON.stringify(auditories),
+  });
+};
+
 export const requestAllRoom = async (): Promise<
   Response<
     {
@@ -72,6 +82,15 @@ export const requestUpdateTeacher = async (data: Teacher[]): Promise<void> => {
     body: JSON.stringify(data),
   });
 };
+export const requestDeleteTeacher = async (data: Teacher[]): Promise<void> => {
+  await fetch("https://puzzlesignlanguage.online/api/v1/delete/teacher", {
+    headers: {
+      "Content-Type": "application/json",
+    },
+    method: "DELETE",
+    body: JSON.stringify(data),
+  });
+};
 
 export const requestAllTeacher = async (): Promise<
   Response<
@@ -110,6 +129,15 @@ export const requestUpdateGroup = async (data: Group[]): Promise<void> => {
       "Content-Type": "application/json",
     },
     method: "PUT",
+    body: JSON.stringify(data),
+  });
+};
+export const requestDeleteGroup = async (data: Group[]): Promise<void> => {
+  await fetch("https://puzzlesignlanguage.online/api/v1/delete/group", {
+    headers: {
+      "Content-Type": "application/json",
+    },
+    method: "DELETE",
     body: JSON.stringify(data),
   });
 };
@@ -157,6 +185,15 @@ export const requestUpdateSubjects = async (data: Subject[]): Promise<void> => {
     body: JSON.stringify(data),
   });
 };
+export const requestDeleteSubjects = async (data: Subject[]): Promise<void> => {
+  await fetch("https://puzzlesignlanguage.online/api/v1/delete/subject", {
+    headers: {
+      "Content-Type": "application/json",
+    },
+    method: "DELETE",
+    body: JSON.stringify(data),
+  });
+};
 
 export const requestAllSubjects = async (): Promise<
   Response<
@@ -193,6 +230,15 @@ export const requestUpdateCoach = async (data: Coaching[]): Promise<void> => {
       "Content-Type": "application/json",
     },
     method: "PUT",
+    body: JSON.stringify(data),
+  });
+};
+export const requestDeleteCoach = async (data: Coaching[]): Promise<void> => {
+  await fetch("https://puzzlesignlanguage.online/api/v1/delete/coach", {
+    headers: {
+      "Content-Type": "application/json",
+    },
+    method: "DELETE",
     body: JSON.stringify(data),
   });
 };
@@ -244,6 +290,18 @@ export const requestUpdateCoachLessons = async (
   });
 };
 
+export const requestDeleteCoachLessons = async (
+  data: (CoachLesson & { id: number })[]
+): Promise<void> => {
+  await fetch("https://puzzlesignlanguage.online/api/v1/delete/coachlesson", {
+    headers: {
+      "Content-Type": "application/json",
+    },
+    method: "DELETE",
+    body: JSON.stringify(data),
+  });
+};
+
 export const requestAllCoachLessons = async (): Promise<
   Response<
     {
@@ -276,6 +334,15 @@ export const requestCreateAccounts = async (data: Account[]): Promise<void> => {
   });
 };
 
+export const requestDeleteAccounts = async (data: Account[]): Promise<void> => {
+  await fetch("https://puzzlesignlanguage.online/api/v1/delete/profile", {
+    headers: {
+      "Content-Type": "application/json",
+    },
+    method: "DELETE",
+    body: JSON.stringify(data),
+  });
+};
 export const requestUpdateAccounts = async (data: Account[]): Promise<void> => {
   await fetch("https://puzzlesignlanguage.online/api/v1/update/profile", {
     headers: {

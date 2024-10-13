@@ -37,6 +37,7 @@ export const AddingSubjectModal: FC<AddingModalProps<SubjectItem>> = ({
   initValue,
   teachers,
   auditories,
+  handleDelete,
 }) => {
   const [newItem, setNewItem] = useState<SubjectItem>(
     initValue || {
@@ -164,11 +165,11 @@ export const AddingSubjectModal: FC<AddingModalProps<SubjectItem>> = ({
               <StyledModalAdd onClick={handleAdd}>
                 {initValue ? "Изменить" : "Добавить"}
               </StyledModalAdd>
-              {/* {initValue && (
-                <button onClick={() => handleDelete(initValue.id)}>
+              {initValue && (
+                <StyledModalAdd onClick={() => handleDelete(initValue.id)}>
                   Удалить
-                </button>
-              )} */}
+                </StyledModalAdd>
+              )}
             </Flex>
           </Flex>
         </Flex>

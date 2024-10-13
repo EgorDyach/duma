@@ -33,6 +33,13 @@ import {
   requestAllAccounts,
   requestCreateAccounts,
   requestUpdateAccounts,
+  requestDeleteTeacher,
+  requestDeleteCoachLessons,
+  requestDeleteSubjects,
+  requestDeleteCoach,
+  requestDeleteRoom,
+  requestDeleteGroup,
+  requestDeleteAccounts,
 } from "@lib/api";
 import { formatAuditories } from "@lib/utils/data/formatAuditories";
 import { formatTeachers } from "@lib/utils/data/formatTeacher";
@@ -106,7 +113,6 @@ export type StudyPlan = {
 
 export const RootPage: React.FC = () => {
   const [error, setError] = useState("");
-  const [deleteMode, setDeleteMode] = useState(false);
   const [isTeacherModalOpen, setIsTeacherModalOpen] = useState(false);
   const [isClassModalOpen, setIsClassModalOpen] = useState(false);
   const [isAuditoryModalOpen, setIsAuditoryModalOpen] = useState(false);
@@ -500,9 +506,30 @@ export const RootPage: React.FC = () => {
         <Portal elementId="overlay">
           <Backdrop />
           <AddingTeacherModal
-            handleDelete={(id) =>
-              setTeachers((prev) => prev.filter((el) => el.id !== id))
-            }
+            handleDelete={(id) => {
+              setTeachers((prev) => prev.filter((el) => el.id !== id));
+              setSubjects((prev) =>
+                prev.filter(
+                  (el) =>
+                    !el.teacher || !el.teacher.length || el.teacher[0].id !== id
+                )
+              );
+
+              setStudyPlan((prev) =>
+                prev.filter(
+                  (el) =>
+                    !subjects
+                      .filter(
+                        (sub) =>
+                          sub.teacher &&
+                          sub.teacher.length &&
+                          sub.teacher[0].id === id
+                      )
+                      .find((item) => item.id === el.subjectId)
+                )
+              );
+              closeAllModals();
+            }}
             initValue={teacherEditValue}
             onConfirm={handleAddTeacher}
             hideModal={closeAllModals}
@@ -514,9 +541,11 @@ export const RootPage: React.FC = () => {
         <Portal elementId="overlay">
           <Backdrop />
           <AddingClassModal
-            handleDelete={(id) =>
-              setClasses((prev) => prev.filter((el) => el.id !== id))
-            }
+            handleDelete={(id) => {
+              setClasses((prev) => prev.filter((el) => el.id !== id));
+              setStudyPlan((prev) => prev.filter((el) => el.classId !== id));
+              closeAllModals();
+            }}
             accounts={accounts}
             initValue={classEditValue}
             onConfirm={handleAddClass}
@@ -530,6 +559,15 @@ export const RootPage: React.FC = () => {
           <AddingAuditoryModal
             handleDelete={(id) => {
               setAuditories((prev) => prev.filter((el) => el.id !== id));
+              setSubjects((prev) => [
+                ...prev.filter((el) => el.room?.id !== id),
+                ...prev
+                  .filter((el) => el.room && el.room.id === id)
+                  .map((el) => ({
+                    ...el,
+                    room: null,
+                  })),
+              ]);
               closeAllModals();
             }}
             accounts={accounts}
@@ -544,9 +582,11 @@ export const RootPage: React.FC = () => {
           <Backdrop />
           <AddingSubjectModal
             auditories={auditories.filter((el) => el.id !== 666)}
-            handleDelete={(id) =>
-              setSubjects((prev) => prev.filter((el) => el.id !== id))
-            }
+            handleDelete={(id) => {
+              setSubjects((prev) => prev.filter((el) => el.id !== id));
+              setStudyPlan((prev) => prev.filter((el) => el.subjectId !== id));
+              closeAllModals();
+            }}
             teachers={teachers}
             initValue={subjectEditValue}
             onConfirm={handleAddSubject}
@@ -577,6 +617,26 @@ export const RootPage: React.FC = () => {
                   .sort((a, b) => a.id - b.id)
                   .map((item) => (
                     <AccountButton
+                      handleDelete={() => {
+                        setAccounts((prev) =>
+                          prev.filter((el) => el.id !== item.id)
+                        );
+                        setClasses((prev) =>
+                          prev.map((el) => ({
+                            ...el,
+                            account:
+                              el.account?.id === item.id ? null : el.account,
+                          }))
+                        );
+                        setAuditories((prev) =>
+                          prev.map((el) => ({
+                            ...el,
+                            accounts: el.accounts
+                              .map((acc) => (acc.id === item.id ? null : acc))
+                              .filter((el) => !!el),
+                          }))
+                        );
+                      }}
                       key={item.id}
                       text={item.name}
                       size="large"
@@ -741,7 +801,7 @@ export const RootPage: React.FC = () => {
               {subjects
                 .sort((a, b) => a.id - b.id)
                 .map((subject) => (
-                  <Flex gap="7px">
+                  <Flex gap="7px" key={subject.id}>
                     <TextButton
                       textSize="small"
                       style={{ flex: 10 }}
@@ -757,8 +817,7 @@ export const RootPage: React.FC = () => {
                                 )?.subjectId as number) || 0
                               )
                           );
-                          if (!teacher) return "";
-                          return ` (${teacher.name})`;
+                          return ` (${teacher?.name || "Не выбран"})`;
                         })()
                       }
                       size="large"
@@ -767,65 +826,67 @@ export const RootPage: React.FC = () => {
                         setSubjectEditValue(subject);
                       }}
                     />
-                    {classes.map((el) => (
-                      <TextButtonWithLabel
-                        id={(() => {
-                          const val = studyPlan.find(
-                            (item) =>
-                              item.classId === el.id &&
-                              item.subjectId === subject.id
-                          );
-                          if (!val) return undefined;
-                          return val.id;
-                        })()}
-                        key={subject.id}
-                        label="ак. ч"
-                        setText={(n) => {
-                          const val = studyPlan.find(
-                            (item) =>
-                              item.classId === el.id &&
-                              item.subjectId === subject.id
-                          );
-                          console.log(val, subject, el);
-                          if (!val) {
+                    {classes
+                      .sort((a, b) => a.id - b.id)
+                      .map((el) => (
+                        <TextButtonWithLabel
+                          id={(() => {
+                            const val = studyPlan.find(
+                              (item) =>
+                                item.classId === el.id &&
+                                item.subjectId === subject.id
+                            );
+                            if (!val) return undefined;
+                            return val.id;
+                          })()}
+                          key={el.id}
+                          label="ак. ч"
+                          setText={(n) => {
+                            const val = studyPlan.find(
+                              (item) =>
+                                item.classId === el.id &&
+                                item.subjectId === subject.id
+                            );
+                            console.log(val, subject, el);
+                            if (!val) {
+                              setStudyPlan((prev) => [
+                                ...prev,
+                                {
+                                  classId: el.id,
+                                  subjectId: subject.id,
+                                  value: 0,
+                                  isActive: false,
+                                  id: new Date().getTime(),
+                                },
+                              ]);
+                              return;
+                            }
+                            let newVal = 0;
+                            if (n === "" || /^[0-9]*$/.test(n)) {
+                              newVal = n === "" ? 0 : Number(n);
+                            } else {
+                              return;
+                            }
                             setStudyPlan((prev) => [
-                              ...prev,
-                              {
-                                classId: el.id,
-                                subjectId: subject.id,
-                                value: 0,
-                                isActive: false,
-                                id: new Date().getTime(),
-                              },
+                              ...prev.filter(
+                                (p) =>
+                                  !(
+                                    p.classId === val.classId &&
+                                    p.subjectId === val.subjectId
+                                  )
+                              ),
+                              { ...val, value: newVal },
                             ]);
-                            return;
+                          }}
+                          text={
+                            studyPlan.find(
+                              (item) =>
+                                item.classId === el.id &&
+                                item.subjectId === subject.id
+                            )?.value + ""
                           }
-                          let newVal = 0;
-                          if (n === "" || /^[0-9]*$/.test(n)) {
-                            newVal = n === "" ? 0 : Number(n);
-                          } else {
-                            return;
-                          }
-                          setStudyPlan((prev) => [
-                            ...prev.filter(
-                              (p) =>
-                                !(
-                                  p.classId === val.classId &&
-                                  p.subjectId === val.subjectId
-                                )
-                            ),
-                            { ...val, value: newVal },
-                          ]);
-                        }}
-                        text={
-                          studyPlan.find(
-                            (item) =>
-                              item.classId === el.id &&
-                              item.subjectId === subject.id
-                          )?.value + ""
-                        }
-                      />
-                    ))}
+                        />
+                      ))}
                   </Flex>
                 ))}
               <Flex gap="7px">
@@ -891,24 +952,47 @@ export const RootPage: React.FC = () => {
       </Flex> */}
       <Flex gap="16px" align="center" $top="large">
         <StyledButton
-          onClick={() => {
-            console.log(teachers, subjects);
+          onClick={async () => {
+            try {
+              fetch("https://puzzlesignlanguage.online/generate", {
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                method: "POST",
+                body: JSON.stringify({
+                  start_date: "2024-02-01T00:00:00.000Z",
+                  end_date: "2024-05-01T00:00:00.000Z",
+                }),
+              });
+            } catch (error) {}
           }}
         >
           Сгенерировать
         </StyledButton>
         <StyledButton
           onClick={async () => {
-            const errors: SubjectItem[] = [];
+            const subjectsErrors: SubjectItem[] = [];
+            const groupsErrors: ClassItem[] = [];
             subjects.forEach((el) => {
-              if (!el.teacher || !el.teacher.length) errors.push(el);
+              if (!el.teacher || !el.teacher.length) subjectsErrors.push(el);
             });
-            if (errors.length) {
+            if (subjectsErrors.length) {
               setError(
-                `Необходимо прикрепить учителя к следующим предметам: ${errors.map((el) => el.name).join(", ")}`
+                `Необходимо прикрепить учителя к следующим предметам: ${subjectsErrors.map((el) => el.name).join(", ")}`
               );
               return;
             }
+
+            classes.forEach((el) => {
+              if (!el.account) groupsErrors.push(el);
+            });
+            if (groupsErrors.length) {
+              setError(
+                `Необходимо прикрепить профиль к следующим группам: ${groupsErrors.map((el) => el.name).join(", ")}`
+              );
+              return;
+            }
+
             try {
               await requestCreateAccounts(
                 formatAccounts(
@@ -1007,6 +1091,110 @@ export const RootPage: React.FC = () => {
               //
               //
 
+              if (initialTeachers.length) {
+                const formatedTeachers = formatTeachers(
+                  initialTeachers.filter(
+                    (el) => !teachers.find((item) => item.id === el.id)
+                  )
+                );
+                await requestDeleteTeacher(formatedTeachers);
+                await requestDeleteCoachLessons(
+                  serverCoachLessons
+                    .filter((el) =>
+                      formatedTeachers.find(
+                        (teacher) => teacher.id === el.TeacherID
+                      )
+                    )
+                    .map((el) => ({
+                      coachingID: el.CoachingID,
+                      teacherID: el.TeacherID,
+                      id: el.ID,
+                    }))
+                );
+              }
+
+              if (initialAuditories.length) {
+                const formatedAuditories = formatAuditories(
+                  initialAuditories.filter(
+                    (el) => !auditories.find((item) => item.id === el.id)
+                  )
+                );
+                await requestDeleteRoom(formatedAuditories);
+              }
+
+              if (initialSubjects.length) {
+                const formatedSubjects = formatSubjects(
+                  initialSubjects.filter(
+                    (el) => !subjects.find((item) => item.id === el.id)
+                  )
+                );
+                const formatedCoaches = formatCoachingsUpdate(
+                  subjects,
+                  serverStudyPlan.filter(
+                    (el) => !studyPlan.find((item) => item.id === el.id)
+                  )
+                );
+                await requestDeleteSubjects(formatedSubjects);
+                await requestDeleteCoach(formatedCoaches);
+                await requestDeleteCoachLessons(
+                  serverCoachLessons
+                    .filter((el) =>
+                      formatedCoaches.find(
+                        (coach) => coach.id === el.CoachingID
+                      )
+                    )
+                    .map((el) => ({
+                      coachingID: el.CoachingID,
+                      teacherID: el.TeacherID,
+                      id: el.ID,
+                    }))
+                );
+              }
+
+              if (initialClasses.length) {
+                const formatedClasses = formatGroups(
+                  initialClasses.filter(
+                    (el) => !classes.find((item) => item.id === el.id)
+                  )
+                );
+                const formatedCoaches = formatCoachingsUpdate(
+                  subjects,
+                  serverStudyPlan.filter(
+                    (el) => !studyPlan.find((item) => item.id === el.id)
+                  )
+                );
+                await requestDeleteGroup(formatedClasses);
+                await requestDeleteCoach(formatedCoaches);
+                await requestDeleteCoachLessons(
+                  serverCoachLessons
+                    .filter((el) =>
+                      formatedCoaches.find(
+                        (coach) => coach.id === el.CoachingID
+                      )
+                    )
+                    .map((el) => ({
+                      coachingID: el.CoachingID,
+                      teacherID: el.TeacherID,
+                      id: el.ID,
+                    }))
+                );
+              }
+
+              if (initialAccounts.length) {
+                await requestDeleteAccounts(
+                  formatAccounts(
+                    initialAccounts.filter(
+                      (el) => !accounts.find((item) => item.id === el.id)
+                    )
+                  )
+                );
+              }
+              //
+              //
+              //
+              //
+              //
+
               if (initialAccounts.length)
                 await requestUpdateAccounts(formatAccounts(accounts));
               localStorage.setItem("accounts", JSON.stringify(accounts));
@@ -1095,10 +1283,38 @@ export const RootPage: React.FC = () => {
           save
         </StyledButton>
         <StyledButton
-          $isDelete={deleteMode}
-          onClick={() => setDeleteMode((prev) => !prev)}
+          onClick={() => {
+            const formatedClasses = formatGroups(
+              initialClasses.filter(
+                (el) => !classes.find((item) => item.id === el.id)
+              )
+            );
+            const formatedCoaches = formatCoachingsUpdate(
+              subjects,
+              serverStudyPlan.filter(
+                (el) => !studyPlan.find((item) => item.id === el.id)
+              )
+            );
+            // await requestDeleteGroup(formatedClasses);
+            // await requestDeleteCoach(formatedCoaches);
+            console.log(
+              formatedClasses,
+              formatedCoaches,
+              serverStudyPlan,
+              studyPlan,
+              serverCoachLessons
+                .filter((el) =>
+                  formatedCoaches.find((coach) => coach.id === el.CoachingID)
+                )
+                .map((el) => ({
+                  coachingID: el.CoachingID,
+                  teacherID: el.TeacherID,
+                  id: el.ID,
+                }))
+            );
+          }}
         >
-          {deleteMode ? "Удаление вкл." : "Удаление выкл."}
+          Log
         </StyledButton>
       </Flex>
       <Flex $top="medium">{error && <span color="red">{error}</span>}</Flex>

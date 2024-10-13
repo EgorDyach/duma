@@ -29,6 +29,7 @@ export const AddingAuditoryModal: FC<AddingModalProps<AuditoryItem>> = ({
   hideModal,
   initValue,
   accounts,
+  handleDelete,
 }) => {
   const [newItem, setNewItem] = useState<AuditoryItem>(
     initValue || {
@@ -109,11 +110,11 @@ export const AddingAuditoryModal: FC<AddingModalProps<AuditoryItem>> = ({
               <StyledModalAdd onClick={handleAdd}>
                 {initValue ? "Изменить" : "Добавить"}
               </StyledModalAdd>
-              {/* {initValue && (
-                <button onClick={() => handleDelete(initValue.id)}>
+              {initValue && (
+                <StyledModalAdd onClick={() => handleDelete(initValue.id)}>
                   Удалить
-                </button>
-              )} */}
+                </StyledModalAdd>
+              )}
             </Flex>
           </Flex>
         </Flex>
