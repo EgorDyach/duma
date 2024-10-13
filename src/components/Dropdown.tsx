@@ -18,9 +18,9 @@ const StyledButton = styled.button`
 const StyledDropdown = styled.ul`
   position: absolute;
   padding: 9px;
-  bottom: -12px;
-  max-height: 60px;
-  height: 100%;
+  bottom: -52px;
+  max-height: 180px;
+  height: 100px;
   transform: translateY(50%);
   left: 0;
   margin: 0;
@@ -28,7 +28,7 @@ const StyledDropdown = styled.ul`
   list-style: none;
   background: #f0f0f7;
   overflow-y: scroll;
-  max-width: 120px;
+  max-width: 280px;
   width: 100%;
   text-align: center;
   z-index: 1000;
@@ -85,7 +85,7 @@ const Dropdown = <T extends { id: number; name: string }>({
               style={{
                 cursor: "pointer",
                 padding: 5,
-                fontSize: 12,
+                fontSize: 18,
               }}
             >
               {option.name}{" "}
@@ -93,14 +93,6 @@ const Dropdown = <T extends { id: number; name: string }>({
           ))}
         </StyledDropdown>
       )}
-      <div
-        style={{
-          display: "flex",
-          overflowX: "auto",
-          whiteSpace: "nowrap",
-          marginTop: "10px",
-        }}
-      ></div>
     </div>
   );
 };

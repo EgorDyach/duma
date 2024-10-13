@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, FC } from "react";
 import styled, { CSSProperties } from "styled-components";
 import { Text } from "./Typography";
+import { FontSize } from "@type/common";
 
 const studyPlanButtonSizes: Record<StudyPlanButtonSize, string> = {
   small: "86px",
@@ -19,6 +20,7 @@ interface StudyPlanButtonProps {
   isActive: boolean;
   setIsActive?: VoidFunction;
   style?: CSSProperties;
+  textSize?: FontSize;
 }
 
 const StyledButton = styled.button<{
@@ -61,6 +63,7 @@ const StudyPlanButton: FC<StudyPlanButtonProps> = ({
   size = "medium",
   isActive,
   setIsActive,
+  textSize = "default",
 }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [tempText, setTempText] = useState(
@@ -138,7 +141,9 @@ const StudyPlanButton: FC<StudyPlanButtonProps> = ({
           onKeyDown={handleKeyDown}
         />
       ) : (
-        <Text $color={isActive ? "#fff" : "#641AEE"}>{text}</Text>
+        <Text $size={textSize} $color={isActive ? "#fff" : "#641AEE"}>
+          {text}
+        </Text>
       )}
     </StyledButton>
   );

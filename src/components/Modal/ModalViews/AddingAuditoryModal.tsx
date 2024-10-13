@@ -8,6 +8,7 @@ import {
   StyledModalTitle,
   StyledModalInput,
   StyledModalButtons,
+  StyledModalAdd,
 } from "../ModalStyles";
 import { AccountItem, AuditoryItem } from "@modules/rootPage/RootPage";
 import { validateAuditory } from "./helpers";
@@ -28,7 +29,6 @@ export const AddingAuditoryModal: FC<AddingModalProps<AuditoryItem>> = ({
   hideModal,
   initValue,
   accounts,
-  handleDelete,
 }) => {
   const [newItem, setNewItem] = useState<AuditoryItem>(
     initValue || {
@@ -106,14 +106,14 @@ export const AddingAuditoryModal: FC<AddingModalProps<AuditoryItem>> = ({
           <Flex direction="column">
             <Text $color="red">{error}</Text>
             <Flex gap="16px" $top="large" justify="start">
-              <button onClick={handleAdd}>
+              <StyledModalAdd onClick={handleAdd}>
                 {initValue ? "Изменить" : "Добавить"}
-              </button>
-              {initValue && (
+              </StyledModalAdd>
+              {/* {initValue && (
                 <button onClick={() => handleDelete(initValue.id)}>
                   Удалить
                 </button>
-              )}
+              )} */}
             </Flex>
           </Flex>
         </Flex>

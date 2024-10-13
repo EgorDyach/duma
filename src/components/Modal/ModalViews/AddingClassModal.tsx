@@ -9,6 +9,7 @@ import {
   StyledModalInput,
   StyledModalButton,
   StyledModalButtons,
+  StyledModalAdd,
 } from "../ModalStyles";
 import { AccountItem, ClassItem } from "@modules/rootPage/RootPage";
 import { validateClass } from "./helpers";
@@ -28,14 +29,12 @@ export const AddingClassModal: FC<AddingModalProps<ClassItem>> = ({
   onConfirm,
   hideModal,
   initValue,
-  handleDelete,
   accounts,
 }) => {
   const [newItem, setNewItem] = useState<ClassItem>(
     initValue || {
       name: "",
       shift: 1,
-      schoolWeek: 5,
       account: null,
       count: 0,
       id: 0,
@@ -75,7 +74,7 @@ export const AddingClassModal: FC<AddingModalProps<ClassItem>> = ({
           <CloseIcon color={"#641AEE"} onClick={hideModal} size={28} />
         </Flex>
 
-        <Flex gap="16px" $top="medium">
+        <Flex gap="16px" direction="column" $top="medium">
           <StyledModalButtons direction="column" gap="8px">
             <StyledItemTitle>
               <span>*</span>Смена
@@ -96,31 +95,6 @@ export const AddingClassModal: FC<AddingModalProps<ClassItem>> = ({
             </Flex>
           </StyledModalButtons>
           <StyledModalButtons direction="column" gap="8px">
-            <StyledItemTitle>
-              <span>*</span>Учебная неделя
-            </StyledItemTitle>
-            <Flex gap="10px">
-              <StyledModalButton
-                onClick={() =>
-                  setNewItem((prev) => ({ ...prev, schoolWeek: 5 }))
-                }
-                $active={newItem.schoolWeek === 5}
-              >
-                5 дней
-              </StyledModalButton>
-              <StyledModalButton
-                onClick={() =>
-                  setNewItem((prev) => ({ ...prev, schoolWeek: 6 }))
-                }
-                $active={newItem.schoolWeek === 6}
-              >
-                6 дней
-              </StyledModalButton>
-            </Flex>
-          </StyledModalButtons>
-        </Flex>
-        <Flex gap="8px">
-          <StyledModalButtons $top="small" direction="column" gap="8px">
             <StyledItemTitle>Профиль/факультет</StyledItemTitle>
             <Dropdown
               options={accounts}
@@ -130,12 +104,7 @@ export const AddingClassModal: FC<AddingModalProps<ClassItem>> = ({
               selectedOption={newItem.account}
             />
           </StyledModalButtons>
-          <StyledModalButtons
-            align="start"
-            $top="medium"
-            direction="column"
-            gap="8px"
-          >
+          <StyledModalButtons align="start" direction="column" gap="8px">
             <StyledItemTitle>
               <span>*</span>Кол-во человек
               <InputWithLabel
@@ -155,14 +124,14 @@ export const AddingClassModal: FC<AddingModalProps<ClassItem>> = ({
           <Flex direction="column">
             <Text $color="red">{classError}</Text>
             <Flex gap="16px" $top="large" justify="start">
-              <button onClick={handleAdd}>
+              <StyledModalAdd onClick={handleAdd}>
                 {initValue ? "Изменить" : "Добавить"}
-              </button>
-              {initValue && (
+              </StyledModalAdd>
+              {/* {initValue && (
                 <button onClick={() => handleDelete(initValue.id)}>
                   Удалить
                 </button>
-              )}
+              )} */}
             </Flex>
           </Flex>
         </Flex>

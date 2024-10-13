@@ -20,7 +20,7 @@ const StyledMultiDropdown = styled.ul`
   position: absolute;
   padding: 6px;
   bottom: -33px;
-  height: 70px;
+  height: 180px;
   transform: translateY(50%);
   left: 0;
   margin: 0;
@@ -28,10 +28,11 @@ const StyledMultiDropdown = styled.ul`
   list-style: none;
   background: #f0f0f7;
   overflow-y: scroll;
-  max-width: 170px;
-  width: 100%;
+  max-width: 280px;
+  width: 230px;
   text-align: center;
   z-index: 1000;
+  color: #000;
 `;
 
 interface MultiDropdownProps<T> {
@@ -94,7 +95,7 @@ const MultiDropdown: React.FC<
               style={{
                 cursor: "pointer",
                 padding: 5,
-                fontSize: 14,
+                fontSize: 18,
               }}
             >
               {option.name}{" "}

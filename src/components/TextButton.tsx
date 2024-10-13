@@ -1,6 +1,7 @@
 import { FC } from "react";
 import styled, { CSSProperties } from "styled-components";
 import { Text } from "./Typography";
+import { FontSize } from "@type/common";
 
 const textButtonSizes: Record<TextButtonSize, string> = {
   small: "86px",
@@ -17,6 +18,7 @@ interface TextButtonProps {
   openEditing: VoidFunction;
   size?: TextButtonSize;
   style?: CSSProperties;
+  textSize?: FontSize;
 }
 
 const StyledButton = styled.button<{
@@ -39,11 +41,14 @@ const TextButton: FC<TextButtonProps> = ({
   text,
   openEditing,
   style,
+  textSize = "default",
   size = "fullSize",
 }) => {
   return (
     <StyledButton style={style} $size={size} onDoubleClick={openEditing}>
-      <Text $color={"#641AEE"}>{text}</Text>
+      <Text $size={textSize} $color={"#641AEE"}>
+        {text}
+      </Text>
     </StyledButton>
   );
 };

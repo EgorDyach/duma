@@ -94,3 +94,13 @@ export const StyledItemTitle = styled(ItemTitle)`
 export const StyledModalButtons = styled(Flex)`
   width: 100%;
 `;
+
+export const StyledModalAdd = styled.button`
+  background: transparent;
+  border: 2px solid #641aee;
+  color: #641aee;
+  padding: 7px 37px;
+  border-radius: 12px;
+  font-size: 18px;
+  cursor: pointer;
+`;

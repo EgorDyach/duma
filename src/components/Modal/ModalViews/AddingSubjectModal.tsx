@@ -9,6 +9,7 @@ import {
   StyledModalInput,
   StyledModalButtons,
   StyledModalButton,
+  StyledModalAdd,
 } from "../ModalStyles";
 import {
   AuditoryItem,
@@ -35,7 +36,6 @@ export const AddingSubjectModal: FC<AddingModalProps<SubjectItem>> = ({
   hideModal,
   initValue,
   teachers,
-  handleDelete,
   auditories,
 }) => {
   const [newItem, setNewItem] = useState<SubjectItem>(
@@ -136,7 +136,12 @@ export const AddingSubjectModal: FC<AddingModalProps<SubjectItem>> = ({
                 teacher: n as any,
               }))
             }
-            selectedOptions={newItem.teacher || []}
+            selectedOptions={
+              newItem.teacher?.map((el) => ({
+                ...el,
+                name: el.name,
+              })) || []
+            }
           />
         </StyledModalButtons>
         <StyledModalButtons $top="small" direction="column" gap="8px">
@@ -156,14 +161,14 @@ export const AddingSubjectModal: FC<AddingModalProps<SubjectItem>> = ({
           <Flex direction="column">
             <Text $color="red">{classError}</Text>
             <Flex gap="16px" $top="large" justify="start">
-              <button onClick={handleAdd}>
+              <StyledModalAdd onClick={handleAdd}>
                 {initValue ? "Изменить" : "Добавить"}
-              </button>
-              {initValue && (
+              </StyledModalAdd>
+              {/* {initValue && (
                 <button onClick={() => handleDelete(initValue.id)}>
                   Удалить
                 </button>
-              )}
+              )} */}
             </Flex>
           </Flex>
         </Flex>

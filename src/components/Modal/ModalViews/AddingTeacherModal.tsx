@@ -8,6 +8,7 @@ import {
   StyledModalInput,
   StyledItemTitle,
   StyledModalButton,
+  StyledModalAdd,
 } from "../ModalStyles";
 import { AuditoryItem, TeacherItem } from "@modules/rootPage/RootPage";
 import { validateTeacher } from "./helpers";
@@ -28,11 +29,13 @@ export const AddingTeacherModal: FC<AddingModalProps<TeacherItem>> = ({
   auditories,
   hideModal,
   initValue,
-  handleDelete,
 }) => {
   const [newItem, setNewItem] = useState<TeacherItem>(
     initValue || {
       name: "",
+      lastName: "",
+      surName: "",
+      firstName: "",
       hours: 0,
       subjects: [],
       id: 0,
@@ -60,18 +63,33 @@ export const AddingTeacherModal: FC<AddingModalProps<TeacherItem>> = ({
             <StyledModalTitle $top="xsmall">
               {initValue ? "Изменить учителя" : "Новый учитель"}
             </StyledModalTitle>
-            <StyledModalInput
-              placeholder="Введите ФИО..."
-              onChange={(e) =>
-                setNewItem((prev) => ({ ...prev, name: e.target.value }))
-              }
-              value={newItem.name}
-            />
           </Flex>
 
           <CloseIcon color={"#641AEE"} onClick={hideModal} size={28} />
         </Flex>
-        <Flex align="start" $top="medium" direction="column"></Flex>
+        <Flex align="start" $top="medium" gap="16px">
+          <StyledModalInput
+            placeholder="Введите фамилию..."
+            onChange={(e) =>
+              setNewItem((prev) => ({ ...prev, surName: e.target.value }))
+            }
+            value={newItem.surName}
+          />
+          <StyledModalInput
+            placeholder="Введите имя..."
+            onChange={(e) =>
+              setNewItem((prev) => ({ ...prev, firstName: e.target.value }))
+            }
+            value={newItem.firstName}
+          />
+          <StyledModalInput
+            placeholder="Введите отчество..."
+            onChange={(e) =>
+              setNewItem((prev) => ({ ...prev, lastName: e.target.value }))
+            }
+            value={newItem.lastName}
+          />
+        </Flex>
         <Flex direction="column">
           <Title
             action={() => {
@@ -100,18 +118,20 @@ export const AddingTeacherModal: FC<AddingModalProps<TeacherItem>> = ({
                 .sort((a, b) => a.id - b.id)
                 .map((el) => (
                   <Flex gap="16px" key={el.id}>
-                    <CloseIcon
-                      onClick={() =>
-                        setNewItem((prev) => ({
-                          ...prev,
-                          subjects: prev.subjects.filter(
-                            (item) => item.id !== el.id
-                          ),
-                        }))
-                      }
-                      color="red"
-                      size={16}
-                    />
+                    {!initValue && (
+                      <CloseIcon
+                        onClick={() =>
+                          setNewItem((prev) => ({
+                            ...prev,
+                            subjects: prev.subjects.filter(
+                              (item) => item.id !== el.id
+                            ),
+                          }))
+                        }
+                        color="red"
+                        size={16}
+                      />
+                    )}
                     <Flex align="start" direction="column" gap="8px">
                       <Flex direction="column" gap="8px">
                         <span>*Название</span>
@@ -204,14 +224,14 @@ export const AddingTeacherModal: FC<AddingModalProps<TeacherItem>> = ({
           <Flex direction="column">
             <Text $color="red">{teacherError}</Text>
             <Flex gap="16px" $top="large" justify="start">
-              <button onClick={handleAdd}>
+              <StyledModalAdd onClick={handleAdd}>
                 {initValue ? "Изменить" : "Добавить"}
-              </button>
-              {initValue && (
+              </StyledModalAdd>
+              {/* {initValue && (
                 <button onClick={() => handleDelete(initValue.id)}>
                   Удалить
                 </button>
-              )}
+              )} */}
             </Flex>
           </Flex>
         </Flex>
