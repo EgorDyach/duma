@@ -1008,8 +1008,16 @@ export const RootPage: React.FC = () => {
         <StyledButton
           $isActive
           onClick={async () => {
+            alert("Скачивание находится в разработке...");
+          }}
+        >
+          Скачать
+        </StyledButton>
+        <StyledButton
+          $isActive
+          onClick={async () => {
             try {
-              fetch("https://puzzlesignlanguage.online/generate", {
+              await fetch("https://puzzlesignlanguage.online/generate", {
                 headers: {
                   "Content-Type": "application/json",
                 },
@@ -1019,7 +1027,9 @@ export const RootPage: React.FC = () => {
                   end_date: "2024-05-01T00:00:00.000Z",
                 }),
               });
-            } catch (error) {}
+            } catch (error) {
+              alert("Не удалось сгенерировать " + `(${error})`);
+            }
           }}
         >
           Сгенерировать
@@ -1331,7 +1341,7 @@ export const RootPage: React.FC = () => {
 
               //
 
-              alert("saved!");
+              ("Успешно сохранено!");
             } catch (e) {
               alert(e);
             } finally {
