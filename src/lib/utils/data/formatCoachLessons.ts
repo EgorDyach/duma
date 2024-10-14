@@ -7,7 +7,6 @@ export const formatCoachLessons = (
   coachings: Coaching[]
 ): CoachLesson[] => {
   return studyPlan
-    .filter((el) => el.subjectId !== "total")
     .map((item) => {
       const subject = subjects.find((el) => el.id === item.subjectId);
       if (!subject || !subject.teacher) return null;
