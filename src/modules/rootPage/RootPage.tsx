@@ -53,6 +53,7 @@ import { formatAccounts } from "@lib/utils/data/formatAccounts";
 import { formatCoachingsUpdate } from "@lib/utils/data/formatCoachingsUpdate";
 import styled from "styled-components";
 import { formatFullName } from "@lib/utils/formatFullName";
+import toast from "react-hot-toast";
 
 const Wrapper = styled(Flex)`
   background-color: #fff;
@@ -350,7 +351,7 @@ export const RootPage: React.FC = () => {
         setStudyPlan(studyPlan);
         setInitialStudyPlan(studyPlan);
       } catch (e) {
-        alert(e);
+        toast.error(e as string);
       } finally {
         setAreSubjectsLoading(false);
         setAreTeachersLoading(false);
@@ -373,75 +374,70 @@ export const RootPage: React.FC = () => {
   };
 
   const handleAddTeacher = async (newItem: TeacherItem) => {
-    try {
-      setTeacherEditValue(null);
-      setTeachers((prevItems) => [
-        ...prevItems.filter((el) => el.id !== newItem.id),
-        {
-          ...newItem,
-          name: formatFullName(
-            newItem.surName,
-            newItem.firstName,
-            newItem.lastName
-          ),
-        },
-      ]);
-      const formattedSubjects = removeDuplicates([
-        ...subjects.filter(
-          (subject) =>
-            !(subject.teacher && newItem.id === subject.teacher[0].id)
+    setTeacherEditValue(null);
+    setTeachers((prevItems) => [
+      ...prevItems.filter((el) => el.id !== newItem.id),
+      {
+        ...newItem,
+        name: formatFullName(
+          newItem.surName,
+          newItem.firstName,
+          newItem.lastName
         ),
-        ...newItem.subjects.map((subject) => ({
-          ...subject,
-          teacher: [
-            {
-              ...newItem,
-              subjects: [],
-              name: formatFullName(
-                newItem.surName,
-                newItem.firstName,
-                newItem.lastName
-              ),
-            },
-          ],
-          dependsOn: [] as [],
-        })),
-      ]);
-      setSubjects(formattedSubjects);
+      },
+    ]);
+    const formattedSubjects = removeDuplicates([
+      ...subjects.filter(
+        (subject) => !(subject.teacher && newItem.id === subject.teacher[0].id)
+      ),
+      ...newItem.subjects.map((subject) => ({
+        ...subject,
+        teacher: [
+          {
+            ...newItem,
+            subjects: [],
+            name: formatFullName(
+              newItem.surName,
+              newItem.firstName,
+              newItem.lastName
+            ),
+          },
+        ],
+        dependsOn: [] as [],
+      })),
+    ]);
+    setSubjects(formattedSubjects);
 
-      setStudyPlan((prev) => [
-        ...prev.filter((studyItem) =>
-          formattedSubjects.map((el) => el.id).includes(studyItem.subjectId)
-        ),
-      ]);
+    setStudyPlan((prev) => [
+      ...prev.filter((studyItem) =>
+        formattedSubjects.map((el) => el.id).includes(studyItem.subjectId)
+      ),
+    ]);
 
-      setStudyPlan((prev) => [
-        ...prev,
-        ...newItem.subjects
-          .filter((el) => !studyPlan.map((i) => i.subjectId).includes(el.id))
-          .map((subject, index2) => {
-            const items: StudyPlan[] = [];
-            items.push(
-              ...classes.map((el, index) => ({
-                classId: el.id,
-                subjectId: subject.id,
-                value: 0,
-                id: new Date().getTime() + index + index2 + index2 + 2,
-              }))
-            );
-            return items;
-          })
-          .flat(),
-      ]);
-      closeAllModals();
-    } catch (error) {
-      alert(error);
-    }
+    setStudyPlan((prev) => [
+      ...prev,
+      ...newItem.subjects
+        .filter((el) => !studyPlan.map((i) => i.subjectId).includes(el.id))
+        .map((subject, index2) => {
+          const items: StudyPlan[] = [];
+          items.push(
+            ...classes.map((el, index) => ({
+              classId: el.id,
+              subjectId: subject.id,
+              value: 0,
+              id: new Date().getTime() + index + index2 + index2 + 2,
+            }))
+          );
+          return items;
+        })
+        .flat(),
+    ]);
+    closeAllModals();
   };
 
   const handleAddClass = async (newItem: ClassItem) => {
     if (!newItem.account) {
-      alert("Введите профиль!");
+      toast("Введите профиль!");
       return;
     }
     if (classEditValue) {
@@ -465,19 +461,15 @@ export const RootPage: React.FC = () => {
   };
 
   const handleAddAuditory = async (newItem: AuditoryItem) => {
-    try {
-      if (auditoryEditValue) {
-        setAuditories((prevItems) => [
-          ...prevItems.filter((el) => el.id !== newItem.id),
-        ]);
-        setAuditoryEditValue(null);
-      }
-
-      setAuditories((prevItems) => [...prevItems, newItem]);
-      closeAllModals();
-    } catch (e) {
-      alert(e);
+    if (auditoryEditValue) {
+      setAuditories((prevItems) => [
+        ...prevItems.filter((el) => el.id !== newItem.id),
+      ]);
+      setAuditoryEditValue(null);
     }
+
+    setAuditories((prevItems) => [...prevItems, newItem]);
+    closeAllModals();
   };
 
   const handleAddSubject = (newItem: SubjectItem) => {
@@ -977,7 +969,9 @@ export const RootPage: React.FC = () => {
         <StyledButton
           $isActive
           onClick={async () => {
-            alert("Скачивание находится в разработке...");
+            toast("Скачивание находится в разработке...", {
+              icon: "🧑🏻‍💻",
+            });
           }}
         >
           Скачать
@@ -997,7 +991,7 @@ export const RootPage: React.FC = () => {
                 }),
               });
             } catch (error) {
-              alert("Не удалось сгенерировать " + `(${error})`);
+              toast.error("Не удалось сгенерировать " + `(${error})`);
             }
           }}
         >
@@ -1304,9 +1298,9 @@ export const RootPage: React.FC = () => {
 
               //
 
-              ("Успешно сохранено!");
+              toast.success("Успешно сохранено!", {});
             } catch (e) {
-              alert(e);
+              toast.error(e as string);
             } finally {
               setIsLoading(false);
             }
