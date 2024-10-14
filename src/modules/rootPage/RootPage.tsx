@@ -121,6 +121,7 @@ export type StudyPlan = {
 
 export const RootPage: React.FC = () => {
   const [error, setError] = useState("");
+  const [isServerLive, setIsServerLive] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isTeacherModalOpen, setIsTeacherModalOpen] = useState(false);
   const [isClassModalOpen, setIsClassModalOpen] = useState(false);
@@ -211,6 +212,27 @@ export const RootPage: React.FC = () => {
       return initSubjects.flat();
     })(),
   ]);
+
+  useEffect(() => {
+    const getStatus = async () => {
+      try {
+        const res = await fetch("https://puzzlesignlanguage.online/status");
+        if (
+          Math.floor(res.status / 100) === 2 ||
+          Math.floor(res.status / 100) === 3
+        ) {
+          setIsServerLive(true);
+        } else {
+          setIsServerLive(false);
+        }
+      } catch (e) {
+        setIsServerLive(false);
+      }
+    };
+    (async () => await getStatus())();
+    const inter = setInterval(getStatus, 10000);
+    return () => clearInterval(inter);
+  }, []);
 
   useEffect(() => {
     (async () => {
@@ -968,6 +990,16 @@ export const RootPage: React.FC = () => {
       <Flex gap="16px" justify="end" align="center" $top="large">
         <StyledButton
           $isActive
+          disabled={!isServerLive}
+          style={
+            isServerLive
+              ? { backgroundColor: "#35c452", borderColor: "#35c452" }
+              : {
+                  backgroundColor: "#f0414c",
+                  borderColor: "#f0414c",
+                  cursor: "default",
+                }
+          }
           onClick={async () => {
             toast("Скачивание находится в разработке...", {
               icon: "🧑🏻‍💻",
@@ -977,6 +1009,16 @@ export const RootPage: React.FC = () => {
           Скачать
         </StyledButton>
         <StyledButton
+          disabled={!isServerLive}
+          style={
+            isServerLive
+              ? { backgroundColor: "#35c452", borderColor: "#35c452" }
+              : {
+                  backgroundColor: "#f0414c",
+                  borderColor: "#f0414c",
+                  cursor: "default",
+                }
+          }
           $isActive
           onClick={async () => {
             try {
