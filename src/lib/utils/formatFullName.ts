@@ -3,8 +3,6 @@ export function formatFullName(
   firstName: string,
   middleName: string
 ): string {
-  // console.log(lastName, firstName, middleName);
-  // Приводим фамилию к нужному формату
   const formattedLastName = lastName
     .toLowerCase()
     .split("-")

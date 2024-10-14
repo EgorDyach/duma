@@ -228,7 +228,6 @@ export const RootPage: React.FC = () => {
         setInitialAccounts(newAccounts);
         setAreAccountsLoading(false);
         const resAuditories = await requestAllRoom();
-        console.log(resAuditories.message.filter((el) => el.ID !== 666));
         const newAuditories = resAuditories.message
           .filter((el) => el.ID !== 666)
           .map((el) => ({
@@ -251,7 +250,6 @@ export const RootPage: React.FC = () => {
           count: el.Count,
           account: newAccounts.find((acc) => acc.id === el.ProfileID) || null,
         }));
-        console.log(resGroups, newClasses, newAccounts);
         setClasses(newClasses);
         setInitialClasses(newClasses);
         setAreClassesLoading(false);
@@ -307,7 +305,6 @@ export const RootPage: React.FC = () => {
         }));
         setSubjects(newSubjects);
         setInitialSubjects(newSubjects);
-        console.log();
         const updatedTeachers = newTeachers.map((teacher) => ({
           ...teacher,
           subjects: newSubjects.filter((subject) =>
@@ -350,8 +347,6 @@ export const RootPage: React.FC = () => {
           })
           .flat();
 
-        (() => console.log(newAuditories))();
-
         setStudyPlan(studyPlan);
         setInitialStudyPlan(studyPlan);
       } catch (e) {
@@ -380,7 +375,6 @@ export const RootPage: React.FC = () => {
   const handleAddTeacher = async (newItem: TeacherItem) => {
     try {
       setTeacherEditValue(null);
-      console.log("teacher", newItem);
       setTeachers((prevItems) => [
         ...prevItems.filter((el) => el.id !== newItem.id),
         {
@@ -393,12 +387,10 @@ export const RootPage: React.FC = () => {
         },
       ]);
       const formattedSubjects = removeDuplicates([
-        ...subjects.filter((subject) => {
-          console.log(
+        ...subjects.filter(
+          (subject) =>
             !(subject.teacher && newItem.id === subject.teacher[0].id)
-          );
-          return !(subject.teacher && newItem.id === subject.teacher[0].id);
-        }),
+        ),
         ...newItem.subjects.map((subject) => ({
           ...subject,
           teacher: [
@@ -422,28 +414,7 @@ export const RootPage: React.FC = () => {
           formattedSubjects.map((el) => el.id).includes(studyItem.subjectId)
         ),
       ]);
-      console.log(
-        newItem.subjects.filter((el) =>
-          studyPlan.map((i) => i.subjectId).includes(el.id)
-        ),
-        [
-          ...newItem.subjects
-            .filter((el) => !studyPlan.map((i) => i.subjectId).includes(el.id))
-            .map((subject, index2) => {
-              const items: StudyPlan[] = [];
-              items.push(
-                ...classes.map((el, index) => ({
-                  classId: el.id,
-                  subjectId: subject.id,
-                  value: 0,
-                  id: new Date().getTime() + index + index2 + index2 + 2,
-                }))
-              );
-              return items;
-            })
-            .flat(),
-        ]
-      );
+
       setStudyPlan((prev) => [
         ...prev,
         ...newItem.subjects
@@ -631,7 +602,6 @@ export const RootPage: React.FC = () => {
                   subjects: el.subjects.filter((sub) => sub.id !== id),
                 }))
               );
-              console.log(studyPlan.filter((el) => el.subjectId !== id));
               setStudyPlan((prev) => prev.filter((el) => el.subjectId !== id));
               closeAllModals();
             }}
@@ -901,7 +871,6 @@ export const RootPage: React.FC = () => {
                                 item.classId === el.id &&
                                 item.subjectId === subject.id
                             );
-                            console.log(val, subject, el);
                             if (!val) {
                               setStudyPlan((prev) => [
                                 ...prev,
@@ -1276,12 +1245,6 @@ export const RootPage: React.FC = () => {
                 );
               localStorage.setItem("teachers", JSON.stringify(teachers));
 
-              //
-              console.log(
-                classes.filter((el) =>
-                  initialClasses.find((item) => item.id === el.id)
-                )
-              );
               if (initialClasses.length)
                 await requestUpdateGroup(
                   formatGroups(

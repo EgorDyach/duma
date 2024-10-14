@@ -93,13 +93,12 @@ export const AddingSubjectModal: FC<AddingModalProps<SubjectItem>> = ({
             Аудитория
             <Dropdown
               options={auditories}
-              setSelectedOption={(n) => {
-                console.log(n);
+              setSelectedOption={(n) =>
                 setNewItem((prev) => ({
                   ...prev,
                   room: n as any,
-                }));
-              }}
+                }))
+              }
               selectedOption={newItem.room}
             />
           </StyledItemTitle>
