@@ -24,7 +24,9 @@ const StyledButton = styled.button<{
   $isEditing?: boolean;
   $size: TextButtonWithLabelSize;
 }>`
-  background-color: ${(props) => (props.$isEditing ? "#fff" : "#641AEE")};
+  /* background-color: ${(props) => (props.$isEditing ? "#fff" : "#641AEE")}; */
+  /* color: ${(props) => (props.$isEditing ? "#641AEE" : "#fff")}; */
+  background-color: #fff;
   width: 86px;
   padding: ${(props) => (props.$isEditing ? "7px 11px" : "11px")};
   border-radius: 9px;
@@ -34,7 +36,7 @@ const StyledButton = styled.button<{
     color 0.2s ease-in-out;
   cursor: pointer;
   max-width: ${(props) => txextButtonWithLabelSizes[props.$size]};
-  color: ${(props) => (props.$isEditing ? "#641AEE" : "#fff")};
+  color: #641aee;
   flex: 1;
 `;
 
@@ -125,7 +127,7 @@ const TextButtonWithLabel: FC<TextButtonWithLabelProps> = ({
             onKeyDown={handleKeyDown}
           />
         ) : (
-          <Text $size="small" $color="#fff">
+          <Text $size="small" $color="#641aee">
             {text}
           </Text>
         )}

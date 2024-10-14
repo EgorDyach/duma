@@ -31,6 +31,7 @@ export const fonts: FontData[] = [
 
 export const fontWeightsDict: Record<FontSize, number> = {
   small: 400,
+  medium: 400,
   default: 500,
   // TODO linar check weight
   big: 500,
@@ -43,6 +44,7 @@ export const fontWeightsDict: Record<FontSize, number> = {
 
 export const lineHeightDict = {
   small: "20px",
+  medium: "22px",
   default: "17px",
   big: "18px",
   subtitle: "28px",
@@ -55,6 +57,7 @@ export const lineHeightDict = {
 
 export const fontDict: Record<FontSize, string> = {
   small: "14px",
+  medium: "16px",
   default: "18px",
   big: "16px",
   title: "18px",

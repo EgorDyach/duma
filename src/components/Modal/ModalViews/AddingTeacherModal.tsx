@@ -165,7 +165,7 @@ export const AddingTeacherModal: FC<AddingModalProps<TeacherItem>> = ({
                                   ),
                                   {
                                     ...el,
-                                    type: "lecture",
+                                    type: "practice",
                                   },
                                 ],
                               }))

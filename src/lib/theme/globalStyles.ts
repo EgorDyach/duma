@@ -9,7 +9,7 @@ export const GlobalStyles = createGlobalStyle`
   }
 
   body {
-    background-color: #fff;
+    background-color: #242736;
     font-family: "Manrope", sans-serif;
     ${getFontSizes("default")}
   }

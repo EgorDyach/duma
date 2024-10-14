@@ -18,13 +18,14 @@ interface TextButtonProps {
   openEditing: VoidFunction;
   size?: TextButtonSize;
   style?: CSSProperties;
+  isActive?: boolean;
   textSize?: FontSize;
 }
 
 const StyledButton = styled.button<{
   $size: TextButtonSize;
+  $isActive: boolean;
 }>`
-  background-color: #fff;
   width: 100%;
   padding: 11px;
   border-radius: 9px;
@@ -34,19 +35,26 @@ const StyledButton = styled.button<{
     color 0.2s ease-in-out;
   cursor: pointer;
   max-width: ${(props) => textButtonSizes[props.$size]};
-  color: #fff;
+  background-color: ${(props) => (props.$isActive ? "#641AEE" : "#fff")};
+  color: ${(props) => (props.$isActive ? "#fff" : "#641AEE")};
 `;
 
 const TextButton: FC<TextButtonProps> = ({
   text,
+  isActive = false,
   openEditing,
   style,
   textSize = "default",
   size = "fullSize",
 }) => {
   return (
-    <StyledButton style={style} $size={size} onDoubleClick={openEditing}>
-      <Text $size={textSize} $color={"#641AEE"}>
+    <StyledButton
+      $isActive={isActive}
+      style={style}
+      $size={size}
+      onDoubleClick={openEditing}
+    >
+      <Text $size={textSize} $color={isActive ? "#fff" : "#641AEE"}>
         {text}
       </Text>
     </StyledButton>

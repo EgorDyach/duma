@@ -19,6 +19,7 @@ export interface IndentStylesProps {
 
 export type FontSize =
   | "small"
+  | "medium"
   | "default"
   | "big"
   | "title"

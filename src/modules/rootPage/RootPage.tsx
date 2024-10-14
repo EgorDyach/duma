@@ -53,13 +53,21 @@ import { formatAccounts } from "@lib/utils/data/formatAccounts";
 import { formatCoachingsUpdate } from "@lib/utils/data/formatCoachingsUpdate";
 import styled from "styled-components";
 import { formatFullName } from "@lib/utils/formatFullName";
-//
 
-export const StyledButton = styled.button<{ $isDelete?: boolean }>`
-  background: ${(props) => (props.$isDelete ? "#eb3942" : "transparent")};
-  border: 2px solid ${(props) => (props.$isDelete ? "#eb3942" : "#641aee")};
-  color: ${(props) => (props.$isDelete ? "#fff" : "#641aee")};
-  padding: 7px 37px;
+const Wrapper = styled(Flex)`
+  background-color: #fff;
+  flex-direction: column;
+  border-radius: 10px;
+  padding: 40px 35px;
+`;
+
+export const StyledButton = styled.button<{
+  $isActive?: boolean;
+}>`
+  background: ${(props) => (props.$isActive ? "#8348F1" : "#641aee")};
+  border: 2px solid ${(props) => (props.$isActive ? "#8348F1" : "#641aee")};
+  color: #fff;
+  padding: 10px 47px;
   border-radius: 12px;
   font-size: 18px;
   cursor: pointer;
@@ -79,7 +87,6 @@ export type TeacherItem = Item & {
     name: string;
     room: AuditoryItem | null;
     id: number;
-    time: number;
     type: "practice" | "lecture";
   }[];
 };
@@ -107,12 +114,13 @@ export type SubjectItem = Item & {
 export type StudyPlan = {
   classId: number;
   id: number;
-  subjectId: number | "total";
+  subjectId: number;
   value: number;
 };
 
 export const RootPage: React.FC = () => {
   const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const [isTeacherModalOpen, setIsTeacherModalOpen] = useState(false);
   const [isClassModalOpen, setIsClassModalOpen] = useState(false);
   const [isAuditoryModalOpen, setIsAuditoryModalOpen] = useState(false);
@@ -372,6 +380,7 @@ export const RootPage: React.FC = () => {
   const handleAddTeacher = async (newItem: TeacherItem) => {
     try {
       setTeacherEditValue(null);
+      console.log("teacher", newItem);
       setTeachers((prevItems) => [
         ...prevItems.filter((el) => el.id !== newItem.id),
         {
@@ -383,15 +392,19 @@ export const RootPage: React.FC = () => {
           ),
         },
       ]);
-      setSubjects((prev) => [
-        ...prev.filter(
-          (subject) => !newItem.subjects.map((el) => el.id).includes(subject.id)
-        ),
+      const formattedSubjects = removeDuplicates([
+        ...subjects.filter((subject) => {
+          console.log(
+            !(subject.teacher && newItem.id === subject.teacher[0].id)
+          );
+          return !(subject.teacher && newItem.id === subject.teacher[0].id);
+        }),
         ...newItem.subjects.map((subject) => ({
           ...subject,
           teacher: [
             {
               ...newItem,
+              subjects: [],
               name: formatFullName(
                 newItem.surName,
                 newItem.firstName,
@@ -402,10 +415,20 @@ export const RootPage: React.FC = () => {
           dependsOn: [] as [],
         })),
       ]);
-      if (!teacherEditValue)
-        setStudyPlan((prev) => [
-          ...prev,
+      setSubjects(formattedSubjects);
+
+      setStudyPlan((prev) => [
+        ...prev.filter((studyItem) =>
+          formattedSubjects.map((el) => el.id).includes(studyItem.subjectId)
+        ),
+      ]);
+      console.log(
+        newItem.subjects.filter((el) =>
+          studyPlan.map((i) => i.subjectId).includes(el.id)
+        ),
+        [
           ...newItem.subjects
+            .filter((el) => !studyPlan.map((i) => i.subjectId).includes(el.id))
             .map((subject, index2) => {
               const items: StudyPlan[] = [];
               items.push(
@@ -419,7 +442,26 @@ export const RootPage: React.FC = () => {
               return items;
             })
             .flat(),
-        ]);
+        ]
+      );
+      setStudyPlan((prev) => [
+        ...prev,
+        ...newItem.subjects
+          .filter((el) => !studyPlan.map((i) => i.subjectId).includes(el.id))
+          .map((subject, index2) => {
+            const items: StudyPlan[] = [];
+            items.push(
+              ...classes.map((el, index) => ({
+                classId: el.id,
+                subjectId: subject.id,
+                value: 0,
+                id: new Date().getTime() + index + index2 + index2 + 2,
+              }))
+            );
+            return items;
+          })
+          .flat(),
+      ]);
       closeAllModals();
     } catch (error) {
       alert(error);
@@ -447,12 +489,6 @@ export const RootPage: React.FC = () => {
           value: 0,
           id: new Date().getTime() + index,
         })),
-        {
-          classId: newItem.id,
-          subjectId: "total",
-          id: 0,
-          value: 0,
-        },
       ]);
     closeAllModals();
   };
@@ -474,14 +510,19 @@ export const RootPage: React.FC = () => {
   };
 
   const handleAddSubject = (newItem: SubjectItem) => {
-    // if (subjectEditValue) {
-    //   console.log(newItem, subjects);
-    //   setSubjects((prevItems) => [
-    //     ...prevItems.filter((el) => el.id !== newItem.id),
-    //   ]);
-    //   setSubjectEditValue(null);
-    // }
-    setTeachers((prev) => [...prev]);
+    setTeachers((prev) =>
+      prev.map((el) =>
+        !newItem.teacher || newItem.teacher[0].id !== el.id
+          ? el
+          : {
+              ...el,
+              subjects: [
+                ...el.subjects.filter((sub) => sub.id !== newItem.id),
+                newItem,
+              ],
+            }
+      )
+    );
     setSubjects((prevItems) => [
       ...prevItems.filter((el) => el.id !== newItem.id),
       newItem,
@@ -501,7 +542,7 @@ export const RootPage: React.FC = () => {
   };
 
   return (
-    <div>
+    <Wrapper>
       {isTeacherModalOpen && (
         <Portal elementId="overlay">
           <Backdrop />
@@ -584,6 +625,13 @@ export const RootPage: React.FC = () => {
             auditories={auditories.filter((el) => el.id !== 666)}
             handleDelete={(id) => {
               setSubjects((prev) => prev.filter((el) => el.id !== id));
+              setTeachers((prev) =>
+                prev.map((el) => ({
+                  ...el,
+                  subjects: el.subjects.filter((sub) => sub.id !== id),
+                }))
+              );
+              console.log(studyPlan.filter((el) => el.subjectId !== id));
               setStudyPlan((prev) => prev.filter((el) => el.subjectId !== id));
               closeAllModals();
             }}
@@ -783,10 +831,11 @@ export const RootPage: React.FC = () => {
               <StudyPlanButton
                 text={"Дисциплина\\Класс"}
                 size="large"
-                isActive={false}
+                isActive
               />
               {classes.map((el) => (
                 <TextButton
+                  isActive
                   style={{ flex: 1 }}
                   text={el.name}
                   size="fullSize"
@@ -804,7 +853,12 @@ export const RootPage: React.FC = () => {
                   <Flex gap="7px" key={subject.id}>
                     <TextButton
                       textSize="small"
-                      style={{ flex: 10 }}
+                      isActive
+                      style={{
+                        flex: 10,
+                        backgroundColor:
+                          subject.type === "practice" ? "#8348F1" : "#641AEE",
+                      }}
                       text={
                         subject.name +
                         (() => {
@@ -894,7 +948,7 @@ export const RootPage: React.FC = () => {
                   textSize="small"
                   text={`Все дисциплины (${subjects.length})`}
                   size="large"
-                  isActive={false}
+                  isActive
                 />
                 {classes.map((el) => (
                   <TextButton
@@ -950,8 +1004,9 @@ export const RootPage: React.FC = () => {
         </Flex>
         <DateRangeComponent>{getDateRange(period)}</DateRangeComponent>
       </Flex> */}
-      <Flex gap="16px" align="center" $top="large">
+      <Flex gap="16px" justify="end" align="center" $top="large">
         <StyledButton
+          $isActive
           onClick={async () => {
             try {
               fetch("https://puzzlesignlanguage.online/generate", {
@@ -970,7 +1025,9 @@ export const RootPage: React.FC = () => {
           Сгенерировать
         </StyledButton>
         <StyledButton
+          $isActive={false}
           onClick={async () => {
+            setIsLoading(true);
             const subjectsErrors: SubjectItem[] = [];
             const groupsErrors: ClassItem[] = [];
             subjects.forEach((el) => {
@@ -1277,48 +1334,20 @@ export const RootPage: React.FC = () => {
               alert("saved!");
             } catch (e) {
               alert(e);
+            } finally {
+              setIsLoading(false);
             }
           }}
+          disabled={isLoading}
         >
-          save
-        </StyledButton>
-        <StyledButton
-          onClick={() => {
-            const formatedClasses = formatGroups(
-              initialClasses.filter(
-                (el) => !classes.find((item) => item.id === el.id)
-              )
-            );
-            const formatedCoaches = formatCoachingsUpdate(
-              subjects,
-              serverStudyPlan.filter(
-                (el) => !studyPlan.find((item) => item.id === el.id)
-              )
-            );
-            // await requestDeleteGroup(formatedClasses);
-            // await requestDeleteCoach(formatedCoaches);
-            console.log(
-              formatedClasses,
-              formatedCoaches,
-              serverStudyPlan,
-              studyPlan,
-              serverCoachLessons
-                .filter((el) =>
-                  formatedCoaches.find((coach) => coach.id === el.CoachingID)
-                )
-                .map((el) => ({
-                  coachingID: el.CoachingID,
-                  teacherID: el.TeacherID,
-                  id: el.ID,
-                }))
-            );
-          }}
-        >
-          Log
+          <Flex align="center" gap="10px">
+            {isLoading && <ContentLoader size={16} color="#fff" />}
+            Сохранить
+          </Flex>
         </StyledButton>
       </Flex>
       <Flex $top="medium">{error && <span color="red">{error}</span>}</Flex>
-    </div>
+    </Wrapper>
   );
 };
 

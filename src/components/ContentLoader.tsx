@@ -11,12 +11,12 @@ export const CircleContainer = styled.div<{
   width: ${(props) => props.$size}px;
 `;
 
-export const CircleProgress = styled.div`
+export const CircleProgress = styled.div<{ $color?: string }>`
   position: absolute;
   height: 100%;
   width: 100%;
   border-radius: 50%;
-  border: 2px solid #fff;
+  border: 2px solid ${(props) => props.$color || content.primary};
   border-radius: 50%;
 
   &::before {
@@ -45,12 +45,13 @@ export const CircleProgress = styled.div`
 
 interface ContentLoaderProps {
   size?: number;
+  color?: string;
 }
 
-const ContentLoader: FC<ContentLoaderProps> = ({ size = 48 }) => (
+const ContentLoader: FC<ContentLoaderProps> = ({ size = 48, color }) => (
   <Flex justify="center">
     <CircleContainer $size={size}>
-      <CircleProgress />
+      <CircleProgress $color={color} />
     </CircleContainer>
   </Flex>
 );
