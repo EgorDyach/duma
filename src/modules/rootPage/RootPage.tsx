@@ -61,6 +61,7 @@ import toast from "react-hot-toast";
 import axios from "axios";
 import { GenerateModal } from "@components/Modal/ModalViews/GenerateModal";
 import { AddingLessonTimesModal } from "@components/Modal/ModalViews/AddingLessonTimesModal";
+import { convertUtcToMsk } from "@lib/utils/convertTime";
 
 const Wrapper = styled(Flex)`
   background-color: #fff;
@@ -715,10 +716,11 @@ export const RootPage: React.FC = () => {
                   },
                   method: "POST",
                   body: JSON.stringify({
-                    start_date: start.toISOString(),
-                    end_date: end.toISOString(),
+                    start_date: convertUtcToMsk(start.toISOString()),
+                    end_date: convertUtcToMsk(end.toISOString()),
                   }),
                 });
+                toast.success("Расписание сгенерировано успешно!");
                 closeAllModals();
               } catch (error) {
                 toast.error("Не удалось сгенерировать " + `(${error})`);
