@@ -26,6 +26,7 @@ export const validateAuditory = (item: AuditoryItem): string => {
 
 export const validateSubject = (item: SubjectItem): string => {
   if (!item.name) return "Введите название дисциплины!";
+  if (!item.teacher?.length) return "Необходимо прекрепить учителя!";
   if (!item.teacher) return "Укажите учителя!";
   return "";
 };
