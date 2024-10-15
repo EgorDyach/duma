@@ -2,6 +2,7 @@ import { RouterProvider } from "react-router-dom";
 import { appRoutersConfig } from "@lib/configs/RouterConfig";
 import { GlobalStyles } from "@lib/theme/globalStyles";
 import { Toaster } from "react-hot-toast";
+import "react-datepicker/dist/react-datepicker.css";
 
 function App() {
   return (

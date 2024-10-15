@@ -14,7 +14,6 @@ export const StyledModalWrap = styled.div<{ $size: ModalWidth }>(
     width: inherit;
     outline: 0;
     height: 100%;
-    overflow-y: auto;
     padding: 20px 0;
     align-content: center;
   `

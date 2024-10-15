@@ -55,6 +55,7 @@ import styled from "styled-components";
 import { formatFullName } from "@lib/utils/formatFullName";
 import toast from "react-hot-toast";
 import axios from "axios";
+import { GenerateModal } from "@components/Modal/ModalViews/GenerateModal";
 
 const Wrapper = styled(Flex)`
   background-color: #fff;
@@ -127,6 +128,7 @@ export const RootPage: React.FC = () => {
   const [isClassModalOpen, setIsClassModalOpen] = useState(false);
   const [isAuditoryModalOpen, setIsAuditoryModalOpen] = useState(false);
   const [isSubjectModalOpen, setIsSubjectModalOpen] = useState(false);
+  const [isGeneratingModalOpen, setIsGeneratingModalOpen] = useState(false);
   const [areTeachersLoading, setAreTeachersLoading] = useState(false);
   const [areClassesLoading, setAreClassesLoading] = useState(false);
   const [areAuditoriesLoading, setAreAuditoriesLoading] = useState(false);
@@ -400,6 +402,7 @@ export const RootPage: React.FC = () => {
     setIsClassModalOpen(false);
     setIsAuditoryModalOpen(false);
     setIsSubjectModalOpen(false);
+    setIsGeneratingModalOpen(false);
   };
 
   const handleAddTeacher = async (newItem: TeacherItem) => {
@@ -630,6 +633,35 @@ export const RootPage: React.FC = () => {
             initValue={subjectEditValue}
             onConfirm={handleAddSubject}
             hideModal={closeAllModals}
+          />
+        </Portal>
+      )}
+      {isGeneratingModalOpen && (
+        <Portal elementId="overlay">
+          <Backdrop />
+          <GenerateModal
+            handleGenerate={async (start, end) => {
+              if (!start || !end) {
+                toast.error("Необходимо ввести начальную и конечную даты.");
+                return;
+              }
+              try {
+                await fetch("https://puzzlesignlanguage.online/generate", {
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  method: "POST",
+                  body: JSON.stringify({
+                    start_date: start.toISOString(),
+                    end_date: end.toISOString(),
+                  }),
+                });
+                closeAllModals();
+              } catch (error) {
+                toast.error("Не удалось сгенерировать " + `(${error})`);
+              }
+            }}
+            hideModal={() => setIsGeneratingModalOpen(false)}
           />
         </Portal>
       )}
@@ -978,9 +1010,33 @@ export const RootPage: React.FC = () => {
                 }
           }
           onClick={async () => {
-            toast("Скачивание находится в разработке...", {
-              icon: "🧑🏻‍💻",
-            });
+            try {
+              await fetch("https://puzzlesignlanguage.online/xlsx_download", {
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                method: "GET",
+              })
+                .then((resp) =>
+                  resp.status === 200
+                    ? resp.blob()
+                    : Promise.reject("Возникла неизвестная ошибка...")
+                )
+                .then((blob) => {
+                  const url = window.URL.createObjectURL(blob);
+                  const a = document.createElement("a");
+                  a.style.display = "none";
+                  a.href = url;
+                  a.download = "Расписание.xlsx";
+                  document.body.appendChild(a);
+                  a.click();
+                  window.URL.revokeObjectURL(url);
+                  toast.success("Файл успешно скачен!");
+                })
+                .catch(() => toast.error("Не удалось скачать!"));
+            } catch (error) {
+              toast.error("Не удалось скачать " + `(${error})`);
+            }
           }}
         >
           Скачать
@@ -997,22 +1053,7 @@ export const RootPage: React.FC = () => {
                 }
           }
           $isActive
-          onClick={async () => {
-            try {
-              await fetch("https://puzzlesignlanguage.online/generate", {
-                headers: {
-                  "Content-Type": "application/json",
-                },
-                method: "POST",
-                body: JSON.stringify({
-                  start_date: "2024-02-01T00:00:00.000Z",
-                  end_date: "2024-05-01T00:00:00.000Z",
-                }),
-              });
-            } catch (error) {
-              toast.error("Не удалось сгенерировать " + `(${error})`);
-            }
-          }}
+          onClick={() => setIsGeneratingModalOpen(true)}
         >
           Сгенерировать
         </StyledButton>
