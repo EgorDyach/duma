@@ -19,7 +19,7 @@ const StyledButton = styled.button`
 const StyledMultiDropdown = styled.ul`
   position: absolute;
   padding: 6px;
-  bottom: -33px;
+  bottom: -82px;
   height: 180px;
   transform: translateY(50%);
   left: 0;
@@ -60,6 +60,7 @@ const MultiDropdown: React.FC<
     } else {
       setSelectedOptions([...selectedOptions, option]);
     }
+    setIsOpen(false);
   };
 
   const dropdownRef = useRef<HTMLUListElement>(null);

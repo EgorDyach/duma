@@ -18,9 +18,9 @@ const StyledButton = styled.button`
 const StyledDropdown = styled.ul`
   position: absolute;
   padding: 9px;
-  bottom: -52px;
+  bottom: -90px;
   max-height: 180px;
-  height: 100px;
+  height: 180px;
   transform: translateY(50%);
   left: 0;
   margin: 0;
@@ -29,7 +29,7 @@ const StyledDropdown = styled.ul`
   background: #f0f0f7;
   overflow-y: scroll;
   max-width: 280px;
-  width: 100%;
+  width: 230px;
   text-align: center;
   z-index: 1000;
 `;

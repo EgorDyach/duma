@@ -54,6 +54,7 @@ import { formatCoachingsUpdate } from "@lib/utils/data/formatCoachingsUpdate";
 import styled from "styled-components";
 import { formatFullName } from "@lib/utils/formatFullName";
 import toast from "react-hot-toast";
+import axios from "axios";
 
 const Wrapper = styled(Flex)`
   background-color: #fff;
@@ -120,7 +121,6 @@ export type StudyPlan = {
 };
 
 export const RootPage: React.FC = () => {
-  const [error, setError] = useState("");
   const [isServerLive, setIsServerLive] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isTeacherModalOpen, setIsTeacherModalOpen] = useState(false);
@@ -216,7 +216,14 @@ export const RootPage: React.FC = () => {
   useEffect(() => {
     const getStatus = async () => {
       try {
-        const res = await fetch("https://puzzlesignlanguage.online/status");
+        const res = await axios.get(
+          "https://puzzlesignlanguage.online/status",
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
         if (
           Math.floor(res.status / 100) === 2 ||
           Math.floor(res.status / 100) === 3
@@ -957,36 +964,6 @@ export const RootPage: React.FC = () => {
           />
         </>
       )}
-      {/* <Flex gap="10px" align="start" direction="column" $top="medium">
-        <Title>Диапозон формирования</Title>
-        <Flex style={{ width: "100%" }} gap="10px">
-          <StyledModalButton
-            $active={period === "quarter"}
-            onClick={() => setPeriod("quarter")}
-          >
-            1 четверть
-          </StyledModalButton>
-          <StyledModalButton
-            $active={period === "semester"}
-            onClick={() => setPeriod("semester")}
-          >
-            1 семестр
-          </StyledModalButton>
-          <StyledModalButton
-            $active={period === "halfYear"}
-            onClick={() => setPeriod("halfYear")}
-          >
-            Полгода
-          </StyledModalButton>
-          <StyledModalButton
-            $active={period === "year"}
-            onClick={() => setPeriod("year")}
-          >
-            Год
-          </StyledModalButton>
-        </Flex>
-        <DateRangeComponent>{getDateRange(period)}</DateRangeComponent>
-      </Flex> */}
       <Flex gap="16px" justify="end" align="center" $top="large">
         <StyledButton
           $isActive
@@ -1049,9 +1026,13 @@ export const RootPage: React.FC = () => {
               if (!el.teacher || !el.teacher.length) subjectsErrors.push(el);
             });
             if (subjectsErrors.length) {
-              setError(
-                `Необходимо прикрепить учителя к следующим предметам: ${subjectsErrors.map((el) => el.name).join(", ")}`
+              toast.error(
+                `Необходимо прикрепить учителя к следующим предметам: ${subjectsErrors.map((el) => el.name).join(", ")}`,
+                {
+                  duration: 6500,
+                }
               );
+              setIsLoading(false);
               return;
             }
 
@@ -1059,13 +1040,25 @@ export const RootPage: React.FC = () => {
               if (!el.account) groupsErrors.push(el);
             });
             if (groupsErrors.length) {
-              setError(
+              toast.error(
                 `Необходимо прикрепить профиль к следующим группам: ${groupsErrors.map((el) => el.name).join(", ")}`
               );
+              setIsLoading(false);
+
               return;
             }
 
             try {
+              if (!initialAuditories.map((el) => el.id).includes(666)) {
+                await requestCreateRoom([
+                  {
+                    capacity: 0,
+                    id: 666,
+                    name: "ПУСТОТА",
+                    profiles: [],
+                  },
+                ]);
+              }
               await requestCreateAccounts(
                 formatAccounts(
                   accounts.filter(
@@ -1355,7 +1348,6 @@ export const RootPage: React.FC = () => {
           </Flex>
         </StyledButton>
       </Flex>
-      <Flex $top="medium">{error && <span color="red">{error}</span>}</Flex>
     </Wrapper>
   );
 };
