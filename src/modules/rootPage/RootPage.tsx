@@ -40,6 +40,10 @@ import {
   requestDeleteRoom,
   requestDeleteGroup,
   requestDeleteAccounts,
+  requestAllLessonTimes,
+  requestCreateLessonTimes,
+  requestDeleteLessonTimes,
+  requestUpdateLessonTimes,
 } from "@lib/api";
 import { formatAuditories } from "@lib/utils/data/formatAuditories";
 import { formatTeachers } from "@lib/utils/data/formatTeacher";
@@ -56,6 +60,7 @@ import { formatFullName } from "@lib/utils/formatFullName";
 import toast from "react-hot-toast";
 import axios from "axios";
 import { GenerateModal } from "@components/Modal/ModalViews/GenerateModal";
+import { AddingLessonTimesModal } from "@components/Modal/ModalViews/AddingLessonTimesModal";
 
 const Wrapper = styled(Flex)`
   background-color: #fff;
@@ -114,6 +119,12 @@ export type SubjectItem = Item & {
   dependsOn: [];
 };
 
+export type LessonTime = {
+  ID: number;
+  StartTime: string;
+  EndTime: string;
+};
+
 export type StudyPlan = {
   classId: number;
   id: number;
@@ -125,10 +136,12 @@ export const RootPage: React.FC = () => {
   const [isServerLive, setIsServerLive] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isTeacherModalOpen, setIsTeacherModalOpen] = useState(false);
+  const [isLessonTimeModalOpen, setIsLessonTimeModalOpen] = useState(false);
   const [isClassModalOpen, setIsClassModalOpen] = useState(false);
   const [isAuditoryModalOpen, setIsAuditoryModalOpen] = useState(false);
   const [isSubjectModalOpen, setIsSubjectModalOpen] = useState(false);
   const [isGeneratingModalOpen, setIsGeneratingModalOpen] = useState(false);
+  const [areLessonTimesLoading, setAreLessonTimesLoading] = useState(false);
   const [areTeachersLoading, setAreTeachersLoading] = useState(false);
   const [areClassesLoading, setAreClassesLoading] = useState(false);
   const [areAuditoriesLoading, setAreAuditoriesLoading] = useState(false);
@@ -143,6 +156,8 @@ export const RootPage: React.FC = () => {
   const [subjectEditValue, setSubjectEditValue] = useState<null | SubjectItem>(
     null
   );
+  const [lessonTimeEditValue, setLessonTimeEditValue] =
+    useState<null | LessonTime>(null);
   const [initialTeachers, setInitialTeachers] = useState<TeacherItem[]>([]);
   const [teachers, setTeachers] = useState<TeacherItem[]>([]);
   const [initialClasses, setInitialClasses] = useState<ClassItem[]>([]);
@@ -153,6 +168,10 @@ export const RootPage: React.FC = () => {
   const [auditories, setAuditories] = useState<AuditoryItem[]>([]);
   const [initialAccounts, setInitialAccounts] = useState<Item[]>([]);
   const [accounts, setAccounts] = useState<Item[]>([]);
+  const [initialLessonTimes, setInitialLessonTimes] = useState<LessonTime[]>(
+    []
+  );
+  const [lessonTimes, setLessonTimes] = useState<LessonTime[]>([]);
 
   const [initialSubjects, setInitialSubjects] = useState<SubjectItem[]>([]);
   const [subjects, setSubjects] = useState<SubjectItem[]>([]);
@@ -250,6 +269,7 @@ export const RootPage: React.FC = () => {
       setAreSubjectsLoading(true);
       setAreAuditoriesLoading(true);
       setAreAccountsLoading(true);
+      setAreLessonTimesLoading(true);
       try {
         const res = await requestAllAccounts();
         const newAccounts = res.message.map((el) => ({
@@ -285,7 +305,21 @@ export const RootPage: React.FC = () => {
         setClasses(newClasses);
         setInitialClasses(newClasses);
         setAreClassesLoading(false);
-
+        const resLessonTimes = await requestAllLessonTimes();
+        setLessonTimes(
+          resLessonTimes.message.map(({ ID, StartTime, EndTime }) => ({
+            ID,
+            StartTime,
+            EndTime,
+          }))
+        );
+        setInitialLessonTimes(
+          resLessonTimes.message.map(({ ID, StartTime, EndTime }) => ({
+            ID,
+            StartTime,
+            EndTime,
+          }))
+        );
         const resTeachers = await requestAllTeacher();
         const resSubjects = await requestAllSubjects();
         const resCoaches = await requestAllCoaches();
@@ -384,6 +418,7 @@ export const RootPage: React.FC = () => {
       } catch (e) {
         toast.error(e as string);
       } finally {
+        setAreLessonTimesLoading(false);
         setAreSubjectsLoading(false);
         setAreTeachersLoading(false);
         setAreAuditoriesLoading(false);
@@ -398,11 +433,13 @@ export const RootPage: React.FC = () => {
     setClassEditValue(null);
     setAuditoryEditValue(null);
     setSubjectEditValue(null);
+    setLessonTimeEditValue(null);
     setIsTeacherModalOpen(false);
     setIsClassModalOpen(false);
     setIsAuditoryModalOpen(false);
     setIsSubjectModalOpen(false);
     setIsGeneratingModalOpen(false);
+    setIsLessonTimeModalOpen(false);
   };
 
   const handleAddTeacher = async (newItem: TeacherItem) => {
@@ -501,6 +538,18 @@ export const RootPage: React.FC = () => {
     }
 
     setAuditories((prevItems) => [...prevItems, newItem]);
+    closeAllModals();
+  };
+
+  const handleAddLessonTime = async (newItem: LessonTime) => {
+    if (lessonTimeEditValue) {
+      setLessonTimes((prevItems) => [
+        ...prevItems.filter((el) => el.ID !== newItem.ID),
+      ]);
+      setLessonTimeEditValue(null);
+    }
+
+    setLessonTimes((prevItems) => [...prevItems, newItem]);
     closeAllModals();
   };
 
@@ -632,6 +681,20 @@ export const RootPage: React.FC = () => {
             teachers={teachers}
             initValue={subjectEditValue}
             onConfirm={handleAddSubject}
+            hideModal={closeAllModals}
+          />
+        </Portal>
+      )}
+      {isLessonTimeModalOpen && (
+        <Portal elementId="overlay">
+          <Backdrop />
+          <AddingLessonTimesModal
+            handleDelete={(id) => {
+              setLessonTimes((prev) => prev.filter((el) => el.ID !== id));
+              closeAllModals();
+            }}
+            initValue={lessonTimeEditValue}
+            onConfirm={handleAddLessonTime}
             hideModal={closeAllModals}
           />
         </Portal>
@@ -996,6 +1059,50 @@ export const RootPage: React.FC = () => {
           />
         </>
       )}
+      <Flex flex="2" direction="column" gap="8px" align="start">
+        <Title action={() => setIsLessonTimeModalOpen(true)}>Время урока</Title>
+        {areLessonTimesLoading && <ContentLoader size={32} />}
+        {!areLessonTimesLoading && (
+          <Flex
+            wrap="wrap"
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              maxHeight: "calc(1 * 42px)",
+              overflowX: "auto",
+              alignContent: "start",
+              width: "100%",
+            }}
+            justify="start"
+            basis="24%"
+            gap="11px"
+          >
+            {lessonTimes
+              .sort(
+                (a, b) =>
+                  Number(a.StartTime.split(":")[0]) * 60 +
+                  Number(a.StartTime.split(":")[1]) -
+                  Number(b.StartTime.split(":")[0]) * 60 +
+                  Number(b.StartTime.split(":")[1])
+              )
+              .filter((el) => el.ID !== 666)
+              .map((item) => {
+                console.log(item);
+                return (
+                  <TextButton
+                    key={item.ID}
+                    text={`${item.StartTime} – ${item.EndTime}`}
+                    size="large"
+                    openEditing={() => {
+                      setIsLessonTimeModalOpen(true);
+                      setLessonTimeEditValue(item);
+                    }}
+                  />
+                );
+              })}
+          </Flex>
+        )}
+      </Flex>
       <Flex gap="16px" justify="end" align="center" $top="large">
         <StyledButton
           $isActive
@@ -1191,6 +1298,12 @@ export const RootPage: React.FC = () => {
                 )
               );
 
+              await requestCreateLessonTimes(
+                lessonTimes.filter(
+                  (el) => !initialLessonTimes.map((l) => l.ID).includes(el.ID)
+                )
+              );
+
               //
               //
               //
@@ -1295,14 +1408,20 @@ export const RootPage: React.FC = () => {
                   )
                 );
               }
+              if (initialLessonTimes.length) {
+                await requestDeleteLessonTimes(
+                  initialLessonTimes.filter(
+                    (item) => !lessonTimes.map((l) => l.ID).includes(item.ID)
+                  )
+                );
+              }
               //
               //
               //
               //
               //
 
-              if (initialAccounts.length)
-                await requestUpdateAccounts(formatAccounts(accounts));
+              await requestUpdateAccounts(formatAccounts(accounts));
               localStorage.setItem("accounts", JSON.stringify(accounts));
 
               if (initialTeachers.length)
@@ -1371,6 +1490,12 @@ export const RootPage: React.FC = () => {
                   )
                 );
               localStorage.setItem("studyPlan", JSON.stringify(studyPlan));
+
+              await requestUpdateLessonTimes(
+                lessonTimes.filter((el) =>
+                  initialLessonTimes.map((l) => l.ID).includes(el.ID)
+                )
+              );
 
               //
 

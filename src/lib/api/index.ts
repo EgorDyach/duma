@@ -1,4 +1,5 @@
 import { Account } from "@lib/utils/data/formatAccounts";
+import { LessonTime } from "@modules/rootPage/RootPage";
 import {
   Room,
   Coaching,
@@ -370,4 +371,61 @@ export const requestAllAccounts = async (): Promise<
     },
     method: "GET",
   }).then(async (res) => await res.json());
+};
+
+export const requestCreateLessonTimes = async (
+  data: LessonTime[]
+): Promise<void> => {
+  await fetch("https://puzzlesignlanguage.online/api/v1/create/lessontime", {
+    headers: {
+      "Content-Type": "application/json",
+    },
+    method: "POST",
+    body: JSON.stringify(data),
+  });
+};
+
+export const requestDeleteLessonTimes = async (
+  data: LessonTime[]
+): Promise<void> => {
+  await fetch("https://puzzlesignlanguage.online/api/v1/delete/lessontime", {
+    headers: {
+      "Content-Type": "application/json",
+    },
+    method: "DELETE",
+    body: JSON.stringify(data),
+  });
+};
+export const requestUpdateLessonTimes = async (
+  data: LessonTime[]
+): Promise<void> => {
+  await fetch("https://puzzlesignlanguage.online/api/v1/update/lessontime", {
+    headers: {
+      "Content-Type": "application/json",
+    },
+    method: "PUT",
+    body: JSON.stringify(data),
+  });
+};
+
+export const requestAllLessonTimes = async (): Promise<
+  Response<
+    {
+      ID: number;
+      CreatedAt: string;
+      UpdatedAt: string;
+      StartTime: string;
+      EndTime: string;
+    }[]
+  >
+> => {
+  return await fetch(
+    "https://puzzlesignlanguage.online/api/v1/get/lessontime",
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      method: "GET",
+    }
+  ).then(async (res) => await res.json());
 };
