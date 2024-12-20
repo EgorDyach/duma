@@ -37,8 +37,8 @@ const InputWithLabel: React.FC<InputWithLabelProps> = ({
   };
 
   return (
-    <Flex align="center" direction="column">
-      <StyledWrapper align="center">
+    <Flex direction="column">
+      <StyledWrapper>
         <StyledInput
           type="text" // Изменяем тип на text для фильтрации ввода
           value={value}

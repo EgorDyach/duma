@@ -46,10 +46,14 @@ const ButtonContainer = styled.button`
 `;
 
 const Button: FC<
-  PropsWithChildren & { onClick: VoidFunction; isLoading: boolean }
-> = ({ children, onClick, isLoading }) => {
+  PropsWithChildren & {
+    onClick: VoidFunction;
+    isLoading: boolean;
+    lowPadding?: boolean;
+  }
+> = ({ children, onClick, isLoading, lowPadding }) => {
   return (
-    <ButtonContainer onClick={onClick}>
+    <ButtonContainer onClick={onClick} style={{ height: lowPadding ? 32 : 55 }}>
       {" "}
       {isLoading && <Spinner />}
       {!isLoading && children}

@@ -21,9 +21,10 @@ const Input: React.FC<InputProps> = ({
   suffix,
   onBlur,
   onFocus,
+  ...props
 }) => {
   return (
-    <Flex direction="column">
+    <Flex direction="column" {...props}>
       <Flex
         justify="space-between"
         direction="row"
