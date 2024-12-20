@@ -1,4 +1,4 @@
-import { TeacherItem } from "./RootPage";
+import { TeacherItem } from "@type/studyPlan";
 
 export const validateTeacher = (item: TeacherItem): string => {
   if (!item.name) return "Введите имя учителя!";

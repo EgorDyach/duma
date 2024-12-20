@@ -1,14 +1,14 @@
 import { Account } from "@lib/utils/data/formatAccounts";
-import { LessonTime } from "@modules/rootPage/RootPage";
+import { Response } from "@type/common";
+import { LessonTime } from "@type/studyPlan";
 import {
   Room,
+  Teacher,
+  Group,
+  Subject,
   Coaching,
   CoachLesson,
-  Group,
-  Response,
-  Subject,
-  Teacher,
-} from "@type/common";
+} from "@type/studyPlanServer";
 
 export const requestCreateRoom = async (auditories: Room[]): Promise<void> => {
   await fetch("https://puzzlesignlanguage.online/api/v1/create/Room", {

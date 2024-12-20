@@ -10,11 +10,11 @@ import {
   StyledModalButtons,
   StyledModalAdd,
 } from "../ModalStyles";
-import { AccountItem, AuditoryItem } from "@modules/rootPage/RootPage";
 import { validateAuditory } from "./helpers";
 import { Text } from "@components/Typography";
 import InputWithLabel from "@components/InputWithLabel";
 import MultiDropdown from "@components/MultiDropdown";
+import { AccountItem, AuditoryItem } from "@type/studyPlan";
 
 interface AddingModalProps<T> {
   onConfirm: (newItem: T) => void;

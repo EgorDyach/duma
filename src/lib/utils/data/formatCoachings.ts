@@ -1,5 +1,5 @@
-import { StudyPlan, SubjectItem } from "@modules/rootPage/RootPage";
-import { Coaching } from "@type/common";
+import { SubjectItem, StudyPlan } from "@type/studyPlan";
+import { Coaching } from "@type/studyPlanServer";
 import { generateIds } from "../generateIds";
 
 export const formatCoachings = (

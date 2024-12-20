@@ -11,15 +11,11 @@ import {
   StyledModalButton,
   StyledModalAdd,
 } from "../ModalStyles";
-import {
-  AuditoryItem,
-  SubjectItem,
-  TeacherItem,
-} from "@modules/rootPage/RootPage";
 import { validateSubject } from "./helpers";
 import { Text } from "@components/Typography";
 import MultiDropdown from "@components/MultiDropdown";
 import Dropdown from "@components/Dropdown";
+import { AuditoryItem, TeacherItem, SubjectItem } from "@type/studyPlan";
 
 interface AddingModalProps<T> {
   onConfirm: (newItem: T) => void;

@@ -1,5 +1,5 @@
-import { ClassItem } from "@modules/rootPage/RootPage";
-import { Group } from "@type/common";
+import { ClassItem } from "@type/studyPlan";
+import { Group } from "@type/studyPlanServer";
 
 export const formatGroups = (classes: ClassItem[]): Group[] => {
   return classes.map(({ id, name, shift, account, count }) => ({

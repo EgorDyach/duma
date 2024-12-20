@@ -8,10 +8,10 @@ import {
   StyledModalButtons,
   StyledModalAdd,
 } from "../ModalStyles";
-import { LessonTime } from "@modules/rootPage/RootPage";
 import { validateLessonTime } from "./helpers";
 import { Text } from "@components/Typography";
 import styled from "styled-components";
+import { LessonTime } from "@type/studyPlan";
 
 interface AddingModalProps<T> {
   onConfirm: (newItem: T) => void;

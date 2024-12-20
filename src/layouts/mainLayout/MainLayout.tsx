@@ -1,6 +1,5 @@
 import Flex from "@components/Flex";
 import { Text } from "@components/Typography";
-import Button from "@modules/authPage/Button";
 import { FC, PropsWithChildren } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import styled from "styled-components";

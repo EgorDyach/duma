@@ -4,7 +4,7 @@ import ContentLoader from "@components/ContentLoader";
 import Flex from "@components/Flex";
 import { Title } from "@components/Title";
 import { SetState } from "@type/common";
-import { AuditoryItem, ClassItem, Item } from "@type/StudyPlan";
+import { Item, ClassItem, AuditoryItem } from "@type/studyPlan";
 import { FC, useState } from "react";
 
 interface AccountModuleProps {
@@ -20,7 +20,7 @@ export const AccountModule: FC<AccountModuleProps> = ({
   setClasses,
   setAuditories,
 }) => {
-  const [areAccountsLoading, setAreAccontsLoading] = useState(true);
+  const [areAccountsLoading] = useState(true);
   return (
     <Flex flex="1" direction="column">
       <Title>Профили {accounts.length ? `(${accounts.length})` : ""}</Title>

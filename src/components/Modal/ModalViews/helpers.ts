@@ -1,10 +1,10 @@
 import {
-  AuditoryItem,
-  ClassItem,
-  LessonTime,
-  SubjectItem,
   TeacherItem,
-} from "@modules/rootPage/RootPage";
+  ClassItem,
+  AuditoryItem,
+  SubjectItem,
+  LessonTime,
+} from "@type/studyPlan";
 
 export const validateTeacher = (item: TeacherItem): string => {
   // if (!item.name) return "Введите имя учителя!";

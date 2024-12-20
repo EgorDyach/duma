@@ -1,4 +1,4 @@
-import { AuditoryItem } from "@modules/rootPage/RootPage";
+import { AuditoryItem } from "@type/studyPlan";
 
 export const formatAuditories = (auditories: AuditoryItem[]): Room[] => {
   return auditories.map(({ capacity, id, name, accounts }) => ({

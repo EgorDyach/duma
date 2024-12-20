@@ -11,11 +11,11 @@ import {
   StyledModalButtons,
   StyledModalAdd,
 } from "../ModalStyles";
-import { AccountItem, ClassItem } from "@modules/rootPage/RootPage";
 import { validateClass } from "./helpers";
 import { Text } from "@components/Typography";
 import Dropdown from "@components/Dropdown";
 import InputWithLabel from "@components/InputWithLabel";
+import { AccountItem, ClassItem } from "@type/studyPlan";
 
 interface AddingModalProps<T> {
   onConfirm: (newItem: T) => void;

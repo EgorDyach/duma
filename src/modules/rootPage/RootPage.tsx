@@ -1477,8 +1477,3 @@ export const RootPage: React.FC = () => {
     </Wrapper>
   );
 };
-
-// serov 1 2
-// golovin 3
-//
-// math serov

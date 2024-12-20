@@ -1,5 +1,5 @@
-import { StudyPlan, SubjectItem } from "@modules/rootPage/RootPage";
-import { Coaching, CoachLesson } from "@type/common";
+import { StudyPlan, SubjectItem } from "@type/studyPlan";
+import { Coaching, CoachLesson } from "@type/studyPlanServer";
 
 export const formatCoachLessons = (
   studyPlan: StudyPlan[],
