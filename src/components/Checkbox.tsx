@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 const CheckboxContainer = styled.label`
   display: flex;
@@ -14,14 +14,14 @@ const StyledCheckbox = styled.div<{ checked: boolean }>`
   width: 24px;
   height: 24px;
   border-radius: 5px;
-  background-color: ${({ checked }) => (checked ? "#5727EC" : "#E0E0E0")};
+  background-color: ${({ checked }) => (checked ? '#5727EC' : '#E0E0E0')};
   display: flex;
   align-items: center;
   justify-content: center;
   transition: background-color 0.2s;
 
   svg {
-    display: ${({ checked }) => (checked ? "block" : "none")};
+    display: ${({ checked }) => (checked ? 'block' : 'none')};
   }
 `;
 

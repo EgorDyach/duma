@@ -1,8 +1,8 @@
-import { indent, radius } from "@lib/theme/sizes";
-import styled from "styled-components";
-import { ModalWidth } from "./constants";
-import { ItemTitle, SubHeader } from "@components/Typography";
-import Flex from "@components/Flex";
+import { indent, radius } from '@lib/theme/sizes';
+import styled from 'styled-components';
+import { ModalWidth } from './constants';
+import { ItemTitle, SubHeader } from '@components/Typography';
+import Flex from '@components/Flex';
 
 export const StyledModalWrap = styled.div<{ $size: ModalWidth }>(
   () => `
@@ -16,7 +16,7 @@ export const StyledModalWrap = styled.div<{ $size: ModalWidth }>(
     height: 100%;
     padding: 20px 0;
     align-content: center;
-  `
+  `,
 );
 
 export const Backdrop = styled.div`
@@ -67,7 +67,7 @@ export const StyledModalInput = styled.input`
 export const StyledModalButton = styled.button<{
   $active: boolean;
 }>`
-  background-color: ${(props) => (props.$active ? "#641AEE" : "#fff")};
+  background-color: ${(props) => (props.$active ? '#641AEE' : '#fff')};
   width: 100%;
   padding: 6px;
   border-radius: 9px;
@@ -77,7 +77,7 @@ export const StyledModalButton = styled.button<{
     color 0.2s ease-in-out;
   cursor: pointer;
   max-width: 80px;
-  color: ${(props) => (props.$active ? "#fff" : "#641AEE")};
+  color: ${(props) => (props.$active ? '#fff' : '#641AEE')};
 `;
 
 export const StyledItemTitle = styled(ItemTitle)`

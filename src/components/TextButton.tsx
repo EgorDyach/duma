@@ -1,17 +1,17 @@
-import { FC } from "react";
-import styled, { CSSProperties } from "styled-components";
-import { Text } from "./Typography";
-import { FontSize } from "@type/common";
+import { FC } from 'react';
+import styled, { CSSProperties } from 'styled-components';
+import { Text } from './Typography';
+import { FontSize } from '@type/common';
 
 const textButtonSizes: Record<TextButtonSize, string> = {
-  small: "86px",
-  medium: "180px",
-  large: "240px",
-  fullSize: "100%",
-  fit: "fit-content",
+  small: '86px',
+  medium: '180px',
+  large: '240px',
+  fullSize: '100%',
+  fit: 'fit-content',
 };
 
-type TextButtonSize = "small" | "medium" | "large" | "fullSize" | "fit";
+type TextButtonSize = 'small' | 'medium' | 'large' | 'fullSize' | 'fit';
 
 interface TextButtonProps {
   text: string;
@@ -35,8 +35,8 @@ const StyledButton = styled.button<{
     color 0.2s ease-in-out;
   cursor: pointer;
   max-width: ${(props) => textButtonSizes[props.$size]};
-  background-color: ${(props) => (props.$isActive ? "#641AEE" : "#fff")};
-  color: ${(props) => (props.$isActive ? "#fff" : "#641AEE")};
+  background-color: ${(props) => (props.$isActive ? '#641AEE' : '#fff')};
+  color: ${(props) => (props.$isActive ? '#fff' : '#641AEE')};
 `;
 
 const TextButton: FC<TextButtonProps> = ({
@@ -44,8 +44,8 @@ const TextButton: FC<TextButtonProps> = ({
   isActive = false,
   openEditing,
   style,
-  textSize = "default",
-  size = "fullSize",
+  textSize = 'default',
+  size = 'fullSize',
 }) => {
   return (
     <StyledButton
@@ -54,7 +54,7 @@ const TextButton: FC<TextButtonProps> = ({
       $size={size}
       onDoubleClick={openEditing}
     >
-      <Text $size={textSize} $color={isActive ? "#fff" : "#641AEE"}>
+      <Text $size={textSize} $color={isActive ? '#fff' : '#641AEE'}>
         {text}
       </Text>
     </StyledButton>

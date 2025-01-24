@@ -1,6 +1,6 @@
-import React from "react";
-import Flex from "./Flex";
-import styled from "styled-components";
+import React from 'react';
+import Flex from './Flex';
+import styled from 'styled-components';
 
 interface InputWithLabelProps {
   label: string;
@@ -31,8 +31,8 @@ const InputWithLabel: React.FC<InputWithLabelProps> = ({
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = event.target.value;
     // Проверка на положительное или нулевое значение
-    if (newValue === "" || /^[0-9]*$/.test(newValue)) {
-      setValue(newValue === "" ? 0 : Number(newValue));
+    if (newValue === '' || /^[0-9]*$/.test(newValue)) {
+      setValue(newValue === '' ? 0 : Number(newValue));
     }
   };
 

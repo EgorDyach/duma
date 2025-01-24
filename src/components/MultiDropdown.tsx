@@ -1,6 +1,6 @@
-import { AnyObject } from "@type/common";
-import React, { useEffect, useRef, useState } from "react";
-import styled from "styled-components";
+import { AnyObject } from '@type/common';
+import React, { useEffect, useRef, useState } from 'react';
+import styled from 'styled-components';
 
 const StyledButton = styled.button`
   background-color: #fff;
@@ -51,11 +51,11 @@ const MultiDropdown: React.FC<
   };
 
   const handleOptionClick = (
-    option: AnyObject & { id: number; name: string }
+    option: AnyObject & { id: number; name: string },
   ) => {
     if (selectedOptions.some((selected) => selected.id === option.id)) {
       setSelectedOptions(
-        selectedOptions.filter((selected) => selected.id !== option.id)
+        selectedOptions.filter((selected) => selected.id !== option.id),
       );
     } else {
       setSelectedOptions([...selectedOptions, option]);
@@ -74,18 +74,18 @@ const MultiDropdown: React.FC<
   };
 
   useEffect(() => {
-    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener('mousedown', handleClickOutside);
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
 
   return (
-    <div style={{ position: "relative" }}>
+    <div style={{ position: 'relative' }}>
       <StyledButton onClick={toggleMultiDropdown}>
         {selectedOptions.length
-          ? selectedOptions.map((el) => el.name).join(", ")
-          : "Выбрать"}
+          ? selectedOptions.map((el) => el.name).join(', ')
+          : 'Выбрать'}
       </StyledButton>
       {isOpen && (
         <StyledMultiDropdown ref={dropdownRef}>
@@ -94,22 +94,22 @@ const MultiDropdown: React.FC<
               key={option.id}
               onClick={() => handleOptionClick(option)}
               style={{
-                cursor: "pointer",
+                cursor: 'pointer',
                 padding: 5,
                 fontSize: 18,
               }}
             >
-              {option.name}{" "}
+              {option.name}{' '}
             </li>
           ))}
         </StyledMultiDropdown>
       )}
       <div
         style={{
-          display: "flex",
-          overflowX: "auto",
-          whiteSpace: "nowrap",
-          marginTop: "10px",
+          display: 'flex',
+          overflowX: 'auto',
+          whiteSpace: 'nowrap',
+          marginTop: '10px',
         }}
       ></div>
     </div>

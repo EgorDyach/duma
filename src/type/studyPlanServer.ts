@@ -1,4 +1,4 @@
-import { Item } from "./studyPlan";
+import { Item } from './studyPlan';
 
 export type Profile = {
   id: number;

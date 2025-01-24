@@ -1,14 +1,14 @@
-import { FC, ReactNode } from "react";
-import styled, { CSSProperties } from "styled-components";
-import PlusIcon from "./icons/PlusIcon";
+import { FC, ReactNode } from 'react';
+import styled, { CSSProperties } from 'styled-components';
+import PlusIcon from './icons/PlusIcon';
 
 const actionButtonSizes: Record<ActionButtonSize, string> = {
-  small: "86px",
-  medium: "180px",
-  large: "240px",
+  small: '86px',
+  medium: '180px',
+  large: '240px',
 };
 
-type ActionButtonSize = "small" | "medium" | "large";
+type ActionButtonSize = 'small' | 'medium' | 'large';
 
 interface ActionButtonProps {
   handleClick: VoidFunction;
@@ -39,7 +39,7 @@ const StyledButton = styled.button<{
 const ActionButton: FC<ActionButtonProps> = ({
   handleClick,
   style,
-  size = "medium",
+  size = 'medium',
   icon = <PlusIcon size={12} />,
 }) => {
   return (

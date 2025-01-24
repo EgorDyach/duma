@@ -1,7 +1,7 @@
-import { content } from "@lib/theme/colors";
-import { FC } from "react";
-import styled from "styled-components";
-import Flex from "./Flex";
+import { content } from '@lib/theme/colors';
+import { FC } from 'react';
+import styled from 'styled-components';
+import Flex from './Flex';
 
 export const CircleContainer = styled.div<{
   $size: number;
@@ -20,7 +20,7 @@ export const CircleProgress = styled.div<{ $color?: string }>`
   border-radius: 50%;
 
   &::before {
-    content: "";
+    content: '';
     position: absolute;
     height: 100%;
     width: 100%;

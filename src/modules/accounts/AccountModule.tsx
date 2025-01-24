@@ -1,11 +1,11 @@
-import AccountButton from "@components/AccountButton";
-import ActionButton from "@components/ActionButton";
-import ContentLoader from "@components/ContentLoader";
-import Flex from "@components/Flex";
-import { Title } from "@components/Title";
-import { SetState } from "@type/common";
-import { Item, ClassItem, AuditoryItem } from "@type/studyPlan";
-import { FC, useState } from "react";
+import AccountButton from '@components/AccountButton';
+import ActionButton from '@components/ActionButton';
+import ContentLoader from '@components/ContentLoader';
+import Flex from '@components/Flex';
+import { Title } from '@components/Title';
+import { SetState } from '@type/common';
+import { Item, ClassItem, AuditoryItem } from '@type/studyPlan';
+import { FC, useState } from 'react';
 
 interface AccountModuleProps {
   accounts: Item[];
@@ -23,18 +23,18 @@ export const AccountModule: FC<AccountModuleProps> = ({
   const [areAccountsLoading] = useState(true);
   return (
     <Flex flex="1" direction="column">
-      <Title>Профили {accounts.length ? `(${accounts.length})` : ""}</Title>
+      <Title>Профили {accounts.length ? `(${accounts.length})` : ''}</Title>
       {areAccountsLoading && <ContentLoader size={32} />}
       {!areAccountsLoading && (
         <>
           <Flex
             style={{
               marginBottom: 11,
-              display: "flex",
-              flexDirection: "column",
-              maxHeight: "calc(2.5 * 42px + 2 * 11px)",
-              overflowY: "auto",
-              alignContent: "start",
+              display: 'flex',
+              flexDirection: 'column',
+              maxHeight: 'calc(2.5 * 42px + 2 * 11px)',
+              overflowY: 'auto',
+              alignContent: 'start',
             }}
             justify="start"
             basis="100%"
@@ -46,13 +46,13 @@ export const AccountModule: FC<AccountModuleProps> = ({
                 <AccountButton
                   handleDelete={() => {
                     setAccounts((prev) =>
-                      prev.filter((el) => el.id !== item.id)
+                      prev.filter((el) => el.id !== item.id),
                     );
                     setClasses((prev) =>
                       prev.map((el) => ({
                         ...el,
                         account: el.account?.id === item.id ? null : el.account,
-                      }))
+                      })),
                     );
                     setAuditories((prev) =>
                       prev.map((el) => ({
@@ -60,7 +60,7 @@ export const AccountModule: FC<AccountModuleProps> = ({
                         accounts: el.accounts
                           .map((acc) => (acc.id === item.id ? null : acc))
                           .filter((el) => !!el),
-                      }))
+                      })),
                     );
                   }}
                   key={item.id}
@@ -80,7 +80,7 @@ export const AccountModule: FC<AccountModuleProps> = ({
             handleClick={() =>
               setAccounts((prev) => [
                 ...prev,
-                { name: "Название", id: new Date().getTime() },
+                { name: 'Название', id: new Date().getTime() },
               ])
             }
           />

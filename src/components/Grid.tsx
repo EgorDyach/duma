@@ -1,5 +1,5 @@
-import React, { ReactNode } from "react";
-import styled from "styled-components";
+import React, { ReactNode } from 'react';
+import styled from 'styled-components';
 
 interface GridProps {
   children: ReactNode;
@@ -11,8 +11,8 @@ interface GridProps {
 const StyledGrid = styled.div<{ templateColumns?: string; gap?: string }>`
   display: grid;
   grid-template-columns: ${({ templateColumns }) =>
-    templateColumns || "repeat(auto, minmax(200px, 1fr))"};
-  gap: ${({ gap }) => gap || "0"};
+    templateColumns || 'repeat(auto, minmax(200px, 1fr))'};
+  gap: ${({ gap }) => gap || '0'};
   overflow-x: auto; /* Позволяет горизонтальную прокрутку */
   max-width: 100%; /* Ограничиваем ширину */
 `;

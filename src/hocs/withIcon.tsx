@@ -1,9 +1,9 @@
-import styled from "styled-components";
-import { FC } from "react";
+import styled from 'styled-components';
+import { FC } from 'react';
 
 type SVGProps = React.SVGProps<SVGSVGElement>;
 
-export type IconWrapperProps = Omit<SVGProps, "height" | "width"> & {
+export type IconWrapperProps = Omit<SVGProps, 'height' | 'width'> & {
   size?: number;
   height?: string;
   width?: string;
@@ -16,11 +16,11 @@ export const IconWrapper = styled.div<{
 }>`
   fill: currentColor;
   height: ${({ $size, $height }) =>
-    $height ? $height : $size ? `${$size}px` : ""};
+    $height ? $height : $size ? `${$size}px` : ''};
   width: ${({ $size, $height, $width }) =>
-    $width || (!$height && $size ? `${$size}px` : "")};
+    $width || (!$height && $size ? `${$size}px` : '')};
   line-height: ${({ $size, $height }) =>
-    !$height && $size ? `${$size}px` : ""};
+    !$height && $size ? `${$size}px` : ''};
 
   svg {
     width: 100%;

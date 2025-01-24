@@ -1,5 +1,5 @@
-import { useRef, useEffect, useState } from "react";
-import styled from "styled-components";
+import { useRef, useEffect, useState } from 'react';
+import styled from 'styled-components';
 
 const StyledButton = styled.button`
   background-color: #fff;
@@ -65,16 +65,16 @@ const Dropdown = <T extends { id: number; name: string }>({
   };
 
   useEffect(() => {
-    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener('mousedown', handleClickOutside);
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
 
   return (
-    <div style={{ position: "relative" }}>
+    <div style={{ position: 'relative' }}>
       <StyledButton onClick={toggleDropdown}>
-        {selectedOption?.name || "Выбрать"}
+        {selectedOption?.name || 'Выбрать'}
       </StyledButton>
       {isOpen && (
         <StyledDropdown ref={dropdownRef}>
@@ -83,12 +83,12 @@ const Dropdown = <T extends { id: number; name: string }>({
               key={option.id}
               onClick={() => handleOptionClick(option)}
               style={{
-                cursor: "pointer",
+                cursor: 'pointer',
                 padding: 5,
                 fontSize: 18,
               }}
             >
-              {option.name}{" "}
+              {option.name}{' '}
             </li>
           ))}
         </StyledDropdown>

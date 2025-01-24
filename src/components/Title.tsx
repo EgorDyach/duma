@@ -1,7 +1,7 @@
-import { FC, PropsWithChildren } from "react";
-import Flex from "./Flex";
-import { SubHeader } from "./Typography";
-import PlusIcon from "./icons/PlusIcon";
+import { FC, PropsWithChildren } from 'react';
+import Flex from './Flex';
+import { SubHeader } from './Typography';
+import PlusIcon from './icons/PlusIcon';
 
 interface TitleProps extends PropsWithChildren {
   action?: VoidFunction;

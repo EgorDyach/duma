@@ -1,17 +1,17 @@
-import React, { useState, useEffect, useRef, FC } from "react";
-import styled, { CSSProperties } from "styled-components";
-import { Text } from "./Typography";
-import { FontSize } from "@type/common";
+import React, { useState, useEffect, useRef, FC } from 'react';
+import styled, { CSSProperties } from 'styled-components';
+import { Text } from './Typography';
+import { FontSize } from '@type/common';
 
 const studyPlanButtonSizes: Record<StudyPlanButtonSize, string> = {
-  small: "86px",
-  medium: "180px",
-  large: "240px",
-  fullSize: "100%",
-  fit: "fit-content",
+  small: '86px',
+  medium: '180px',
+  large: '240px',
+  fullSize: '100%',
+  fit: 'fit-content',
 };
 
-type StudyPlanButtonSize = "small" | "medium" | "large" | "fullSize" | "fit";
+type StudyPlanButtonSize = 'small' | 'medium' | 'large' | 'fullSize' | 'fit';
 
 interface StudyPlanButtonProps {
   text: string;
@@ -28,9 +28,9 @@ const StyledButton = styled.button<{
   $isEditing?: boolean;
   $size: StudyPlanButtonSize;
 }>`
-  background-color: ${(props) => (props.$active ? "#641AEE" : "#fff")};
+  background-color: ${(props) => (props.$active ? '#641AEE' : '#fff')};
   width: 248px;
-  padding: ${(props) => (props.$isEditing ? "7px 11px" : "11px")};
+  padding: ${(props) => (props.$isEditing ? '7px 11px' : '11px')};
   border-radius: 9px;
   border: 1.2px solid #641aee;
   transition:
@@ -38,36 +38,36 @@ const StyledButton = styled.button<{
     color 0.2s ease-in-out;
   cursor: pointer;
   max-width: ${(props) => studyPlanButtonSizes[props.$size]};
-  color: ${(props) => (props.$active ? "#fff" : "#641AEE")};
+  color: ${(props) => (props.$active ? '#fff' : '#641AEE')};
   flex: 10;
 `;
 
 const StyledInput = styled.input<{ $active: boolean; $isEditing: boolean }>`
-  background-color: ${(props) => (props.$active ? "#641AEE" : "#fff")};
+  background-color: ${(props) => (props.$active ? '#641AEE' : '#fff')};
   width: calc(100% - 20px);
   padding: 4px;
   border: none;
-  border-bottom: 1.2px solid ${(props) => (props.$active ? "#fff" : "#641AEE")};
+  border-bottom: 1.2px solid ${(props) => (props.$active ? '#fff' : '#641AEE')};
   outline: none;
   transition: 0.2s ease-in-out;
-  height: ${(props) => (props.$isEditing ? "100%" : 0)};
+  height: ${(props) => (props.$isEditing ? '100%' : 0)};
   padding: ${(props) => (props.$isEditing ? 11 : 0)};
   border-bottom-width: ${(props) => (props.$isEditing ? 1.2 : 0)};
-  color: ${(props) => (props.$active ? "#fff" : "#641AEE")};
+  color: ${(props) => (props.$active ? '#fff' : '#641AEE')};
 `;
 
 const StudyPlanButton: FC<StudyPlanButtonProps> = ({
   text,
   setText,
   style,
-  size = "medium",
+  size = 'medium',
   isActive,
   setIsActive,
-  textSize = "default",
+  textSize = 'default',
 }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [tempText, setTempText] = useState(
-    typeof text === "string" ? text : ""
+    typeof text === 'string' ? text : '',
   );
   const inputRef = useRef<HTMLInputElement>(null);
   const containerRef = useRef<HTMLButtonElement>(null);
@@ -89,10 +89,10 @@ const StudyPlanButton: FC<StudyPlanButtonProps> = ({
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter" && setText) {
+    if (e.key === 'Enter' && setText) {
       setText(tempText);
       setIsEditing(false);
-    } else if (e.key === "Escape") {
+    } else if (e.key === 'Escape') {
       setIsEditing(false);
       setTempText(text);
     }
@@ -114,9 +114,9 @@ const StudyPlanButton: FC<StudyPlanButtonProps> = ({
     if (isEditing && inputRef.current) {
       inputRef.current.focus();
     }
-    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener('mousedown', handleClickOutside);
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [isEditing, tempText]);
 
@@ -141,7 +141,7 @@ const StudyPlanButton: FC<StudyPlanButtonProps> = ({
           onKeyDown={handleKeyDown}
         />
       ) : (
-        <Text $size={textSize} $color={isActive ? "#fff" : "#641AEE"}>
+        <Text $size={textSize} $color={isActive ? '#fff' : '#641AEE'}>
           {text}
         </Text>
       )}

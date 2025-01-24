@@ -1,17 +1,17 @@
-import Flex from "@components/Flex";
-import CloseIcon from "@components/icons/CloseIcon";
-import { FC, useState } from "react";
+import Flex from '@components/Flex';
+import CloseIcon from '@components/icons/CloseIcon';
+import { FC, useState } from 'react';
 import {
   StyledModalWrap,
   StyledModalContent,
   StyledModalTitle,
   StyledModalButtons,
   StyledModalAdd,
-} from "../ModalStyles";
-import { validateLessonTime } from "./helpers";
-import { Text } from "@components/Typography";
-import styled from "styled-components";
-import { LessonTime } from "@type/studyPlan";
+} from '../ModalStyles';
+import { validateLessonTime } from './helpers';
+import { Text } from '@components/Typography';
+import styled from 'styled-components';
+import { LessonTime } from '@type/studyPlan';
 
 interface AddingModalProps<T> {
   onConfirm: (newItem: T) => void;
@@ -36,11 +36,11 @@ export const AddingLessonTimesModal: FC<AddingModalProps<LessonTime>> = ({
   const [newItem, setNewItem] = useState<LessonTime>(
     initValue || {
       ID: 0,
-      EndTime: "",
-      StartTime: "",
-    }
+      EndTime: '',
+      StartTime: '',
+    },
   );
-  const [classError, setClassError] = useState("");
+  const [classError, setClassError] = useState('');
 
   const handleAdd = () => {
     const addingItem: LessonTime = {
@@ -55,16 +55,16 @@ export const AddingLessonTimesModal: FC<AddingModalProps<LessonTime>> = ({
     onConfirm(addingItem);
   };
   return (
-    <StyledModalWrap $size={"default"}>
+    <StyledModalWrap $size={'default'}>
       <StyledModalContent>
         <Flex gap="30px" justify="space-between">
           <Flex gap="10px">
             <StyledModalTitle $top="xsmall">
-              {initValue ? "Изменить время" : "Новое время"}
+              {initValue ? 'Изменить время' : 'Новое время'}
             </StyledModalTitle>
           </Flex>
 
-          <CloseIcon color={"#641AEE"} onClick={hideModal} size={28} />
+          <CloseIcon color={'#641AEE'} onClick={hideModal} size={28} />
         </Flex>
 
         <StyledModalButtons
@@ -77,8 +77,8 @@ export const AddingLessonTimesModal: FC<AddingModalProps<LessonTime>> = ({
             type="time"
             value={
               newItem && newItem.StartTime
-                ? `${newItem.StartTime.split(":")[0].padStart(2, "0")}:${newItem.StartTime.split(":")[1].padStart(2, "0")}`
-                : ""
+                ? `${newItem.StartTime.split(':')[0].padStart(2, '0')}:${newItem.StartTime.split(':')[1].padStart(2, '0')}`
+                : ''
             }
             onChange={(e) =>
               setNewItem((prev) => ({
@@ -91,8 +91,8 @@ export const AddingLessonTimesModal: FC<AddingModalProps<LessonTime>> = ({
             type="time"
             value={
               newItem && newItem.EndTime
-                ? `${newItem.EndTime.split(":")[0].padStart(2, "0")}:${newItem.EndTime.split(":")[1].padStart(2, "0")}`
-                : ""
+                ? `${newItem.EndTime.split(':')[0].padStart(2, '0')}:${newItem.EndTime.split(':')[1].padStart(2, '0')}`
+                : ''
             }
             onChange={(e) =>
               setNewItem((prev) => ({
@@ -108,7 +108,7 @@ export const AddingLessonTimesModal: FC<AddingModalProps<LessonTime>> = ({
             <Text $color="red">{classError}</Text>
             <Flex gap="16px" $top="large" justify="start">
               <StyledModalAdd onClick={handleAdd}>
-                {initValue ? "Изменить" : "Добавить"}
+                {initValue ? 'Изменить' : 'Добавить'}
               </StyledModalAdd>
               {initValue && (
                 <StyledModalAdd onClick={() => handleDelete(initValue.ID)}>

@@ -1,5 +1,5 @@
-import { FC, SVGProps } from "react";
-import withIcon from "@hocs/withIcon";
+import { FC, SVGProps } from 'react';
+import withIcon from '@hocs/withIcon';
 
 const Icon: FC = (props: SVGProps<SVGSVGElement>) => (
   <svg
@@ -26,5 +26,5 @@ const Icon: FC = (props: SVGProps<SVGSVGElement>) => (
 
 const CloseIcon = withIcon(Icon);
 
-CloseIcon.displayName = "CloseIcon";
+CloseIcon.displayName = 'CloseIcon';
 export default CloseIcon;

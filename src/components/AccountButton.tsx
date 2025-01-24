@@ -1,16 +1,16 @@
-import React, { useState, useEffect, useRef, FC } from "react";
-import styled from "styled-components";
-import { Text } from "./Typography";
-import Flex from "./Flex";
+import React, { useState, useEffect, useRef, FC } from 'react';
+import styled from 'styled-components';
+import { Text } from './Typography';
+import Flex from './Flex';
 
 const accountButtonSizes: Record<AccountButtonSize, string> = {
-  small: "86px",
-  medium: "180px",
-  large: "240px",
-  fullSize: "100%",
+  small: '86px',
+  medium: '180px',
+  large: '240px',
+  fullSize: '100%',
 };
 
-type AccountButtonSize = "small" | "medium" | "large" | "fullSize";
+type AccountButtonSize = 'small' | 'medium' | 'large' | 'fullSize';
 
 interface AccountButtonProps {
   text: string;
@@ -36,7 +36,7 @@ const StyledButton = styled.button<{
 }>`
   background-color: #641aee;
   width: 100%;
-  padding: ${(props) => (props.$isEditing ? "7px 11px" : "11px")};
+  padding: ${(props) => (props.$isEditing ? '7px 11px' : '11px')};
   border-radius: 9px;
   border: 1.2px solid #641aee;
   transition:
@@ -56,7 +56,7 @@ const StyledInput = styled.input<{ $isEditing: boolean }>`
   border-bottom: 1.2px solid #fff;
   outline: none;
   transition: 0.2s ease-in-out;
-  height: ${(props) => (props.$isEditing ? "100%" : 0)};
+  height: ${(props) => (props.$isEditing ? '100%' : 0)};
   padding: ${(props) => (props.$isEditing ? 11 : 0)};
   border-bottom-width: ${(props) => (props.$isEditing ? 1.2 : 0)};
   color: #fff;
@@ -66,11 +66,11 @@ const AccountButton: FC<AccountButtonProps> = ({
   text,
   handleDelete,
   setText,
-  size = "medium",
+  size = 'medium',
 }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [tempText, setTempText] = useState(
-    typeof text === "string" ? text : ""
+    typeof text === 'string' ? text : '',
   );
   const inputRef = useRef<HTMLInputElement>(null);
   const containerRef = useRef<HTMLButtonElement>(null);
@@ -85,10 +85,10 @@ const AccountButton: FC<AccountButtonProps> = ({
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
+    if (e.key === 'Enter') {
       setText(tempText);
       setIsEditing(false);
-    } else if (e.key === "Escape") {
+    } else if (e.key === 'Escape') {
       setIsEditing(false);
       setTempText(text);
     }
@@ -109,9 +109,9 @@ const AccountButton: FC<AccountButtonProps> = ({
     if (isEditing && inputRef.current) {
       inputRef.current.focus();
     }
-    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener('mousedown', handleClickOutside);
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [isEditing, tempText]);
 
@@ -148,7 +148,7 @@ const AccountButton: FC<AccountButtonProps> = ({
           </StyledDeleteButton>
         </Flex>
       ) : (
-        <Text $color={"#fff"}>{text}</Text>
+        <Text $color={'#fff'}>{text}</Text>
       )}
     </StyledButton>
   );

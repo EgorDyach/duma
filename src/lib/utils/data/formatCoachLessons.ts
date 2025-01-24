@@ -1,17 +1,17 @@
-import { StudyPlan, SubjectItem } from "@type/studyPlan";
-import { Coaching, CoachLesson } from "@type/studyPlanServer";
+import { StudyPlan, SubjectItem } from '@type/studyPlan';
+import { Coaching, CoachLesson } from '@type/studyPlanServer';
 
 export const formatCoachLessons = (
   studyPlan: StudyPlan[],
   subjects: SubjectItem[],
-  coachings: Coaching[]
+  coachings: Coaching[],
 ): CoachLesson[] => {
   return studyPlan
     .map((item) => {
       const subject = subjects.find((el) => el.id === item.subjectId);
       if (!subject || !subject.teacher) return null;
       const coach = coachings.find(
-        (el) => el.subjectID == subject.id && item.classId === el.groupID
+        (el) => el.subjectID == subject.id && item.classId === el.groupID,
       );
       if (!coach) return;
       return {

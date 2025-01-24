@@ -1,6 +1,6 @@
-import Flex from "@components/Flex";
-import CloseIcon from "@components/icons/CloseIcon";
-import { FC, useState } from "react";
+import Flex from '@components/Flex';
+import CloseIcon from '@components/icons/CloseIcon';
+import { FC, useState } from 'react';
 import {
   StyledModalWrap,
   StyledModalContent,
@@ -9,12 +9,12 @@ import {
   StyledItemTitle,
   StyledModalButton,
   StyledModalAdd,
-} from "../ModalStyles";
-import { validateTeacher } from "./helpers";
-import { Text } from "@components/Typography";
-import { Title } from "@components/Title";
-import Dropdown from "@components/Dropdown";
-import { AuditoryItem, TeacherItem } from "@type/studyPlan";
+} from '../ModalStyles';
+import { validateTeacher } from './helpers';
+import { Text } from '@components/Typography';
+import { Title } from '@components/Title';
+import Dropdown from '@components/Dropdown';
+import { AuditoryItem, TeacherItem } from '@type/studyPlan';
 
 interface AddingModalProps<T> {
   onConfirm: (newItem: T) => void;
@@ -33,16 +33,16 @@ export const AddingTeacherModal: FC<AddingModalProps<TeacherItem>> = ({
 }) => {
   const [newItem, setNewItem] = useState<TeacherItem>(
     initValue || {
-      name: "",
-      lastName: "",
-      surName: "",
-      firstName: "",
+      name: '',
+      lastName: '',
+      surName: '',
+      firstName: '',
       hours: 0,
       subjects: [],
       id: 0,
-    }
+    },
   );
-  const [teacherError, setTeacherError] = useState("");
+  const [teacherError, setTeacherError] = useState('');
 
   const handleAdd = () => {
     const addingItem: TeacherItem = {
@@ -57,16 +57,16 @@ export const AddingTeacherModal: FC<AddingModalProps<TeacherItem>> = ({
     onConfirm(addingItem);
   };
   return (
-    <StyledModalWrap $size={"default"}>
+    <StyledModalWrap $size={'default'}>
       <StyledModalContent>
         <Flex gap="30px" justify="space-between">
           <Flex gap="10px">
             <StyledModalTitle $top="xsmall">
-              {initValue ? "Изменить учителя" : "Новый учитель"}
+              {initValue ? 'Изменить учителя' : 'Новый учитель'}
             </StyledModalTitle>
           </Flex>
 
-          <CloseIcon color={"#641AEE"} onClick={hideModal} size={28} />
+          <CloseIcon color={'#641AEE'} onClick={hideModal} size={28} />
         </Flex>
         <Flex align="start" $top="medium" gap="16px">
           <StyledModalInput
@@ -100,12 +100,12 @@ export const AddingTeacherModal: FC<AddingModalProps<TeacherItem>> = ({
                   ...prev.subjects,
                   {
                     auditory: [],
-                    name: "",
+                    name: '',
                     classes: [],
                     id: new Date().getTime(),
                     room: null,
                     time: 0,
-                    type: "practice",
+                    type: 'practice',
                   },
                 ],
               }));
@@ -124,7 +124,7 @@ export const AddingTeacherModal: FC<AddingModalProps<TeacherItem>> = ({
                         setNewItem((prev) => ({
                           ...prev,
                           subjects: prev.subjects.filter(
-                            (item) => item.id !== el.id
+                            (item) => item.id !== el.id,
                           ),
                         }))
                       }
@@ -142,7 +142,7 @@ export const AddingTeacherModal: FC<AddingModalProps<TeacherItem>> = ({
                               ...prev,
                               subjects: [
                                 ...prev.subjects.filter(
-                                  (item) => item.id !== el.id
+                                  (item) => item.id !== el.id,
                                 ),
                                 { ...el, name: v.target.value },
                               ],
@@ -161,16 +161,16 @@ export const AddingTeacherModal: FC<AddingModalProps<TeacherItem>> = ({
                                 ...prev,
                                 subjects: [
                                   ...prev.subjects.filter(
-                                    (subject) => subject.id !== el.id
+                                    (subject) => subject.id !== el.id,
                                   ),
                                   {
                                     ...el,
-                                    type: "practice",
+                                    type: 'practice',
                                   },
                                 ],
                               }))
                             }
-                            $active={el.type === "practice"}
+                            $active={el.type === 'practice'}
                           >
                             Практика
                           </StyledModalButton>
@@ -180,16 +180,16 @@ export const AddingTeacherModal: FC<AddingModalProps<TeacherItem>> = ({
                                 ...prev,
                                 subjects: [
                                   ...prev.subjects.filter(
-                                    (subject) => subject.id !== el.id
+                                    (subject) => subject.id !== el.id,
                                   ),
                                   {
                                     ...el,
-                                    type: "lecture",
+                                    type: 'lecture',
                                   },
                                 ],
                               }))
                             }
-                            $active={el.type === "lecture"}
+                            $active={el.type === 'lecture'}
                           >
                             Лекция
                           </StyledModalButton>
@@ -204,7 +204,7 @@ export const AddingTeacherModal: FC<AddingModalProps<TeacherItem>> = ({
                               ...prev,
                               subjects: [
                                 ...prev.subjects.filter(
-                                  (item) => item.id !== el.id
+                                  (item) => item.id !== el.id,
                                 ),
                                 { ...el, room: n },
                               ],
@@ -224,7 +224,7 @@ export const AddingTeacherModal: FC<AddingModalProps<TeacherItem>> = ({
             <Text $color="red">{teacherError}</Text>
             <Flex gap="16px" $top="large" justify="start">
               <StyledModalAdd onClick={handleAdd}>
-                {initValue ? "Изменить" : "Добавить"}
+                {initValue ? 'Изменить' : 'Добавить'}
               </StyledModalAdd>
               {initValue && (
                 <StyledModalAdd onClick={() => handleDelete(initValue.id)}>

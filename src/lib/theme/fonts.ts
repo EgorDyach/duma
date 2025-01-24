@@ -1,4 +1,4 @@
-import { FontSize } from "@type/common";
+import { FontSize } from '@type/common';
 
 interface FontData {
   name: string;
@@ -9,7 +9,7 @@ interface FontData {
 
 export const getFont = (
   { name, fileName, style, weight }: FontData,
-  pathPrefix = ""
+  pathPrefix = '',
 ) => {
   return `@font-face {
     font-family: '${name}';
@@ -23,9 +23,9 @@ export const getFont = (
 
 export const fonts: FontData[] = [
   {
-    name: "Manrope",
-    fileName: "Manrope",
-    style: "normal",
+    name: 'Manrope',
+    fileName: 'Manrope',
+    style: 'normal',
   },
 ];
 
@@ -43,28 +43,28 @@ export const fontWeightsDict: Record<FontSize, number> = {
 };
 
 export const lineHeightDict = {
-  small: "20px",
-  medium: "22px",
-  default: "17px",
-  big: "18px",
-  subtitle: "28px",
-  title: "32px",
-  subheader: "36px",
-  header: "44px",
-  heroMedium: "56px",
-  heroLarge: "64px",
+  small: '20px',
+  medium: '22px',
+  default: '17px',
+  big: '18px',
+  subtitle: '28px',
+  title: '32px',
+  subheader: '36px',
+  header: '44px',
+  heroMedium: '56px',
+  heroLarge: '64px',
 };
 
 export const fontDict: Record<FontSize, string> = {
-  small: "14px",
-  medium: "16px",
-  default: "18px",
-  big: "16px",
-  title: "18px",
-  subheader: "24px",
-  header: "32px",
-  heroMedium: "40px",
-  heroLarge: "48px",
+  small: '14px',
+  medium: '16px',
+  default: '18px',
+  big: '16px',
+  title: '18px',
+  subheader: '24px',
+  header: '32px',
+  heroMedium: '40px',
+  heroLarge: '48px',
 };
 
 export const getFontSizes = (size: FontSize) => {

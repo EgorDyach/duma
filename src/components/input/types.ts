@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import { ReactNode } from 'react';
 
 export type InputProps = {
   suffix?: ReactNode;
@@ -6,7 +6,7 @@ export type InputProps = {
   label?: string;
   type?: string;
   value: string;
-  theme?: "light" | "dark";
+  theme?: 'light' | 'dark';
   onChange: (e: string) => void;
   error?: string;
   placeholder?: string;

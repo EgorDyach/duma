@@ -1,10 +1,10 @@
-import { SubjectItem, StudyPlan } from "@type/studyPlan";
-import { Coaching } from "@type/studyPlanServer";
-import { generateIds } from "../generateIds";
+import { SubjectItem, StudyPlan } from '@type/studyPlan';
+import { Coaching } from '@type/studyPlanServer';
+import { generateIds } from '../generateIds';
 
 export const formatCoachings = (
   subjects: SubjectItem[],
-  studyPlan: StudyPlan[]
+  studyPlan: StudyPlan[],
 ): Coaching[] => {
   const ids = generateIds(studyPlan.length, new Date().getTime());
   return studyPlan.map((item, index) => ({

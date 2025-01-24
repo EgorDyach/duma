@@ -1,6 +1,6 @@
-import Flex from "@components/Flex";
-import CloseIcon from "@components/icons/CloseIcon";
-import { FC, useState } from "react";
+import Flex from '@components/Flex';
+import CloseIcon from '@components/icons/CloseIcon';
+import { FC, useState } from 'react';
 import {
   StyledItemTitle,
   StyledModalWrap,
@@ -9,12 +9,12 @@ import {
   StyledModalInput,
   StyledModalButtons,
   StyledModalAdd,
-} from "../ModalStyles";
-import { validateAuditory } from "./helpers";
-import { Text } from "@components/Typography";
-import InputWithLabel from "@components/InputWithLabel";
-import MultiDropdown from "@components/MultiDropdown";
-import { AccountItem, AuditoryItem } from "@type/studyPlan";
+} from '../ModalStyles';
+import { validateAuditory } from './helpers';
+import { Text } from '@components/Typography';
+import InputWithLabel from '@components/InputWithLabel';
+import MultiDropdown from '@components/MultiDropdown';
+import { AccountItem, AuditoryItem } from '@type/studyPlan';
 
 interface AddingModalProps<T> {
   onConfirm: (newItem: T) => void;
@@ -33,13 +33,13 @@ export const AddingAuditoryModal: FC<AddingModalProps<AuditoryItem>> = ({
 }) => {
   const [newItem, setNewItem] = useState<AuditoryItem>(
     initValue || {
-      name: "",
+      name: '',
       accounts: [],
       id: 0,
       capacity: 0,
-    }
+    },
   );
-  const [error, setError] = useState("");
+  const [error, setError] = useState('');
 
   const handleAdd = () => {
     const addingItem: AuditoryItem = {
@@ -54,12 +54,12 @@ export const AddingAuditoryModal: FC<AddingModalProps<AuditoryItem>> = ({
     onConfirm(addingItem);
   };
   return (
-    <StyledModalWrap $size={"default"}>
+    <StyledModalWrap $size={'default'}>
       <StyledModalContent>
         <Flex gap="30px" justify="space-between">
           <Flex gap="10px">
             <StyledModalTitle $top="xsmall">
-              {initValue ? "Изменить аудиторию" : "Новая аудитория"}
+              {initValue ? 'Изменить аудиторию' : 'Новая аудитория'}
             </StyledModalTitle>
             <StyledModalInput
               placeholder="Введите название..."
@@ -70,7 +70,7 @@ export const AddingAuditoryModal: FC<AddingModalProps<AuditoryItem>> = ({
             />
           </Flex>
 
-          <CloseIcon color={"#641AEE"} onClick={hideModal} size={28} />
+          <CloseIcon color={'#641AEE'} onClick={hideModal} size={28} />
         </Flex>
 
         <StyledModalButtons
@@ -108,7 +108,7 @@ export const AddingAuditoryModal: FC<AddingModalProps<AuditoryItem>> = ({
             <Text $color="red">{error}</Text>
             <Flex gap="16px" $top="large" justify="start">
               <StyledModalAdd onClick={handleAdd}>
-                {initValue ? "Изменить" : "Добавить"}
+                {initValue ? 'Изменить' : 'Добавить'}
               </StyledModalAdd>
               {initValue && (
                 <StyledModalAdd onClick={() => handleDelete(initValue.id)}>

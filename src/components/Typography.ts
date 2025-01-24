@@ -1,9 +1,9 @@
-import { withIndentStyles } from "@hocs/withIndentStyles";
-import styled from "styled-components";
-import { FontSize } from "@type/common";
-import { getFontSizes } from "@lib/theme/fonts";
-import { content, ContentColors } from "@lib/theme/colors";
-import { media } from "@lib/theme/media";
+import { withIndentStyles } from '@hocs/withIndentStyles';
+import styled from 'styled-components';
+import { FontSize } from '@type/common';
+import { getFontSizes } from '@lib/theme/fonts';
+import { content, ContentColors } from '@lib/theme/colors';
+import { media } from '@lib/theme/media';
 
 export const Header = withIndentStyles(styled.h1``);
 
@@ -19,20 +19,20 @@ export const Paragraph = withIndentStyles(styled.p`
 export const Bold = withIndentStyles(
   styled.b<{ $size?: FontSize; $color?: ContentColors; $display?: string }>(
     ({ $size, $color, $display }) => `
-    ${getFontSizes($size || "default")}
+    ${getFontSizes($size || 'default')}
     font-weight: 600;
-    color: ${content[$color || "primary"]};
-    display: ${$display || "inline-block"}
-  `
-  )
+    color: ${content[$color || 'primary']};
+    display: ${$display || 'inline-block'}
+  `,
+  ),
 );
 
 export const Text = withIndentStyles(
   styled.span<{ $size?: FontSize; $color?: string }>(
     ({ $size, $color }) => `
     transition: color .3s ease-in-out;
-    ${getFontSizes($size || "default")}
-    color: ${$color || "#333"};
-  `
-  )
+    ${getFontSizes($size || 'default')}
+    color: ${$color || '#333'};
+  `,
+  ),
 );

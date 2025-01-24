@@ -1,4 +1,4 @@
-import { AccountItem } from "@type/studyPlan";
+import { AccountItem } from '@type/studyPlan';
 
 export const formatAccounts = (accounts: AccountItem[]): Account[] => {
   return accounts.map(({ id, name }) => ({

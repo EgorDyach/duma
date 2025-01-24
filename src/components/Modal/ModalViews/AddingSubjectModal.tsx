@@ -1,6 +1,6 @@
-import Flex from "@components/Flex";
-import CloseIcon from "@components/icons/CloseIcon";
-import { FC, useState } from "react";
+import Flex from '@components/Flex';
+import CloseIcon from '@components/icons/CloseIcon';
+import { FC, useState } from 'react';
 import {
   StyledItemTitle,
   StyledModalWrap,
@@ -10,12 +10,12 @@ import {
   StyledModalButtons,
   StyledModalButton,
   StyledModalAdd,
-} from "../ModalStyles";
-import { validateSubject } from "./helpers";
-import { Text } from "@components/Typography";
-import MultiDropdown from "@components/MultiDropdown";
-import Dropdown from "@components/Dropdown";
-import { AuditoryItem, TeacherItem, SubjectItem } from "@type/studyPlan";
+} from '../ModalStyles';
+import { validateSubject } from './helpers';
+import { Text } from '@components/Typography';
+import MultiDropdown from '@components/MultiDropdown';
+import Dropdown from '@components/Dropdown';
+import { AuditoryItem, TeacherItem, SubjectItem } from '@type/studyPlan';
 
 interface AddingModalProps<T> {
   onConfirm: (newItem: T) => void;
@@ -37,15 +37,15 @@ export const AddingSubjectModal: FC<AddingModalProps<SubjectItem>> = ({
 }) => {
   const [newItem, setNewItem] = useState<SubjectItem>(
     initValue || {
-      name: "",
+      name: '',
       id: 0,
       dependsOn: [],
       room: null,
-      type: "practice",
+      type: 'practice',
       teacher: null,
-    }
+    },
   );
-  const [classError, setClassError] = useState("");
+  const [classError, setClassError] = useState('');
 
   const handleAdd = () => {
     const addingItem: SubjectItem = {
@@ -60,12 +60,12 @@ export const AddingSubjectModal: FC<AddingModalProps<SubjectItem>> = ({
     onConfirm(addingItem);
   };
   return (
-    <StyledModalWrap $size={"default"}>
+    <StyledModalWrap $size={'default'}>
       <StyledModalContent>
         <Flex gap="30px" justify="space-between">
           <Flex gap="10px">
             <StyledModalTitle $top="xsmall">
-              {initValue ? "Изменить дисциплину" : "Новая дисциплина"}
+              {initValue ? 'Изменить дисциплину' : 'Новая дисциплина'}
             </StyledModalTitle>
             <StyledModalInput
               placeholder="Введите название..."
@@ -76,7 +76,7 @@ export const AddingSubjectModal: FC<AddingModalProps<SubjectItem>> = ({
             />
           </Flex>
 
-          <CloseIcon color={"#641AEE"} onClick={hideModal} size={28} />
+          <CloseIcon color={'#641AEE'} onClick={hideModal} size={28} />
         </Flex>
 
         <StyledModalButtons
@@ -106,17 +106,17 @@ export const AddingSubjectModal: FC<AddingModalProps<SubjectItem>> = ({
           <Flex gap="10px">
             <StyledModalButton
               onClick={() =>
-                setNewItem((prev) => ({ ...prev, type: "practice" }))
+                setNewItem((prev) => ({ ...prev, type: 'practice' }))
               }
-              $active={newItem.type === "practice"}
+              $active={newItem.type === 'practice'}
             >
               Практика
             </StyledModalButton>
             <StyledModalButton
               onClick={() =>
-                setNewItem((prev) => ({ ...prev, type: "lecture" }))
+                setNewItem((prev) => ({ ...prev, type: 'lecture' }))
               }
-              $active={newItem.type === "lecture"}
+              $active={newItem.type === 'lecture'}
             >
               Лекция
             </StyledModalButton>
@@ -158,7 +158,7 @@ export const AddingSubjectModal: FC<AddingModalProps<SubjectItem>> = ({
             <Text $color="red">{classError}</Text>
             <Flex gap="16px" $top="large" justify="start">
               <StyledModalAdd onClick={handleAdd}>
-                {initValue ? "Изменить" : "Добавить"}
+                {initValue ? 'Изменить' : 'Добавить'}
               </StyledModalAdd>
               {initValue && (
                 <StyledModalAdd onClick={() => handleDelete(initValue.id)}>

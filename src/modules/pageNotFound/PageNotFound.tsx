@@ -1,10 +1,10 @@
-import styled from "styled-components";
-import { Text } from "@components/Typography";
-import { Link } from "react-router-dom";
-import { lineHeightDict } from "@lib/theme/fonts";
-import { content } from "@lib/theme/colors";
-import { indent } from "@lib/theme/sizes";
-import img from "/img/notFound.png";
+import styled from 'styled-components';
+import { Text } from '@components/Typography';
+import { Link } from 'react-router-dom';
+import { lineHeightDict } from '@lib/theme/fonts';
+import { content } from '@lib/theme/colors';
+import { indent } from '@lib/theme/sizes';
+import img from '/img/notFound.png';
 
 const StyledPageNotFound = styled.div`
   display: flex;
@@ -34,7 +34,7 @@ const Button = styled.button`
   cursor: pointer;
   margin-top: ${indent.medium};
   font-size: ${indent.medium};
-  font-family: "Manrope";
+  font-family: 'Manrope';
 `;
 
 const PageNotFound = () => {
@@ -53,7 +53,7 @@ const PageNotFound = () => {
         </StyledTextGray>
       </Text>
       <Button>
-        <StyledLink to={"/"}>Перейти на главную</StyledLink>
+        <StyledLink to={'/'}>Перейти на главную</StyledLink>
       </Button>
     </StyledPageNotFound>
   );

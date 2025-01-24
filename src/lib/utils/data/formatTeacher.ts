@@ -1,5 +1,5 @@
-import { TeacherItem } from "@type/studyPlan";
-import { Teacher } from "@type/studyPlanServer";
+import { TeacherItem } from '@type/studyPlan';
+import { Teacher } from '@type/studyPlanServer';
 
 export const formatTeachers = (teachers: TeacherItem[]): Teacher[] => {
   return teachers.map(({ id, name }) => ({

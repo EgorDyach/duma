@@ -1,6 +1,6 @@
-import styled from "styled-components";
-import { withIndentStyles } from "@hocs/withIndentStyles";
-import { Indent } from "@type/common";
+import styled from 'styled-components';
+import { withIndentStyles } from '@hocs/withIndentStyles';
+import { Indent } from '@type/common';
 
 export interface FlexProps {
   direction?: string;
@@ -19,17 +19,17 @@ export interface FlexProps {
 const FlexRaw = styled.div<FlexProps>(
   ({ direction, wrap, align, justify, gap, flex, grow, shrink, basis }) => `
   display: flex;
-  ${direction ? `flex-direction: ${direction};` : ""}
-  ${wrap ? `flex-wrap: ${wrap};` : ""}
-  ${align ? `align-items: ${align};` : ""}
-  ${justify ? `justify-content: ${justify};` : ""}
-  ${gap ? `gap: ${gap};` : ""}
-  ${flex ? `flex: ${flex};` : ""}
-  ${grow ? `flex-grow: ${grow};` : ""}
-  ${shrink ? `flex-shrink: ${shrink};` : ""}
+  ${direction ? `flex-direction: ${direction};` : ''}
+  ${wrap ? `flex-wrap: ${wrap};` : ''}
+  ${align ? `align-items: ${align};` : ''}
+  ${justify ? `justify-content: ${justify};` : ''}
+  ${gap ? `gap: ${gap};` : ''}
+  ${flex ? `flex: ${flex};` : ''}
+  ${grow ? `flex-grow: ${grow};` : ''}
+  ${shrink ? `flex-shrink: ${shrink};` : ''}
   
   & > * {
-    ${basis && `flex-basis: calc(${basis} - ${gap || "0px"}/2)`}
+    ${basis && `flex-basis: calc(${basis} - ${gap || '0px'}/2)`}
   }
  
 `,

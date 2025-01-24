@@ -1,15 +1,15 @@
-import React from "react";
-import { content } from "@lib/theme/colors";
-import { InputProps } from "./types";
+import React from 'react';
+import { content } from '@lib/theme/colors';
+import { InputProps } from './types';
 import {
   ErrorText,
   StyledInput,
   StyledLabel,
   SuffixWrapper,
   labelWrapper,
-} from "./InputStyles";
+} from './InputStyles';
 
-import Flex from "@components/Flex";
+import Flex from '@components/Flex';
 
 const Input: React.FC<InputProps> = ({
   value,

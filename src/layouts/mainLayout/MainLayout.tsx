@@ -1,8 +1,8 @@
-import Flex from "@components/Flex";
-import { Text } from "@components/Typography";
-import { FC, PropsWithChildren } from "react";
-import { Outlet, useNavigate } from "react-router-dom";
-import styled from "styled-components";
+import Flex from '@components/Flex';
+import { Text } from '@components/Typography';
+import { FC, PropsWithChildren } from 'react';
+import { Outlet, useNavigate } from 'react-router-dom';
+import styled from 'styled-components';
 
 const MainWrapper = styled(Flex)`
   max-width: 1040px;
@@ -65,8 +65,8 @@ export const MainLayout: FC<PropsWithChildren> = ({ children }) => {
         </Flex>
         <ExitButton
           onClick={() => {
-            localStorage.removeItem("token");
-            navigate("/login");
+            sessionStorage.removeItem('token');
+            navigate('/login');
           }}
         >
           Выйти

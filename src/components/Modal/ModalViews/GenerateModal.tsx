@@ -1,14 +1,14 @@
-import Flex from "@components/Flex";
-import CloseIcon from "@components/icons/CloseIcon";
+import Flex from '@components/Flex';
+import CloseIcon from '@components/icons/CloseIcon';
 import {
   StyledModalWrap,
   StyledModalContent,
   StyledModalTitle,
   StyledModalAdd,
-} from "../ModalStyles";
-import { FC, useState } from "react";
-import DatePicker from "react-datepicker";
-import styled from "styled-components";
+} from '../ModalStyles';
+import { FC, useState } from 'react';
+import DatePicker from 'react-datepicker';
+import styled from 'styled-components';
 
 interface GenerateModalProps {
   handleGenerate: (startDate: Date | null, endDate: Date | null) => void;
@@ -33,7 +33,7 @@ export const GenerateModal: FC<GenerateModalProps> = ({
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
   return (
-    <StyledModalWrap $size={"default"}>
+    <StyledModalWrap $size={'default'}>
       <StyledModalContent>
         <Flex gap="30px" justify="space-between">
           <Flex gap="10px">
@@ -42,7 +42,7 @@ export const GenerateModal: FC<GenerateModalProps> = ({
             </StyledModalTitle>
           </Flex>
 
-          <CloseIcon color={"#641AEE"} onClick={hideModal} size={28} />
+          <CloseIcon color={'#641AEE'} onClick={hideModal} size={28} />
         </Flex>
 
         <Flex direction="column">

@@ -1,15 +1,15 @@
-import React, { ReactNode } from "react";
+import React, { ReactNode } from 'react';
 
 export type Indent =
-  | "none"
-  | "xsmall"
-  | "small"
-  | "xmedium"
-  | "medium"
-  | "large"
-  | "xlarge"
-  | "xxlarge"
-  | "vlarge";
+  | 'none'
+  | 'xsmall'
+  | 'small'
+  | 'xmedium'
+  | 'medium'
+  | 'large'
+  | 'xlarge'
+  | 'xxlarge'
+  | 'vlarge';
 
 export interface IndentStylesProps {
   $top?: Indent;
@@ -17,15 +17,15 @@ export interface IndentStylesProps {
 }
 
 export type FontSize =
-  | "small"
-  | "medium"
-  | "default"
-  | "big"
-  | "title"
-  | "subheader"
-  | "header"
-  | "heroMedium"
-  | "heroLarge";
+  | 'small'
+  | 'medium'
+  | 'default'
+  | 'big'
+  | 'title'
+  | 'subheader'
+  | 'header'
+  | 'heroMedium'
+  | 'heroLarge';
 
 export interface BreadcrumbItem {
   title: string;
@@ -40,7 +40,7 @@ export interface SidebarMenuLink {
 }
 
 export interface SidebarMenuSubs {
-  type: "divider";
+  type: 'divider';
 }
 
 export type SidebarMenuItem = SidebarMenuSubs | SidebarMenuLink;

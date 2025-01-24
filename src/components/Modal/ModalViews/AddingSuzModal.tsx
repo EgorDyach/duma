@@ -1,6 +1,6 @@
-import Flex from "@components/Flex";
-import CloseIcon from "@components/icons/CloseIcon";
-import { FC, useState } from "react";
+import Flex from '@components/Flex';
+import CloseIcon from '@components/icons/CloseIcon';
+import { FC, useState } from 'react';
 import {
   StyledModalWrap,
   StyledModalContent,
@@ -8,9 +8,9 @@ import {
   StyledModalInput,
   StyledItemTitle,
   StyledModalAdd,
-} from "../ModalStyles";
-import { Text } from "@components/Typography";
-import Input from "@components/input/Input";
+} from '../ModalStyles';
+import { Text } from '@components/Typography';
+import Input from '@components/input/Input';
 
 interface AddingModalProps<T> {
   onConfirm: (newItem: T) => void;
@@ -37,14 +37,14 @@ export const AddingSuzModal: FC<AddingModalProps<SchoolItem>> = ({
   const [newItem, setNewItem] = useState<SchoolItem>(
     initValue || {
       id: new Date().getTime(),
-      name: "",
-      address: "",
-      login: "",
-      password: "",
-      type: "suz",
-    }
+      name: '',
+      address: '',
+      login: '',
+      password: '',
+      type: 'suz',
+    },
   );
-  const [teacherError] = useState("");
+  const [teacherError] = useState('');
 
   const handleAdd = () => {
     const addingItem: SchoolItem = {
@@ -54,12 +54,12 @@ export const AddingSuzModal: FC<AddingModalProps<SchoolItem>> = ({
     onConfirm(addingItem);
   };
   return (
-    <StyledModalWrap $size={"default"}>
+    <StyledModalWrap $size={'default'}>
       <StyledModalContent>
         <Flex gap="30px" justify="space-between">
           <Flex gap="10px">
             <StyledModalTitle $top="xsmall">
-              {initValue ? "Изменить ССУЗ" : "Новый ССУЗ"}
+              {initValue ? 'Изменить ССУЗ' : 'Новый ССУЗ'}
             </StyledModalTitle>
             <StyledModalInput
               placeholder="Введите название..."
@@ -70,7 +70,7 @@ export const AddingSuzModal: FC<AddingModalProps<SchoolItem>> = ({
             />
           </Flex>
 
-          <CloseIcon color={"#641AEE"} onClick={hideModal} size={28} />
+          <CloseIcon color={'#641AEE'} onClick={hideModal} size={28} />
         </Flex>
         <Flex direction="column" $top="medium" gap="16px">
           <StyledItemTitle>
@@ -80,7 +80,7 @@ export const AddingSuzModal: FC<AddingModalProps<SchoolItem>> = ({
               onChange={(newVal) =>
                 setNewItem((prev) => ({ ...prev, address: newVal }))
               }
-              name={""}
+              name={''}
             />
           </StyledItemTitle>
         </Flex>
@@ -90,37 +90,37 @@ export const AddingSuzModal: FC<AddingModalProps<SchoolItem>> = ({
             <Flex gap="10px" align="end">
               <Input
                 // @ts-ignore
-                style={{ flex: 10, width: "100%" }}
+                style={{ flex: 10, width: '100%' }}
                 value={newItem.login}
                 onChange={(newVal) =>
                   setNewItem((prev) => ({ ...prev, login: newVal }))
                 }
-                name={""}
+                name={''}
               />
               <button
                 style={{
                   flex: 1,
                   height: 44.5,
 
-                  border: "none",
+                  border: 'none',
                   borderRadius: 10,
-                  backgroundColor: "#5727ec",
-                  color: "white",
-                  cursor: "pointer",
+                  backgroundColor: '#5727ec',
+                  color: 'white',
+                  cursor: 'pointer',
                   fontSize: 16,
-                  display: "flex",
-                  padding: "12px ",
-                  alignItems: "center",
-                  justifyContent: "center",
+                  display: 'flex',
+                  padding: '12px ',
+                  alignItems: 'center',
+                  justifyContent: 'center',
                 }}
                 onClick={() => {
                   const characters =
-                    "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-                  let login = "";
+                    'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+                  let login = '';
 
                   for (let i = 0; i < 10; i++) {
                     const randomIndex = Math.floor(
-                      Math.random() * characters.length
+                      Math.random() * characters.length,
                     );
                     login += characters[randomIndex];
                   }
@@ -138,38 +138,38 @@ export const AddingSuzModal: FC<AddingModalProps<SchoolItem>> = ({
             <Flex gap="10px" align="end">
               <Input
                 // @ts-ignore
-                style={{ flex: 10, width: "100%" }}
+                style={{ flex: 10, width: '100%' }}
                 value={newItem.password}
                 onChange={(newVal) =>
                   setNewItem((prev) => ({ ...prev, password: newVal }))
                 }
-                name={""}
+                name={''}
               />
               <button
                 style={{
                   flex: 1,
                   height: 44.5,
 
-                  border: "none",
+                  border: 'none',
                   borderRadius: 10,
-                  backgroundColor: "#5727ec",
-                  color: "white",
-                  cursor: "pointer",
+                  backgroundColor: '#5727ec',
+                  color: 'white',
+                  cursor: 'pointer',
                   fontSize: 16,
-                  display: "flex",
-                  padding: "12px ",
-                  alignItems: "center",
-                  justifyContent: "center",
+                  display: 'flex',
+                  padding: '12px ',
+                  alignItems: 'center',
+                  justifyContent: 'center',
                 }}
                 onClick={() => {
-                  const lowercase = "abcdefghijklmnopqrstuvwxyz";
-                  const uppercase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-                  const numbers = "0123456789";
-                  const specialCharacters = "!@#$%^&*()_+[]{}|;:,.<>?";
+                  const lowercase = 'abcdefghijklmnopqrstuvwxyz';
+                  const uppercase = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+                  const numbers = '0123456789';
+                  const specialCharacters = '!@#$%^&*()_+[]{}|;:,.<>?';
 
                   const allCharacters =
                     lowercase + uppercase + numbers + specialCharacters;
-                  let password = "";
+                  let password = '';
 
                   // Убедимся, что пароль содержит хотя бы один символ из каждой категории
                   password +=
@@ -186,7 +186,7 @@ export const AddingSuzModal: FC<AddingModalProps<SchoolItem>> = ({
                   // Заполняем оставшуюся длину пароля случайными символами
                   for (let i = 4; i < 16; i++) {
                     const randomIndex = Math.floor(
-                      Math.random() * allCharacters.length
+                      Math.random() * allCharacters.length,
                     );
                     password += allCharacters[randomIndex];
                   }
@@ -195,9 +195,9 @@ export const AddingSuzModal: FC<AddingModalProps<SchoolItem>> = ({
                   return setNewItem((prev) => ({
                     ...prev,
                     password: password
-                      .split("")
+                      .split('')
                       .sort(() => Math.random() - 0.5)
-                      .join(""),
+                      .join(''),
                   }));
                 }}
               >
@@ -212,7 +212,7 @@ export const AddingSuzModal: FC<AddingModalProps<SchoolItem>> = ({
             <Text $color="red">{teacherError}</Text>
             <Flex gap="16px" $top="large" justify="start">
               <StyledModalAdd onClick={handleAdd}>
-                {initValue ? "Изменить" : "Добавить"}
+                {initValue ? 'Изменить' : 'Добавить'}
               </StyledModalAdd>
               {initValue && (
                 <StyledModalAdd onClick={() => handleDelete(initValue.id)}>

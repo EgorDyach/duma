@@ -1,11 +1,11 @@
-import { css } from "styled-components";
-import { Interpolation, RuleSet, Styles } from "styled-components/dist/types";
+import { css } from 'styled-components';
+import { Interpolation, RuleSet, Styles } from 'styled-components/dist/types';
 
 const devices = {
-  small: "600px",
-  medium: "760px",
-  large: "1000px",
-  xlarge: "1200px",
+  small: '600px',
+  medium: '760px',
+  large: '1000px',
+  xlarge: '1200px',
 };
 export type Devices = keyof typeof devices;
 

@@ -12,7 +12,7 @@ export type TeacherItem = Item & {
     name: string;
     room: AuditoryItem | null;
     id: number;
-    type: "practice" | "lecture";
+    type: 'practice' | 'lecture';
   }[];
 };
 
@@ -32,7 +32,7 @@ export type AccountItem = Item;
 export type SubjectItem = Item & {
   room: AuditoryItem | null;
   teacher: TeacherItem[] | null;
-  type: "practice" | "lecture";
+  type: 'practice' | 'lecture';
   dependsOn: [];
 };
 

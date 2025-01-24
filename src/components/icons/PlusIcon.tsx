@@ -1,5 +1,5 @@
-import { FC, SVGProps } from "react";
-import withIcon from "@hocs/withIcon";
+import { FC, SVGProps } from 'react';
+import withIcon from '@hocs/withIcon';
 
 const Icon: FC = (props: SVGProps<SVGSVGElement>) => (
   <svg
@@ -16,5 +16,5 @@ const Icon: FC = (props: SVGProps<SVGSVGElement>) => (
 
 const PlusIcon = withIcon(Icon);
 
-PlusIcon.displayName = "PlusIcon";
+PlusIcon.displayName = 'PlusIcon';
 export default PlusIcon;

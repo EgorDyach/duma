@@ -1,5 +1,5 @@
-import { FC, PropsWithChildren } from "react";
-import styled, { keyframes } from "styled-components";
+import { FC, PropsWithChildren } from 'react';
+import styled, { keyframes } from 'styled-components';
 
 const spin = keyframes`
   0% {
@@ -54,7 +54,7 @@ const Button: FC<
 > = ({ children, onClick, isLoading, lowPadding }) => {
   return (
     <ButtonContainer onClick={onClick} style={{ height: lowPadding ? 32 : 55 }}>
-      {" "}
+      {' '}
       {isLoading && <Spinner />}
       {!isLoading && children}
     </ButtonContainer>

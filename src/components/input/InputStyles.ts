@@ -1,7 +1,7 @@
-import Flex from "@components/Flex";
-import { Text } from "@components/Typography";
-import { content } from "@lib/theme/colors";
-import styled from "styled-components";
+import Flex from '@components/Flex';
+import { Text } from '@components/Typography';
+import { content } from '@lib/theme/colors';
+import styled from 'styled-components';
 
 export const StyledInput = styled.input`
   color: #333;

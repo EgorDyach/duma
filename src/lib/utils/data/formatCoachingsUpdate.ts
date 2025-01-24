@@ -1,9 +1,9 @@
-import { SubjectItem, StudyPlan } from "@type/studyPlan";
-import { Coaching } from "@type/studyPlanServer";
+import { SubjectItem, StudyPlan } from '@type/studyPlan';
+import { Coaching } from '@type/studyPlanServer';
 
 export const formatCoachingsUpdate = (
   subjects: SubjectItem[],
-  studyPlan: StudyPlan[]
+  studyPlan: StudyPlan[],
 ): Coaching[] => {
   return studyPlan.map((item) => ({
     id: item.id,

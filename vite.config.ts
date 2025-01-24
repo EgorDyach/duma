@@ -1,17 +1,17 @@
-import { defineConfig } from "vite";
-import react from "@vitejs/plugin-react-swc";
-import path from "path";
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react-swc';
+import path from 'path';
 
 const aliasFolders = [
-  "components",
-  "type",
-  "lib",
-  "modules",
-  "store",
-  "hooks",
-  "hocs",
-  "assets",
-  "layouts",
+  'components',
+  'type',
+  'lib',
+  'modules',
+  'store',
+  'hooks',
+  'hocs',
+  'assets',
+  'layouts',
 ];
 
 // https://vitejs.dev/config/
@@ -25,7 +25,7 @@ export default defineConfig({
           `${path.resolve(__dirname, `./src/${v}/`)}`,
         ]),
       ),
-      "@public": `${path.resolve(__dirname, "./public/")}`,
+      '@public': `${path.resolve(__dirname, './public/')}`,
     },
   },
 });

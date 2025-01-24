@@ -1,6 +1,6 @@
-import { FC, PropsWithChildren } from "react";
-import styled from "styled-components";
-import Flex from "./Flex";
+import { FC, PropsWithChildren } from 'react';
+import styled from 'styled-components';
+import Flex from './Flex';
 
 const StyledRange = styled(Flex)`
   padding: 13px 30px;
