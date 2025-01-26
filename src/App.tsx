@@ -9,13 +9,13 @@ import { store } from './store';
 const TOAST_OPTIONS: DefaultToastOptions = { style: { fontSize: 15 } };
 
 function App() {
-    return (
-        <Provider store={store}>
-            <Toaster position="top-right" toastOptions={TOAST_OPTIONS} />
-            <GlobalStyles />
-            <RouterProvider router={appRoutersConfig} />
-        </Provider>
-    );
+  return (
+    <Provider store={store}>
+      <Toaster position="top-right" toastOptions={TOAST_OPTIONS} />
+      <GlobalStyles />
+      <RouterProvider router={appRoutersConfig} />
+    </Provider>
+  );
 }
 
 export default App;

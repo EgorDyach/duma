@@ -1,5 +1,5 @@
 const EducationPage = () => {
-    return '?)';
+  return '?)';
 };
 
 export default EducationPage;

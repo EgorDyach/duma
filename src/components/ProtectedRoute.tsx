@@ -9,22 +9,22 @@ import { useAppDispatch } from '@hooks/useAppDispatch';
 import { useRequestFetched } from '@hooks/useRequestFetching';
 
 export const ProtectedRoute: FC<PropsWithChildren> = ({ children }) => {
-    const user = useSelector(uiSelectors.getUser);
-    const dispatch = useAppDispatch();
-    const navigate = useNavigate();
+  const user = useSelector(uiSelectors.getUser);
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
-    const userIsFetched = useRequestFetched('getUser');
+  const userIsFetched = useRequestFetched('getUser');
 
-    useEffectOnce(() => {
-        if (!user) dispatch(fetchUser(navigate));
-    });
+  useEffectOnce(() => {
+    if (!user) dispatch(fetchUser(navigate));
+  });
 
-    if (!userIsFetched)
-        return (
-            <Flex align="center" justify="center" style={{ height: '100vh' }}>
-                <h2>Загрузка...</h2>
-            </Flex>
-        );
+  if (!userIsFetched)
+    return (
+      <Flex align="center" justify="center" style={{ height: '100vh' }}>
+        <h2>Загрузка...</h2>
+      </Flex>
+    );
 
-    return children;
+  return children;
 };

@@ -8,44 +8,44 @@ import { AuthPage } from '@modules/authPage/AuthPage';
 import AppRoutes from './routes';
 
 export const appRoutersConfig = createBrowserRouter([
-    {
-        path: AppRoutes.login,
-        errorElement: (
-            <MainLayout>
-                <PageNotFound />
-            </MainLayout>
-        ),
-        element: <AuthLayout />,
-        children: [
-            {
-                path: '',
-                element: <AuthPage />,
-            },
-            {
-                path: 'admin',
-                element: <AuthPage isAdmin />,
-            },
-        ],
-    },
-    {
-        path: '/',
-        errorElement: (
-            <ProtectedRoute>
-                <MainLayout>
-                    <PageNotFound />
-                </MainLayout>
-            </ProtectedRoute>
-        ),
-        element: (
-            <ProtectedRoute>
-                <MainLayout />
-            </ProtectedRoute>
-        ),
-        children: [
-            {
-                path: '',
-                element: <RootPage />,
-            },
-        ],
-    },
+  {
+    path: AppRoutes.login,
+    errorElement: (
+      <MainLayout>
+        <PageNotFound />
+      </MainLayout>
+    ),
+    element: <AuthLayout />,
+    children: [
+      {
+        path: '',
+        element: <AuthPage />,
+      },
+      {
+        path: 'admin',
+        element: <AuthPage isAdmin />,
+      },
+    ],
+  },
+  {
+    path: '/',
+    errorElement: (
+      <ProtectedRoute>
+        <MainLayout>
+          <PageNotFound />
+        </MainLayout>
+      </ProtectedRoute>
+    ),
+    element: (
+      <ProtectedRoute>
+        <MainLayout />
+      </ProtectedRoute>
+    ),
+    children: [
+      {
+        path: '',
+        element: <RootPage />,
+      },
+    ],
+  },
 ]);

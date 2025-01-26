@@ -10,19 +10,26 @@
 import Flex from '@components/Flex';
 import styled from 'styled-components';
 import SchoolModule from './school/SchoolModule';
+import { useEffectOnce } from '@hooks/useEffectOnce';
+import { useAppDispatch } from '@hooks/useAppDispatch';
+import { fetchEducations } from '@store/admin/thunks';
 
 const Wrapper = styled(Flex)`
-    background-color: #fff;
-    flex-direction: column;
-    border-radius: 10px;
-    padding: 40px 35px;
+  background-color: #fff;
+  flex-direction: column;
+  border-radius: 10px;
+  padding: 40px 35px;
 `;
 
 const AdminPage = () => {
-    return (
-        <Wrapper>
-            <SchoolModule />
-            {/* <Flex direction="column" $top="large">
+  const dispatch = useAppDispatch();
+  useEffectOnce(() => {
+    dispatch(fetchEducations());
+  });
+  return (
+    <Wrapper>
+      <SchoolModule />
+      {/* <Flex direction="column" $top="large">
                 <Title action={() => setIsVuzModalOpen(true)}>Вузы</Title>
                 {!areSchoolsLoading && (
                     <>
@@ -221,8 +228,8 @@ const AdminPage = () => {
                     />
                 </Portal>
             )} */}
-        </Wrapper>
-    );
+    </Wrapper>
+  );
 };
 
 export default AdminPage;

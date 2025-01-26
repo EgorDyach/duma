@@ -1,5 +1,6 @@
 import Flex from '@components/Flex';
 import { Text } from '@components/Typography';
+import SessionService from '@lib/utils/sessionService';
 import { FC, PropsWithChildren } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
@@ -65,7 +66,7 @@ export const MainLayout: FC<PropsWithChildren> = ({ children }) => {
         </Flex>
         <ExitButton
           onClick={() => {
-            sessionStorage.removeItem('token');
+            SessionService.logout();
             navigate('/login');
           }}
         >

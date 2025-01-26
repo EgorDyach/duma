@@ -10,11 +10,11 @@ const LazyAdminPage = lazy(() => import('../adminPage/AdminPage'));
 const LazyEducationPage = lazy(() => import('../educationPage/EducationPage'));
 
 export const RootPage = () => {
-    const user = useSelector(uiSelectors.getUser);
-    if (!user) return <Navigate to={AppRoutes.login} />;
-    return (
-        <Suspense fallback={<ContentLoader />}>
-            {isAdmin(user) ? <LazyAdminPage /> : <LazyEducationPage />}
-        </Suspense>
-    );
+  const user = useSelector(uiSelectors.getUser);
+  if (!user) return <Navigate to={AppRoutes.login} />;
+  return (
+    <Suspense fallback={<ContentLoader />}>
+      {user && isAdmin(user) ? <LazyAdminPage /> : <LazyEducationPage />}
+    </Suspense>
+  );
 };

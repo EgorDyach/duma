@@ -2,16 +2,16 @@ import { UserEducation } from '@type/user';
 import { AdminState, adminStateName, StoreWithAdminState } from './types';
 
 const getState = (store: StoreWithAdminState): AdminState =>
-    store[adminStateName];
+  store[adminStateName];
 
 export const getSchools = (s: StoreWithAdminState): UserEducation[] =>
-    getState(s).schools;
+  getState(s).schools;
 
 export const getUniversities = (s: StoreWithAdminState): UserEducation[] =>
-    getState(s).universities;
+  getState(s).universities;
 
 export const getSecondaries = (s: StoreWithAdminState): UserEducation[] =>
-    getState(s).secondaries;
+  getState(s).secondaries;
 
 export const getOtherEducations = (s: StoreWithAdminState): UserEducation[] =>
-    getState(s).otherEducations;
+  getState(s).otherEducations;
