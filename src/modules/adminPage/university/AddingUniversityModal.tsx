@@ -9,8 +9,8 @@ import {
 import Input from '@components/input/Input';
 import { UserEducation } from '@type/user';
 import { useSelector } from 'react-redux';
-import { uiSelectors } from '@store/ui';
-import { MODAL_NAME } from './SchoolModule';
+import { uiActions, uiSelectors } from '@store/ui';
+import { MODAL_NAME } from './UniversityModule';
 import { useAppDispatch } from '@hooks/useAppDispatch';
 import {
   fetchAddEducation,
@@ -24,12 +24,12 @@ const ITEM_INIT_DATA: UserEducation = {
   email: '',
   fullname: '',
   Education: {
-    type: 'school',
+    type: 'university',
     name: '',
   },
 };
 
-export const AddingSchoolModal = () => {
+export const AddingUniversityModal = () => {
   const dispatch = useAppDispatch();
   const modals = useSelector(uiSelectors.getModals);
   const currentModal = modals[MODAL_NAME];
@@ -38,8 +38,12 @@ export const AddingSchoolModal = () => {
   );
 
   const handleAdd = () => {
-    if (currentModal.isEditing) return dispatch(fetchEditEducation(newItem));
-    dispatch(fetchAddEducation(newItem));
+    const addingItem = {
+      ...newItem,
+      ID: newItem.ID || new Date().getTime(),
+    };
+    if (currentModal.isEditing) return dispatch(fetchEditEducation(addingItem));
+    dispatch(fetchAddEducation(addingItem));
   };
 
   return (
@@ -47,7 +51,9 @@ export const AddingSchoolModal = () => {
       <Flex gap="30px" justify="space-between">
         <Flex gap="10px">
           <StyledModalTitle $top="xsmall">
-            {currentModal.isEditing ? 'Изменить школу' : 'Новая школа'}
+            {currentModal.isEditing
+              ? 'Изменить университет'
+              : 'Новый университет'}
           </StyledModalTitle>
           <StyledModalInput
             placeholder="Введите название..."
@@ -156,6 +162,7 @@ export const AddingSchoolModal = () => {
               <StyledModalAdd
                 onClick={() => {
                   dispatch(fetchDeleteEducation(currentModal.value!.email));
+                  dispatch(uiActions.closeModals());
                 }}
               >
                 Удалить

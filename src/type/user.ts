@@ -18,7 +18,7 @@ export type UserEducation = {
   DeletedAt?: null | string;
   uuid?: string;
   email: string;
-  password: string;
+  password?: string;
   token?: string;
   fullname: string;
   education_id?: number;

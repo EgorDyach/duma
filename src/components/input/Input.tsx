@@ -21,6 +21,7 @@ const Input: React.FC<InputProps> = ({
   suffix,
   onBlur,
   onFocus,
+  disabled,
   ...props
 }) => {
   return (
@@ -42,6 +43,7 @@ const Input: React.FC<InputProps> = ({
           onChange={(e) => onChange(e.currentTarget.value)}
           onFocus={onFocus}
           onBlur={onBlur}
+          disabled={disabled}
         />
         {suffix && (
           <SuffixWrapper direction="row" align="center">

@@ -46,6 +46,7 @@ export const fetchDeleteEducation =
     try {
       await requestRemoveEducation$(email);
       dispatch(adminActions.removeItem(email));
+      dispatch(uiActions.closeModals());
     } catch (error) {
       showErrorNotification('Ошибка при удалении учреждений');
     } finally {
@@ -57,9 +58,11 @@ export const fetchEditEducation =
   (newItem: UserEducation) =>
   async (dispatch: AppDispatch): Promise<void> => {
     dispatch(uiActions.setRequestStarted('educations'));
+    if (!newItem.password) delete newItem.password;
     try {
-      await requestEditEducation$(newItem);
+      await requestEditEducation$({ ...newItem });
       dispatch(adminActions.editItem(newItem));
+      dispatch(uiActions.closeModals());
     } catch (error) {
       showErrorNotification('Ошибка при удалении учреждений');
     } finally {
@@ -74,6 +77,7 @@ export const fetchAddEducation =
     try {
       await requestAddEducation$(newItem);
       dispatch(adminActions.addItem(newItem));
+      dispatch(uiActions.closeModals());
     } catch (error) {
       showErrorNotification('Ошибка при удалении учреждений');
     } finally {

@@ -12,6 +12,9 @@ export const StyledInput = styled.input`
   outline: none;
   font-size: 16px;
   width: 100%;
+  &:disabled {
+    color: #999;
+  }
 `;
 
 export const StyledLabel = styled(Text)`

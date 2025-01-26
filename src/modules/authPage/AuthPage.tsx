@@ -7,9 +7,11 @@ import Checkbox from '@components/Checkbox';
 import Button from './Button';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
-import { requestAuthenticateDuma } from '@lib/api/user';
+import { requestAuthenticate } from '@lib/api/user';
 import { showErrorNotification } from '@lib/utils/notification';
 import SessionService from '@lib/utils/sessionService';
+import { useAppDispatch } from '@hooks/useAppDispatch';
+import { uiActions } from '@store/ui';
 
 const StyledFlex = styled(Flex)`
   height: 80vh;
@@ -71,16 +73,21 @@ export const AuthPage: FC<AuthProps> = ({ isAdmin = false }) => {
   const [password, setPassword] = useState('');
   const [saving, setSaving] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const handleSubmit = async () => {
     setIsLoading(true);
     try {
-      const res = await requestAuthenticateDuma(login, password);
-      SessionService.login(res.message.token);
+      const res = await requestAuthenticate(login, password);
+      if (res && res.message && res.message.token) {
+        console.log(res);
+        dispatch(uiActions.setUser(res.message));
+        SessionService.login(res.message.token);
+      }
       navigate('/');
     } catch (e) {
       const error = e as { response: { data: { error: string } } };
-      showErrorNotification(error.response.data.error);
+      showErrorNotification(String(error));
     } finally {
       setIsLoading(false);
     }
