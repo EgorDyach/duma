@@ -1,5 +1,4 @@
 import Flex from '@components/Flex';
-import EyeIcon from '@components/icons/EyeIcon';
 import { AddingUniversityModal } from './AddingUniversityModal';
 import TextButton from '@components/TextButton';
 import { Title } from '@components/Title';
@@ -8,6 +7,7 @@ import { adminSelectors } from '@store/admin';
 import { uiActions, uiSelectors } from '@store/ui';
 import { useSelector } from 'react-redux';
 import { Modal } from '@components/Modal/Modal';
+import PenIcon from '@components/icons/PenIcon';
 
 export const MODAL_NAME = 'addUniversity';
 
@@ -52,22 +52,7 @@ const UniversityModule = () => {
               {universities.map((item) => (
                 <Flex gap="16px" align="center">
                   <button
-                    style={{
-                      padding: 8,
-                      background: 'white',
-                      borderRadius: 8,
-                      width: 32,
-                      height: 32,
-                    }}
-                  >
-                    <EyeIcon />
-                  </button>
-                  <TextButton
-                    key={item.Education.ID}
-                    text={item.Education.name}
-                    // @ts-ignore
-                    size="full"
-                    openEditing={() =>
+                    onClick={() =>
                       dispatch(
                         uiActions.openModal({
                           modalName: MODAL_NAME,
@@ -76,6 +61,32 @@ const UniversityModule = () => {
                         }),
                       )
                     }
+                    style={{
+                      alignItems: 'center',
+                      display: 'flex',
+                      justifyContent: 'center',
+                      background: 'white',
+                      borderRadius: 8,
+                      width: 32,
+                      height: 32,
+                      cursor: 'pointer',
+                    }}
+                  >
+                    <PenIcon width="24px" height="24px" />
+                  </button>
+                  <TextButton
+                    key={item.Education.ID}
+                    text={item.Education.name}
+                    // @ts-ignore
+                    size="full"
+                    openEditing={() => {}}
+                  />
+                  <TextButton
+                    key={item.Education.ID}
+                    text={item.fullname}
+                    // @ts-ignore
+                    size="full"
+                    openEditing={() => {}}
                   />
                 </Flex>
               ))}

@@ -82,7 +82,8 @@ export const AuthPage: FC<AuthProps> = ({ isAdmin = false }) => {
       if (res && res.message && res.message.token) {
         console.log(res);
         dispatch(uiActions.setUser(res.message));
-        SessionService.login(res.message.token);
+        dispatch(uiActions.setRequestFinished('getUser'));
+        if (saving) SessionService.login(res.message.token);
         navigate('/');
       }
     } catch (e) {

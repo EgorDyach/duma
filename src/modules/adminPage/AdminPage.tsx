@@ -1,12 +1,3 @@
-// import Flex from '@components/Flex';
-// import { Backdrop } from '@components/Modal/ModalStyles';
-// import { AddingSchoolModal } from '@components/Modal/ModalViews/AddingSchoolModal';
-// import { AddingSuzModal } from '@components/Modal/ModalViews/AddingSuzModal';
-// import { AddingVuzModal } from '@components/Modal/ModalViews/AddingVuzModal';
-// import Portal from '@components/Portal';
-// import TextButton from '@components/TextButton';
-// import { Title } from '@components/Title';
-
 import Flex from '@components/Flex';
 import styled from 'styled-components';
 import SchoolModule from './school/SchoolModule';
@@ -15,6 +6,7 @@ import { useAppDispatch } from '@hooks/useAppDispatch';
 import { fetchEducations } from '@store/admin/thunks';
 import UniversityModule from './university/UniversityModule';
 import SecondaryModule from './secondary/SecondaryModule';
+import { StyledButton } from '@modules/educationPage/EducationPage';
 
 const Wrapper = styled(Flex)`
   background-color: #fff;
@@ -30,6 +22,37 @@ const AdminPage = () => {
   });
   return (
     <Wrapper>
+      <Flex gap="16px" align="center">
+        <button
+          style={{
+            alignItems: 'center',
+            display: 'flex',
+            justifyContent: 'center',
+            background: 'white',
+            borderRadius: 8,
+            width: 56,
+            height: 32,
+            cursor: 'pointer',
+            border: 'none',
+          }}
+        ></button>
+        <StyledButton
+          // @ts-ignore
+          size="full"
+          style={{ width: '100%' }}
+          openEditing={() => {}}
+        >
+          Название
+        </StyledButton>
+        <StyledButton
+          // @ts-ignore
+          size="full"
+          style={{ width: '100%' }}
+          openEditing={() => {}}
+        >
+          Администратор
+        </StyledButton>
+      </Flex>
       <SchoolModule />
       <UniversityModule />
       <SecondaryModule />
