@@ -235,8 +235,24 @@ const EducationPage: React.FC = () => {
       setAreAuditoriesLoading(true);
       setAreAccountsLoading(true);
       setAreLessonTimesLoading(true);
+
+      if (!user) {
+        showErrorNotification('Вы не авторизованы!');
+        return navigate('/login');
+      }
+
+      if (!('education_id' in user)) {
+        showErrorNotification('У вас другая категория аккаунтов!');
+        return navigate('/login');
+      }
+
+      if (!user.education_id) {
+        showErrorNotification('Неизвестная ошибка!');
+        return navigate('/login');
+      }
+
       try {
-        const res = await requestAllAccounts();
+        const res = await requestAllAccounts(user.education_id);
         const newAccounts = res.message.map((el) => ({
           id: el.ID,
           name: el.name,
@@ -244,7 +260,7 @@ const EducationPage: React.FC = () => {
         setAccounts(newAccounts);
         setInitialAccounts(newAccounts);
         setAreAccountsLoading(false);
-        const resAuditories = await requestAllRoom();
+        const resAuditories = await requestAllRoom(user.education_id);
         const newAuditories = resAuditories.message
           .filter((el) => el.ID !== 666)
           .map((el) => ({
@@ -258,7 +274,7 @@ const EducationPage: React.FC = () => {
         setInitialAuditories(newAuditories);
         setAreAuditoriesLoading(false);
 
-        const resGroups = await requestAllGroups();
+        const resGroups = await requestAllGroups(user.education_id);
         const newClasses = resGroups.message.map((el) => ({
           id: el.ID,
           name: el.Name,
@@ -270,7 +286,7 @@ const EducationPage: React.FC = () => {
         setClasses(newClasses);
         setInitialClasses(newClasses);
         setAreClassesLoading(false);
-        const resLessonTimes = await requestAllLessonTimes();
+        const resLessonTimes = await requestAllLessonTimes(user.education_id);
         setLessonTimes(
           resLessonTimes.message.map(({ ID, StartTime, EndTime }) => ({
             ID,
@@ -285,11 +301,11 @@ const EducationPage: React.FC = () => {
             EndTime,
           })),
         );
-        const resTeachers = await requestAllTeacher();
-        const resSubjects = await requestAllSubjects();
-        const resCoaches = await requestAllCoaches();
+        const resTeachers = await requestAllTeacher(user.education_id);
+        const resSubjects = await requestAllSubjects(user.education_id);
+        const resCoaches = await requestAllCoaches(user.education_id);
         setServerCoach(resCoaches.message);
-        const resCoachLessons = await requestAllCoachLessons();
+        const resCoachLessons = await requestAllCoachLessons(user.education_id);
         setServerCoachLessons(resCoachLessons.message);
         const newTeachers = resTeachers.message.map((el) => ({
           id: el.ID,
@@ -382,7 +398,7 @@ const EducationPage: React.FC = () => {
         setStudyPlan(studyPlan);
         setInitialStudyPlan(studyPlan);
       } catch (e) {
-        toast.error(e as string);
+        toast.error(String(e) as string);
       } finally {
         setAreLessonTimesLoading(false);
         setAreSubjectsLoading(false);

@@ -4,6 +4,17 @@ import { ApiError, AppApi } from '@type/api';
 import AppRoutes from '@lib/configs/routes';
 import SessionService from '@lib/utils/sessionService';
 import { showErrorNotification } from '@lib/utils/notification';
+import { Response } from '@type/common';
+import {
+  Room,
+  Teacher,
+  Group,
+  Subject,
+  Coaching,
+  CoachLesson,
+} from '@type/studyPlanServer';
+import { Account } from '@lib/utils/data/formatAccounts';
+import { LessonTime } from '@type/studyPlan';
 
 const defaultHeaders = {
   'Accept-Language': 'ru',
@@ -49,60 +60,39 @@ const createRequestInstance = (addAuthHeader: boolean): AppApi => {
 export const request = createRequestInstance(true);
 export const noAuthRequest = createRequestInstance(false);
 
-import { Response } from '@type/common';
-import {
-  Room,
-  Teacher,
-  Group,
-  Subject,
-  Coaching,
-  CoachLesson,
-} from '@type/studyPlanServer';
-import { Account } from '@lib/utils/data/formatAccounts';
-import { LessonTime } from '@type/studyPlan';
 export const requestCreateRoom = async (
   data: Room[],
   education_id: number,
 ): Promise<void> => {
-  await fetch('https://puzzlesignlanguage.online/api/v1/create/Room', {
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    method: 'POST',
-    body: JSON.stringify({
-      ...data.map((el) => ({ ...el, education_id })),
-    }),
-  });
+  await request.post(
+    'https://puzzlesignlanguage.online/api/v1/create/Room',
+    data.map((el) => ({ ...el, education_id })),
+  );
 };
 export const requestUpdateRoom = async (
   data: Room[],
   education_id: number,
 ): Promise<void> => {
-  await fetch('https://puzzlesignlanguage.online/api/v1/update/Room', {
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    method: 'PUT',
-    body: JSON.stringify({
-      ...data.map((el) => ({ ...el, education_id })),
-    }),
-  });
+  await request.put(
+    'https://puzzlesignlanguage.online/api/v1/update/Room',
+    data.map((el) => ({ ...el, education_id })),
+  );
 };
 export const requestDeleteRoom = async (
   data: Room[],
   education_id: number,
 ): Promise<void> => {
-  await fetch('https://puzzlesignlanguage.online/api/v1/delete/room', {
+  await request.delete('https://puzzlesignlanguage.online/api/v1/delete/room', {
     headers: {
       'Content-Type': 'application/json',
     },
     method: 'DELETE',
-    body: JSON.stringify({
-      ...data.map((el) => ({ ...el, education_id })),
-    }),
+    data: data.map((el) => ({ ...el, education_id })),
   });
 };
-export const requestAllRoom = async (): Promise<
+export const requestAllRoom = async (
+  education_id: number,
+): Promise<
   Response<
     {
       CreatedAt: string;
@@ -116,51 +106,46 @@ export const requestAllRoom = async (): Promise<
     }[]
   >
 > => {
-  return await fetch('https://puzzlesignlanguage.online/api/v1/Get/Room', {
-    headers: {
-      'Content-Type': 'application/json',
+  return await request.get(
+    'https://puzzlesignlanguage.online/api/v1/Get/Room',
+    {
+      data: { education_id },
     },
-    method: 'GET',
-  }).then(async (res) => await res.json());
+  );
 };
 //
 export const requestCreateTeacher = async (
   data: Teacher[],
   education_id: number,
 ): Promise<void> => {
-  await fetch('https://puzzlesignlanguage.online/api/v1/create/teacher', {
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    method: 'POST',
-    body: JSON.stringify({ ...data.map((el) => ({ ...el, education_id })) }),
-  });
+  await request.post(
+    'https://puzzlesignlanguage.online/api/v1/create/teacher',
+    data.map((el) => ({ ...el, education_id })),
+  );
 };
 export const requestUpdateTeacher = async (
   data: Teacher[],
   education_id: number,
 ): Promise<void> => {
-  await fetch('https://puzzlesignlanguage.online/api/v1/update/teacher', {
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    method: 'PUT',
-    body: JSON.stringify({ ...data.map((el) => ({ ...el, education_id })) }),
-  });
+  await request.put(
+    'https://puzzlesignlanguage.online/api/v1/update/teacher',
+    data.map((el) => ({ ...el, education_id })),
+  );
 };
 export const requestDeleteTeacher = async (
   data: Teacher[],
   education_id: number,
 ): Promise<void> => {
-  await fetch('https://puzzlesignlanguage.online/api/v1/delete/teacher', {
-    headers: {
-      'Content-Type': 'application/json',
+  await request.delete(
+    'https://puzzlesignlanguage.online/api/v1/delete/teacher',
+    {
+      data: data.map((el) => ({ ...el, education_id })),
     },
-    method: 'DELETE',
-    body: JSON.stringify({ ...data.map((el) => ({ ...el, education_id })) }),
-  });
+  );
 };
-export const requestAllTeacher = async (): Promise<
+export const requestAllTeacher = async (
+  education_id: number,
+): Promise<
   Response<
     {
       CreatedAt: string;
@@ -173,50 +158,45 @@ export const requestAllTeacher = async (): Promise<
     }[]
   >
 > => {
-  return await fetch('https://puzzlesignlanguage.online/api/v1/Get/teacher', {
-    headers: {
-      'Content-Type': 'application/json',
+  return await request.get(
+    'https://puzzlesignlanguage.online/api/v1/Get/teacher',
+    {
+      data: { education_id },
     },
-    method: 'GET',
-  }).then(async (res) => await res.json());
+  );
 };
 export const requestCreateGroup = async (
   data: Group[],
   education_id: number,
 ): Promise<void> => {
-  await fetch('https://puzzlesignlanguage.online/api/v1/create/group', {
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    method: 'POST',
-    body: JSON.stringify({ ...data.map((el) => ({ ...el, education_id })) }),
-  });
+  await request.post(
+    'https://puzzlesignlanguage.online/api/v1/create/group',
+    data.map((el) => ({ ...el, education_id })),
+  );
 };
 export const requestUpdateGroup = async (
   data: Group[],
   education_id: number,
 ): Promise<void> => {
-  await fetch('https://puzzlesignlanguage.online/api/v1/update/group', {
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    method: 'PUT',
-    body: JSON.stringify({ ...data.map((el) => ({ ...el, education_id })) }),
-  });
+  await request.put(
+    'https://puzzlesignlanguage.online/api/v1/update/group',
+    data.map((el) => ({ ...el, education_id })),
+  );
 };
 export const requestDeleteGroup = async (
   data: Group[],
   education_id: number,
 ): Promise<void> => {
-  await fetch('https://puzzlesignlanguage.online/api/v1/delete/group', {
-    headers: {
-      'Content-Type': 'application/json',
+  await request.delete(
+    'https://puzzlesignlanguage.online/api/v1/delete/group',
+    {
+      data: data.map((el) => ({ ...el, education_id })),
     },
-    method: 'DELETE',
-    body: JSON.stringify({ ...data.map((el) => ({ ...el, education_id })) }),
-  });
+  );
 };
-export const requestAllGroups = async (): Promise<
+export const requestAllGroups = async (
+  education_id: number,
+): Promise<
   Response<
     {
       CreatedAt: string;
@@ -232,50 +212,45 @@ export const requestAllGroups = async (): Promise<
     }[]
   >
 > => {
-  return await fetch('https://puzzlesignlanguage.online/api/v1/get/group', {
-    headers: {
-      'Content-Type': 'application/json',
+  return await request.get(
+    'https://puzzlesignlanguage.online/api/v1/get/group',
+    {
+      data: { education_id },
     },
-    method: 'GET',
-  }).then(async (res) => await res.json());
+  );
 };
 export const requestCreateSubjects = async (
   data: Subject[],
   education_id: number,
 ): Promise<void> => {
-  await fetch('https://puzzlesignlanguage.online/api/v1/create/subject', {
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    method: 'POST',
-    body: JSON.stringify({ ...data.map((el) => ({ ...el, education_id })) }),
-  });
+  await request.post(
+    'https://puzzlesignlanguage.online/api/v1/create/subject',
+    data.map((el) => ({ ...el, education_id })),
+  );
 };
 export const requestUpdateSubjects = async (
   data: Subject[],
   education_id: number,
 ): Promise<void> => {
-  await fetch('https://puzzlesignlanguage.online/api/v1/update/subject', {
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    method: 'PUT',
-    body: JSON.stringify({ ...data.map((el) => ({ ...el, education_id })) }),
-  });
+  await request.put(
+    'https://puzzlesignlanguage.online/api/v1/update/subject',
+    data.map((el) => ({ ...el, education_id })),
+  );
 };
 export const requestDeleteSubjects = async (
   data: Subject[],
   education_id: number,
 ): Promise<void> => {
-  await fetch('https://puzzlesignlanguage.online/api/v1/delete/subject', {
-    headers: {
-      'Content-Type': 'application/json',
+  await request.delete(
+    'https://puzzlesignlanguage.online/api/v1/delete/subject',
+    {
+      data: data.map((el) => ({ ...el, education_id })),
     },
-    method: 'DELETE',
-    body: JSON.stringify({ ...data.map((el) => ({ ...el, education_id })) }),
-  });
+  );
 };
-export const requestAllSubjects = async (): Promise<
+export const requestAllSubjects = async (
+  education_id: number,
+): Promise<
   Response<
     {
       CreatedAt: string;
@@ -286,50 +261,45 @@ export const requestAllSubjects = async (): Promise<
     }[]
   >
 > => {
-  return await fetch('https://puzzlesignlanguage.online/api/v1/Get/subject', {
-    headers: {
-      'Content-Type': 'application/json',
+  return await request.get(
+    'https://puzzlesignlanguage.online/api/v1/Get/subject',
+    {
+      data: { education_id },
     },
-    method: 'GET',
-  }).then(async (res) => await res.json());
+  );
 };
 export const requestCreateCoach = async (
   data: Coaching[],
   education_id: number,
 ): Promise<void> => {
-  await fetch('https://puzzlesignlanguage.online/api/v1/create/coach', {
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    method: 'POST',
-    body: JSON.stringify({ ...data.map((el) => ({ ...el, education_id })) }),
-  });
+  await request.post(
+    'https://puzzlesignlanguage.online/api/v1/create/coach',
+    data.map((el) => ({ ...el, education_id })),
+  );
 };
 export const requestUpdateCoach = async (
   data: Coaching[],
   education_id: number,
 ): Promise<void> => {
-  await fetch('https://puzzlesignlanguage.online/api/v1/update/coach', {
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    method: 'PUT',
-    body: JSON.stringify({ ...data.map((el) => ({ ...el, education_id })) }),
-  });
+  await request.put(
+    'https://puzzlesignlanguage.online/api/v1/update/coach',
+    data.map((el) => ({ ...el, education_id })),
+  );
 };
 export const requestDeleteCoach = async (
   data: Coaching[],
   education_id: number,
 ): Promise<void> => {
-  await fetch('https://puzzlesignlanguage.online/api/v1/delete/coach', {
-    headers: {
-      'Content-Type': 'application/json',
+  await request.delete(
+    'https://puzzlesignlanguage.online/api/v1/delete/coach',
+    {
+      data: data.map((el) => ({ ...el, education_id })),
     },
-    method: 'DELETE',
-    body: JSON.stringify({ ...data.map((el) => ({ ...el, education_id })) }),
-  });
+  );
 };
-export const requestAllCoaches = async (): Promise<
+export const requestAllCoaches = async (
+  education_id: number,
+): Promise<
   Response<
     {
       CreatedAt: string;
@@ -344,50 +314,45 @@ export const requestAllCoaches = async (): Promise<
     }[]
   >
 > => {
-  return await fetch('https://puzzlesignlanguage.online/api/v1/Get/coach', {
-    headers: {
-      'Content-Type': 'application/json',
+  return await request.get(
+    'https://puzzlesignlanguage.online/api/v1/Get/coach',
+    {
+      data: { education_id },
     },
-    method: 'GET',
-  }).then(async (res) => await res.json());
+  );
 };
 export const requestCreateCoachLessons = async (
   data: CoachLesson[],
   education_id: number,
 ): Promise<void> => {
-  await fetch('https://puzzlesignlanguage.online/api/v1/create/coachlesson', {
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    method: 'POST',
-    body: JSON.stringify({ ...data.map((el) => ({ ...el, education_id })) }),
-  });
+  await request.post(
+    'https://puzzlesignlanguage.online/api/v1/create/coachlesson',
+    data.map((el) => ({ ...el, education_id })),
+  );
 };
 export const requestUpdateCoachLessons = async (
   data: CoachLesson[],
   education_id: number,
 ): Promise<void> => {
-  await fetch('https://puzzlesignlanguage.online/api/v1/update/coachlesson', {
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    method: 'PUT',
-    body: JSON.stringify({ ...data.map((el) => ({ ...el, education_id })) }),
-  });
+  await request.put(
+    'https://puzzlesignlanguage.online/api/v1/update/coachlesson',
+    data.map((el) => ({ ...el, education_id })),
+  );
 };
 export const requestDeleteCoachLessons = async (
   data: (CoachLesson & { id: number })[],
   education_id: number,
 ): Promise<void> => {
-  await fetch('https://puzzlesignlanguage.online/api/v1/delete/coachlesson', {
-    headers: {
-      'Content-Type': 'application/json',
+  await request.delete(
+    'https://puzzlesignlanguage.online/api/v1/delete/coachlesson',
+    {
+      data: data.map((el) => ({ ...el, education_id })),
     },
-    method: 'DELETE',
-    body: JSON.stringify({ ...data.map((el) => ({ ...el, education_id })) }),
-  });
+  );
 };
-export const requestAllCoachLessons = async (): Promise<
+export const requestAllCoachLessons = async (
+  education_id: number,
+): Promise<
   Response<
     {
       ID: number;
@@ -398,54 +363,46 @@ export const requestAllCoachLessons = async (): Promise<
     }[]
   >
 > => {
-  return await fetch(
+  return await request.get(
     'https://puzzlesignlanguage.online/api/v1/get/coachlesson',
     {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      method: 'GET',
+      data: education_id,
     },
-  ).then(async (res) => await res.json());
+  );
 };
 
 export const requestCreateAccounts = async (
   data: Account[],
   education_id: number,
 ): Promise<void> => {
-  await fetch('https://puzzlesignlanguage.online/api/v1/create/profile', {
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    method: 'POST',
-    body: JSON.stringify({ ...data.map((el) => ({ ...el, education_id })) }),
-  });
+  await request.post(
+    'https://puzzlesignlanguage.online/api/v1/create/profile',
+    data.map((el) => ({ ...el, education_id })),
+  );
 };
 export const requestDeleteAccounts = async (
   data: Account[],
   education_id: number,
 ): Promise<void> => {
-  await fetch('https://puzzlesignlanguage.online/api/v1/delete/profile', {
-    headers: {
-      'Content-Type': 'application/json',
+  await request.delete(
+    'https://puzzlesignlanguage.online/api/v1/delete/profile',
+    {
+      data: data.map((el) => ({ ...el, education_id })),
     },
-    method: 'DELETE',
-    body: JSON.stringify({ ...data.map((el) => ({ ...el, education_id })) }),
-  });
+  );
 };
 export const requestUpdateAccounts = async (
   data: Account[],
   education_id: number,
 ): Promise<void> => {
-  await fetch('https://puzzlesignlanguage.online/api/v1/update/profile', {
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    method: 'PUT',
-    body: JSON.stringify({ ...data.map((el) => ({ ...el, education_id })) }),
-  });
+  await request.put(
+    'https://puzzlesignlanguage.online/api/v1/update/profile',
+    data.map((el) => ({ ...el, education_id })),
+  );
 };
-export const requestAllAccounts = async (): Promise<
+export const requestAllAccounts = async (
+  education_id: number,
+): Promise<
   Response<
     {
       ID: number;
@@ -456,50 +413,45 @@ export const requestAllAccounts = async (): Promise<
     }[]
   >
 > => {
-  return await fetch('https://puzzlesignlanguage.online/api/v1/get/profile', {
-    headers: {
-      'Content-Type': 'application/json',
+  return await request.get(
+    'https://puzzlesignlanguage.online/api/v1/get/profile',
+    {
+      data: { education_id },
     },
-    method: 'GET',
-  }).then(async (res) => await res.json());
+  );
 };
 export const requestCreateLessonTimes = async (
   data: LessonTime[],
   education_id: number,
 ): Promise<void> => {
-  await fetch('https://puzzlesignlanguage.online/api/v1/create/lessontime', {
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    method: 'POST',
-    body: JSON.stringify({ ...data.map((el) => ({ ...el, education_id })) }),
-  });
+  await request.post(
+    'https://puzzlesignlanguage.online/api/v1/create/lessontime',
+    data.map((el) => ({ ...el, education_id })),
+  );
 };
 export const requestDeleteLessonTimes = async (
   data: LessonTime[],
   education_id: number,
 ): Promise<void> => {
-  await fetch('https://puzzlesignlanguage.online/api/v1/delete/lessontime', {
-    headers: {
-      'Content-Type': 'application/json',
+  await request.delete(
+    'https://puzzlesignlanguage.online/api/v1/delete/lessontime',
+    {
+      data: data.map((el) => ({ ...el, education_id })),
     },
-    method: 'DELETE',
-    body: JSON.stringify({ ...data.map((el) => ({ ...el, education_id })) }),
-  });
+  );
 };
 export const requestUpdateLessonTimes = async (
   data: LessonTime[],
   education_id: number,
 ): Promise<void> => {
-  await fetch('https://puzzlesignlanguage.online/api/v1/update/lessontime', {
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    method: 'PUT',
-    body: JSON.stringify({ ...data.map((el) => ({ ...el, education_id })) }),
-  });
+  await request.put(
+    'https://puzzlesignlanguage.online/api/v1/update/lessontime',
+    data.map((el) => ({ ...el, education_id })),
+  );
 };
-export const requestAllLessonTimes = async (): Promise<
+export const requestAllLessonTimes = async (
+  education_id: number,
+): Promise<
   Response<
     {
       ID: number;
@@ -510,13 +462,10 @@ export const requestAllLessonTimes = async (): Promise<
     }[]
   >
 > => {
-  return await fetch(
+  return await request.get(
     'https://puzzlesignlanguage.online/api/v1/get/lessontime',
     {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      method: 'GET',
+      data: education_id,
     },
-  ).then(async (res) => await res.json());
+  );
 };

@@ -1,5 +1,5 @@
 import { User } from '@type/user';
-import { noAuthRequest } from '.';
+import { noAuthRequest, request } from '.';
 import SessionService from '@lib/utils/sessionService';
 
 type AuthLoginRes = {
@@ -12,8 +12,6 @@ export const requestAuthenticate = (
   password?: string,
 ): Promise<AuthLoginRes> => {
   const token = SessionService.accessToken;
-  return noAuthRequest.post<AuthLoginRes>(
-    '/login',
-    token && !email && !password ? { token } : { email, password },
-  );
+  if (token && !email && !password) return request.post<AuthLoginRes>('/login');
+  return noAuthRequest.post<AuthLoginRes>('/login', { email, password });
 };

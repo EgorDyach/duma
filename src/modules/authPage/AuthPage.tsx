@@ -83,8 +83,8 @@ export const AuthPage: FC<AuthProps> = ({ isAdmin = false }) => {
         console.log(res);
         dispatch(uiActions.setUser(res.message));
         SessionService.login(res.message.token);
+        navigate('/');
       }
-      navigate('/');
     } catch (e) {
       const error = e as { response: { data: { error: string } } };
       showErrorNotification(String(error));
