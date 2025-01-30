@@ -487,10 +487,10 @@ const EducationPage: React.FC = () => {
   };
 
   const handleAddClass = async (newItem: ClassItem) => {
-    if (!newItem.account) {
-      toast('Введите профиль!');
-      return;
-    }
+    // if (!newItem.account) {
+    //   toast('Введите профиль!');
+    //   return;
+    // }
     if (classEditValue) {
       setClasses((prevItems) => [
         ...prevItems.filter((el) => el.id !== newItem.id),
@@ -1160,7 +1160,7 @@ const EducationPage: React.FC = () => {
           onClick={async () => {
             setIsLoading(true);
             const subjectsErrors: SubjectItem[] = [];
-            const groupsErrors: ClassItem[] = [];
+
             subjects.forEach((el) => {
               if (!el.teacher || !el.teacher.length) subjectsErrors.push(el);
             });
@@ -1172,18 +1172,6 @@ const EducationPage: React.FC = () => {
                 },
               );
               setIsLoading(false);
-              return;
-            }
-
-            classes.forEach((el) => {
-              if (!el.account) groupsErrors.push(el);
-            });
-            if (groupsErrors.length) {
-              toast.error(
-                `Необходимо прикрепить профиль к следующим группам: ${groupsErrors.map((el) => el.name).join(', ')}`,
-              );
-              setIsLoading(false);
-
               return;
             }
 
@@ -1203,19 +1191,6 @@ const EducationPage: React.FC = () => {
             }
 
             try {
-              if (!initialAuditories.map((el) => el.id).includes(666)) {
-                await requestCreateRoom(
-                  [
-                    {
-                      capacity: 0,
-                      id: 666,
-                      name: 'ПУСТОТА',
-                      profiles: [],
-                    },
-                  ],
-                  user.education_id,
-                );
-              }
               await requestCreateAccounts(
                 formatAccounts(
                   accounts.filter(
