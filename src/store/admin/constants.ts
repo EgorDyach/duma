@@ -1,15 +1,15 @@
-import { EducationType } from '@type/user';
+import { InstitutionType } from '@type/user';
 import { AdminState } from './types';
 
 export const adminInitialState: AdminState = {
   schools: [],
   universities: [],
   secondaries: [],
-  otherEducations: [],
+  otherInstitutions: [],
 };
 
 export const educationTypeMap: Record<
-  EducationType | 'default',
+  InstitutionType | 'default',
   'schools' | 'secondaries' | 'universities' | 'otherEducations'
 > = {
   school: 'schools',

@@ -1,5 +1,4 @@
-import { AuditoryItem, ClassItem } from '@type/studyPlan';
-import { User, UserEducation } from '@type/user';
+import { User, InstitutionsAdmin } from '@type/user';
 
 export const uiStateName = 'ui';
 
@@ -19,17 +18,19 @@ export type ModalTypes =
   | 'addSecondary'
   | 'addUniversity'
   | 'addSchool'
+  | 'addShift'
   | 'GenerateModal';
 
 export type Modals = {
-  addClass: ClassItem;
-  addAuditory: AuditoryItem;
-  addLessonTime: AuditoryItem;
-  addSubject: AuditoryItem;
-  addSecondary: UserEducation;
-  addUniversity: UserEducation;
-  addSchool: UserEducation;
-  GenerateModal: AuditoryItem;
+  addClass: Group;
+  addAuditory: Room;
+  addLessonTime: LessonTime;
+  addSubject: Subject;
+  addSecondary: InstitutionsAdmin;
+  addUniversity: InstitutionsAdmin;
+  addSchool: InstitutionsAdmin;
+  GenerateModal: string;
+  addShift: Shift;
 };
 
 export type UIState = {

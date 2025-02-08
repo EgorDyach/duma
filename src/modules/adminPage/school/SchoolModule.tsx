@@ -75,14 +75,14 @@ const SchoolModule = () => {
                     <PenIcon width="24px" height="24px" />
                   </button>
                   <TextButton
-                    key={item.Education.ID}
-                    text={item.Education.name}
+                    key={item.institution.ID}
+                    text={item.institution.name}
                     // @ts-ignore
                     size="full"
                     openEditing={() => {}}
                   />
                   <TextButton
-                    key={item.Education.ID}
+                    key={item.institution.ID}
                     text={item.fullname}
                     // @ts-ignore
                     size="full"

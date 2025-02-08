@@ -14,7 +14,6 @@ import { useAppDispatch } from '@hooks/useAppDispatch';
 import { uiActions } from '@store/ui';
 
 const StyledFlex = styled(Flex)`
-  height: 80vh;
   width: 80vw;
   @media (max-width: 1260px) {
     height: 100%;

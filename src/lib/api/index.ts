@@ -5,16 +5,6 @@ import AppRoutes from '@lib/configs/routes';
 import SessionService from '@lib/utils/sessionService';
 import { showErrorNotification } from '@lib/utils/notification';
 import { Response } from '@type/common';
-import {
-  Room,
-  Teacher,
-  Group,
-  Subject,
-  Coaching,
-  CoachLesson,
-} from '@type/studyPlanServer';
-import { Account } from '@lib/utils/data/formatAccounts';
-import { LessonTime } from '@type/studyPlan';
 
 const defaultHeaders = {
   'Accept-Language': 'ru',
@@ -60,412 +50,233 @@ const createRequestInstance = (addAuthHeader: boolean): AppApi => {
 export const request = createRequestInstance(true);
 export const noAuthRequest = createRequestInstance(false);
 
-export const requestCreateRoom = async (
-  data: Room[],
-  education_id: number,
-): Promise<void> => {
-  await request.post(
-    'https://puzzlesignlanguage.online/api/v1/create/Room',
-    data.map((el) => ({ ...el, education_id })),
-  );
+export const requestCreateRoom = async (data: Room): Promise<void> => {
+  await request.post('https://puzzlesignlanguage.online/api/v1/create/Room', [
+    data,
+  ]);
 };
-export const requestUpdateRoom = async (
-  data: Room[],
-  education_id: number,
-): Promise<void> => {
-  await request.put(
-    'https://puzzlesignlanguage.online/api/v1/update/Room',
-    data.map((el) => ({ ...el, education_id })),
-  );
+export const requestUpdateRoom = async (data: Room): Promise<void> => {
+  await request.put('https://puzzlesignlanguage.online/api/v1/update/Room', [
+    data,
+  ]);
 };
-export const requestDeleteRoom = async (
-  data: Room[],
-  education_id: number,
-): Promise<void> => {
+export const requestDeleteRoom = async (data: {
+  id: string | number;
+}): Promise<void> => {
   await request.delete('https://puzzlesignlanguage.online/api/v1/delete/room', {
     headers: {
       'Content-Type': 'application/json',
     },
     method: 'DELETE',
-    data: data.map((el) => ({ ...el, education_id })),
+    data: [data],
   });
 };
-export const requestAllRoom = async (
-  education_id: number,
-): Promise<
-  Response<
-    {
-      CreatedAt: string;
-      UpdatedAt: string;
-      DeletedAt: null;
-      ID: number;
-      Name: string;
-      Capacity: number;
-      profileID: number;
-      profiles: null;
-    }[]
-  >
-> => {
+export const requestAllRoom = async (): Promise<Response<Room[]>> => {
   return await request.get(
     'https://puzzlesignlanguage.online/api/v1/Get/Room',
-    {
-      data: { education_id },
-    },
+    {},
   );
 };
 //
-export const requestCreateTeacher = async (
-  data: Teacher[],
-  education_id: number,
-): Promise<void> => {
+export const requestCreateTeacher = async (data: Teacher): Promise<void> => {
   await request.post(
     'https://puzzlesignlanguage.online/api/v1/create/teacher',
-    data.map((el) => ({ ...el, education_id })),
+    [data],
   );
 };
-export const requestUpdateTeacher = async (
-  data: Teacher[],
-  education_id: number,
-): Promise<void> => {
-  await request.put(
-    'https://puzzlesignlanguage.online/api/v1/update/teacher',
-    data.map((el) => ({ ...el, education_id })),
-  );
+export const requestUpdateTeacher = async (data: Teacher): Promise<void> => {
+  await request.put('https://puzzlesignlanguage.online/api/v1/update/teacher', [
+    data,
+  ]);
 };
-export const requestDeleteTeacher = async (
-  data: Teacher[],
-  education_id: number,
-): Promise<void> => {
+export const requestDeleteTeacher = async (data: {
+  id: string | number;
+}): Promise<void> => {
   await request.delete(
     'https://puzzlesignlanguage.online/api/v1/delete/teacher',
     {
-      data: data.map((el) => ({ ...el, education_id })),
+      data: [data],
     },
   );
 };
-export const requestAllTeacher = async (
-  education_id: number,
-): Promise<
-  Response<
-    {
-      CreatedAt: string;
-      UpdatedAt: string;
-      DeletedAt: null;
-      ID: number;
-      Fullname: string;
-      holidays: [] | null;
-      Lessons: [] | null;
-    }[]
-  >
-> => {
+export const requestAllTeacher = async (): Promise<Response<Teacher[]>> => {
   return await request.get(
     'https://puzzlesignlanguage.online/api/v1/Get/teacher',
-    {
-      data: { education_id },
-    },
+    {},
   );
 };
-export const requestCreateGroup = async (
-  data: Group[],
-  education_id: number,
-): Promise<void> => {
-  await request.post(
-    'https://puzzlesignlanguage.online/api/v1/create/group',
-    data.map((el) => ({ ...el, education_id })),
-  );
+export const requestCreateGroup = async (data: Group): Promise<void> => {
+  await request.post('https://puzzlesignlanguage.online/api/v1/create/group', [
+    data,
+  ]);
 };
-export const requestUpdateGroup = async (
-  data: Group[],
-  education_id: number,
-): Promise<void> => {
-  await request.put(
-    'https://puzzlesignlanguage.online/api/v1/update/group',
-    data.map((el) => ({ ...el, education_id })),
-  );
+export const requestUpdateGroup = async (data: Group): Promise<void> => {
+  await request.put('https://puzzlesignlanguage.online/api/v1/update/group', [
+    data,
+  ]);
 };
-export const requestDeleteGroup = async (
-  data: Group[],
-  education_id: number,
-): Promise<void> => {
+export const requestDeleteGroup = async (data: {
+  id: string | number;
+}): Promise<void> => {
   await request.delete(
     'https://puzzlesignlanguage.online/api/v1/delete/group',
     {
-      data: data.map((el) => ({ ...el, education_id })),
+      data: [data],
     },
   );
 };
-export const requestAllGroups = async (
-  education_id: number,
-): Promise<
-  Response<
-    {
-      CreatedAt: string;
-      UpdatedAt: string;
-      DeletedAt: null;
-      Count: number;
-      ID: number;
-      Name: string;
-      Shift: number;
-      ProfileID: number;
-      Profile: null;
-      holidays: null;
-    }[]
-  >
-> => {
+export const requestAllGroup = async (): Promise<Response<Group[]>> => {
   return await request.get(
     'https://puzzlesignlanguage.online/api/v1/get/group',
-    {
-      data: { education_id },
-    },
+    {},
   );
 };
-export const requestCreateSubjects = async (
-  data: Subject[],
-  education_id: number,
-): Promise<void> => {
+export const requestCreateSubject = async (data: Subject): Promise<void> => {
   await request.post(
     'https://puzzlesignlanguage.online/api/v1/create/subject',
-    data.map((el) => ({ ...el, education_id })),
+    [data],
   );
 };
-export const requestUpdateSubjects = async (
-  data: Subject[],
-  education_id: number,
-): Promise<void> => {
-  await request.put(
-    'https://puzzlesignlanguage.online/api/v1/update/subject',
-    data.map((el) => ({ ...el, education_id })),
-  );
+export const requestUpdateSubject = async (data: Subject): Promise<void> => {
+  await request.put('https://puzzlesignlanguage.online/api/v1/update/subject', [
+    data,
+  ]);
 };
-export const requestDeleteSubjects = async (
-  data: Subject[],
-  education_id: number,
-): Promise<void> => {
+export const requestDeleteSubject = async (data: {
+  id: string | number;
+}): Promise<void> => {
   await request.delete(
     'https://puzzlesignlanguage.online/api/v1/delete/subject',
     {
-      data: data.map((el) => ({ ...el, education_id })),
+      data: [data],
     },
   );
 };
-export const requestAllSubjects = async (
-  education_id: number,
-): Promise<
-  Response<
-    {
-      CreatedAt: string;
-      UpdatedAt: string;
-      DeletedAt: null;
-      ID: number;
-      Name: string;
-    }[]
-  >
-> => {
+export const requestAllSubject = async (): Promise<Response<Subject[]>> => {
   return await request.get(
     'https://puzzlesignlanguage.online/api/v1/Get/subject',
-    {
-      data: { education_id },
-    },
-  );
-};
-export const requestCreateCoach = async (
-  data: Coaching[],
-  education_id: number,
-): Promise<void> => {
-  await request.post(
-    'https://puzzlesignlanguage.online/api/v1/create/coach',
-    data.map((el) => ({ ...el, education_id })),
-  );
-};
-export const requestUpdateCoach = async (
-  data: Coaching[],
-  education_id: number,
-): Promise<void> => {
-  await request.put(
-    'https://puzzlesignlanguage.online/api/v1/update/coach',
-    data.map((el) => ({ ...el, education_id })),
-  );
-};
-export const requestDeleteCoach = async (
-  data: Coaching[],
-  education_id: number,
-): Promise<void> => {
-  await request.delete(
-    'https://puzzlesignlanguage.online/api/v1/delete/coach',
-    {
-      data: data.map((el) => ({ ...el, education_id })),
-    },
-  );
-};
-export const requestAllCoaches = async (
-  education_id: number,
-): Promise<
-  Response<
-    {
-      CreatedAt: string;
-      UpdatedAt: string;
-      DeletedAt: null;
-      ID: number;
-      SubjectID: number;
-      Hours: number;
-      depends_on: [];
-      RoomID: number;
-      GroupID: number;
-    }[]
-  >
-> => {
-  return await request.get(
-    'https://puzzlesignlanguage.online/api/v1/Get/coach',
-    {
-      data: { education_id },
-    },
-  );
-};
-export const requestCreateCoachLessons = async (
-  data: CoachLesson[],
-  education_id: number,
-): Promise<void> => {
-  await request.post(
-    'https://puzzlesignlanguage.online/api/v1/create/coachlesson',
-    data.map((el) => ({ ...el, education_id })),
-  );
-};
-export const requestUpdateCoachLessons = async (
-  data: CoachLesson[],
-  education_id: number,
-): Promise<void> => {
-  await request.put(
-    'https://puzzlesignlanguage.online/api/v1/update/coachlesson',
-    data.map((el) => ({ ...el, education_id })),
-  );
-};
-export const requestDeleteCoachLessons = async (
-  data: (CoachLesson & { id: number })[],
-  education_id: number,
-): Promise<void> => {
-  await request.delete(
-    'https://puzzlesignlanguage.online/api/v1/delete/coachlesson',
-    {
-      data: data.map((el) => ({ ...el, education_id })),
-    },
-  );
-};
-export const requestAllCoachLessons = async (
-  education_id: number,
-): Promise<
-  Response<
-    {
-      ID: number;
-      CreatedAt: string;
-      UpdatedAt: string;
-      TeacherID: number;
-      CoachingID: number;
-    }[]
-  >
-> => {
-  return await request.get(
-    'https://puzzlesignlanguage.online/api/v1/get/coachlesson',
-    {
-      data: education_id,
-    },
+    {},
   );
 };
 
-export const requestCreateAccounts = async (
-  data: Account[],
-  education_id: number,
-): Promise<void> => {
+export const requestCreateProfile = async (data: Profile): Promise<void> => {
   await request.post(
     'https://puzzlesignlanguage.online/api/v1/create/profile',
-    data.map((el) => ({ ...el, education_id })),
+    [data],
   );
 };
-export const requestDeleteAccounts = async (
-  data: Account[],
-  education_id: number,
-): Promise<void> => {
+export const requestDeleteProfile = async (data: {
+  id: string | number;
+}): Promise<void> => {
   await request.delete(
     'https://puzzlesignlanguage.online/api/v1/delete/profile',
     {
-      data: data.map((el) => ({ ...el, education_id })),
+      data: [data],
     },
   );
 };
-export const requestUpdateAccounts = async (
-  data: Account[],
-  education_id: number,
-): Promise<void> => {
-  await request.put(
-    'https://puzzlesignlanguage.online/api/v1/update/profile',
-    data.map((el) => ({ ...el, education_id })),
-  );
+export const requestUpdateProfile = async (data: Profile): Promise<void> => {
+  await request.put('https://puzzlesignlanguage.online/api/v1/update/profile', [
+    data,
+  ]);
 };
-export const requestAllAccounts = async (
-  education_id: number,
-): Promise<
-  Response<
-    {
-      ID: number;
-      CreatedAt: string;
-      UpdatedAt: string;
-      name: string;
-      classes: null | [];
-    }[]
-  >
-> => {
+export const requestAllProfile = async (): Promise<Response<Profile[]>> => {
   return await request.get(
     'https://puzzlesignlanguage.online/api/v1/get/profile',
-    {
-      data: { education_id },
-    },
+    {},
   );
 };
-export const requestCreateLessonTimes = async (
-  data: LessonTime[],
-  education_id: number,
+export const requestCreateLessonTime = async (
+  data: LessonTime,
 ): Promise<void> => {
   await request.post(
     'https://puzzlesignlanguage.online/api/v1/create/lessontime',
-    data.map((el) => ({ ...el, education_id })),
+    [data],
   );
 };
-export const requestDeleteLessonTimes = async (
-  data: LessonTime[],
-  education_id: number,
-): Promise<void> => {
+export const requestDeleteLessonTime = async (data: {
+  id: string | number;
+}): Promise<void> => {
   await request.delete(
     'https://puzzlesignlanguage.online/api/v1/delete/lessontime',
     {
-      data: data.map((el) => ({ ...el, education_id })),
+      data: [data],
     },
   );
 };
-export const requestUpdateLessonTimes = async (
-  data: LessonTime[],
-  education_id: number,
+export const requestUpdateLessonTime = async (
+  data: LessonTime,
 ): Promise<void> => {
   await request.put(
     'https://puzzlesignlanguage.online/api/v1/update/lessontime',
-    data.map((el) => ({ ...el, education_id })),
+    [data],
   );
 };
-export const requestAllLessonTimes = async (
-  education_id: number,
-): Promise<
-  Response<
-    {
-      ID: number;
-      CreatedAt: string;
-      UpdatedAt: string;
-      StartTime: string;
-      EndTime: string;
-    }[]
-  >
+export const requestAllLessonTime = async (): Promise<
+  Response<LessonTime[]>
 > => {
   return await request.get(
     'https://puzzlesignlanguage.online/api/v1/get/lessontime',
+    {},
+  );
+};
+
+export const requestCreateShift = async (data: Shift): Promise<void> => {
+  await request.post('https://puzzlesignlanguage.online/api/v1/create/shift', [
+    data,
+  ]);
+};
+export const requestDeleteShift = async (data: {
+  id: string | number;
+}): Promise<void> => {
+  await request.delete(
+    'https://puzzlesignlanguage.online/api/v1/delete/shift',
     {
-      data: education_id,
+      data: [data],
     },
+  );
+};
+export const requestUpdateShift = async (data: Shift): Promise<void> => {
+  await request.put('https://puzzlesignlanguage.online/api/v1/update/shift', [
+    data,
+  ]);
+};
+export const requestAllShift = async (): Promise<Response<Shift[]>> => {
+  return await request.get(
+    'https://puzzlesignlanguage.online/api/v1/get/shift',
+  );
+};
+
+export const requestCreateDiscipline = async (
+  data: Discipline,
+): Promise<void> => {
+  await request.post(
+    'https://puzzlesignlanguage.online/api/v1/create/discipline',
+    [data],
+  );
+};
+export const requestDeleteDiscipline = async (data: {
+  id: string | number;
+}): Promise<void> => {
+  await request.delete(
+    'https://puzzlesignlanguage.online/api/v1/delete/discipline',
+    {
+      data: [data],
+    },
+  );
+};
+export const requestUpdateDiscipline = async (
+  data: Discipline,
+): Promise<void> => {
+  await request.put(
+    'https://puzzlesignlanguage.online/api/v1/update/discipline',
+    [data],
+  );
+};
+export const requestAllDiscipline = async (): Promise<
+  Response<Discipline[]>
+> => {
+  return await request.get(
+    'https://puzzlesignlanguage.online/api/v1/get/discipline',
   );
 };

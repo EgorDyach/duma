@@ -7,7 +7,7 @@ import {
   StyledModalAdd,
 } from '@components/Modal/ModalStyles';
 import Input from '@components/input/Input';
-import { UserEducation } from '@type/user';
+import { InstitutionsAdmin } from '@type/user';
 import { useSelector } from 'react-redux';
 import { uiActions, uiSelectors } from '@store/ui';
 import { MODAL_NAME } from './UniversityModule';
@@ -19,11 +19,11 @@ import {
 } from '@store/admin/thunks';
 import { generatePassword } from './helpers';
 
-const ITEM_INIT_DATA: UserEducation = {
+const ITEM_INIT_DATA: InstitutionsAdmin = {
   ID: new Date().getTime(),
   email: '',
   fullname: '',
-  Education: {
+  institution: {
     type: 'university',
     name: '',
   },
@@ -33,7 +33,7 @@ export const AddingUniversityModal = () => {
   const dispatch = useAppDispatch();
   const modals = useSelector(uiSelectors.getModals);
   const currentModal = modals[MODAL_NAME];
-  const [newItem, setNewItem] = useState<UserEducation>(
+  const [newItem, setNewItem] = useState<InstitutionsAdmin>(
     currentModal.value || ITEM_INIT_DATA,
   );
 
@@ -60,13 +60,13 @@ export const AddingUniversityModal = () => {
             onChange={(e) =>
               setNewItem((prev) => ({
                 ...prev,
-                Education: {
-                  ...prev.Education,
+                institution: {
+                  ...prev.institution,
                   name: e.target.value,
                 },
               }))
             }
-            value={newItem.Education.name}
+            value={newItem.institution.name}
           />
         </Flex>
       </Flex>

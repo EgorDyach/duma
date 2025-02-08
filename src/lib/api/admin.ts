@@ -1,16 +1,18 @@
 import { ApiResponse } from '@type/api';
 import { handledRequest, getEmptyApiResponse } from './utils';
 import { request } from '.';
-import { UserEducation } from '@type/user';
+import { InstitutionsAdmin } from '@type/user';
 
-const requestEducations$ = async (): Promise<ApiResponse<UserEducation[]>> => {
+const requestEducations$ = async (): Promise<
+  ApiResponse<InstitutionsAdmin[]>
+> => {
   return request.get('/s9rk988utk/admin/manage/accounts');
 };
 
 export const requestEducations = handledRequest(
   requestEducations$,
   'Не удалось получить список учреждений!',
-  getEmptyApiResponse<UserEducation[]>(),
+  getEmptyApiResponse<InstitutionsAdmin[]>(),
 );
 
 export const requestRemoveEducation$ = async (
@@ -22,13 +24,13 @@ export const requestRemoveEducation$ = async (
 };
 
 export const requestEditEducation$ = async (
-  newItem: UserEducation,
+  newItem: InstitutionsAdmin,
 ): Promise<ApiResponse<void>> => {
   return request.put('/s9rk988utk/admin/manage/change', newItem);
 };
 
 export const requestAddEducation$ = async (
-  newItem: UserEducation,
+  newItem: InstitutionsAdmin,
 ): Promise<ApiResponse<void>> => {
   return request.post('/s9rk988utk/admin/manage/create', newItem);
 };

@@ -8,7 +8,7 @@ import {
   requestRemoveEducation$,
 } from '@lib/api/admin';
 import { adminActions } from '.';
-import { UserEducation } from '@type/user';
+import { InstitutionsAdmin } from '@type/user';
 
 export const fetchEducations =
   () =>
@@ -16,15 +16,15 @@ export const fetchEducations =
     dispatch(uiActions.setRequestStarted('educations'));
     try {
       const educations = await requestEducations();
-      const data: Record<string, UserEducation[]> = {
+      const data: Record<string, InstitutionsAdmin[]> = {
         school: [],
         university: [],
         secondary: [],
         otherEducations: [],
       };
       educations.message.forEach((el) => {
-        console.log(el.Education.type, el);
-        if (el.Education.type in data) data[el.Education.type].push(el);
+        console.log(el.institution.type, el);
+        if (el.institution.type in data) data[el.institution.type].push(el);
         else data['otherEducations'].push(el);
       });
       console.log(data);
@@ -55,7 +55,7 @@ export const fetchDeleteEducation =
   };
 5;
 export const fetchEditEducation =
-  (newItem: UserEducation) =>
+  (newItem: InstitutionsAdmin) =>
   async (dispatch: AppDispatch): Promise<void> => {
     dispatch(uiActions.setRequestStarted('educations'));
     if (!newItem.password) delete newItem.password;
@@ -71,7 +71,7 @@ export const fetchEditEducation =
   };
 
 export const fetchAddEducation =
-  (newItem: UserEducation) =>
+  (newItem: InstitutionsAdmin) =>
   async (dispatch: AppDispatch): Promise<void> => {
     dispatch(uiActions.setRequestStarted('educations'));
     try {

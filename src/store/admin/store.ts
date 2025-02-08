@@ -1,23 +1,23 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { adminStateName } from './types';
 import { adminInitialState, educationTypeMap } from './constants';
-import { UserEducation } from '@type/user';
+import { InstitutionsAdmin } from '@type/user';
 
 const adminSlice = createSlice({
   name: adminStateName,
   initialState: adminInitialState,
   reducers: {
-    setSchools(state, { payload }: PayloadAction<UserEducation[]>) {
+    setSchools(state, { payload }: PayloadAction<InstitutionsAdmin[]>) {
       state.schools = payload;
     },
-    setSecondaries(state, { payload }: PayloadAction<UserEducation[]>) {
+    setSecondaries(state, { payload }: PayloadAction<InstitutionsAdmin[]>) {
       state.secondaries = payload;
     },
-    setUniversities(state, { payload }: PayloadAction<UserEducation[]>) {
+    setUniversities(state, { payload }: PayloadAction<InstitutionsAdmin[]>) {
       state.universities = payload;
     },
-    setOtherEducations(state, { payload }: PayloadAction<UserEducation[]>) {
-      state.otherEducations = payload;
+    setOtherEducations(state, { payload }: PayloadAction<InstitutionsAdmin[]>) {
+      state.otherInstitutions = payload;
     },
     removeItem(state, { payload }: PayloadAction<string>) {
       state.schools = state.schools.filter((el) => payload !== el.email);
@@ -27,26 +27,26 @@ const adminSlice = createSlice({
       state.secondaries = state.secondaries.filter(
         (el) => payload !== el.email,
       );
-      state.otherEducations = state.otherEducations.filter(
+      state.otherInstitutions = state.otherInstitutions.filter(
         (el) => payload !== el.email,
       );
     },
-    addItem(state, { payload }: PayloadAction<UserEducation>) {
+    addItem(state, { payload }: PayloadAction<InstitutionsAdmin>) {
       const educationKey =
-        educationTypeMap[payload.Education.type] || educationTypeMap.default;
+        educationTypeMap[payload.institution.type] || educationTypeMap.default;
 
       state[educationKey] = [...state[educationKey], payload].sort((a, b) =>
-        a.Education.name.localeCompare(b.Education.name),
+        a.institution.name.localeCompare(b.institution.name),
       );
     },
-    editItem(state, { payload }: PayloadAction<UserEducation>) {
+    editItem(state, { payload }: PayloadAction<InstitutionsAdmin>) {
       const educationKey =
-        educationTypeMap[payload.Education.type] || educationTypeMap.default;
+        educationTypeMap[payload.institution.type] || educationTypeMap.default;
 
       state[educationKey] = [
         ...state[educationKey].filter((el) => el.ID !== payload.ID),
         payload,
-      ].sort((a, b) => a.Education.name.localeCompare(b.Education.name));
+      ].sort((a, b) => a.institution.name.localeCompare(b.institution.name));
     },
   },
 });

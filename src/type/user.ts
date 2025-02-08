@@ -1,4 +1,4 @@
-export type User = UserDuma | UserEducation;
+export type User = UserDuma | InstitutionsAdmin;
 
 export type UserDuma = {
   ID: number;
@@ -11,7 +11,7 @@ export type UserDuma = {
   token: string;
 };
 
-export type UserEducation = {
+export type InstitutionsAdmin = {
   ID?: number;
   CreatedAt?: string;
   UpdatedAt?: string;
@@ -21,17 +21,17 @@ export type UserEducation = {
   password?: string;
   token?: string;
   fullname: string;
-  education_id?: number;
-  Education: Education;
+  institution_id?: number;
+  institution: Institution;
 };
 
-export type Education = {
+export type Institution = {
   ID?: number;
   CreatedAt?: string;
   UpdatedAt?: string;
   DeletedAt?: null | string;
   name: string;
-  type: EducationType;
+  type: InstitutionType;
 };
 
-export type EducationType = 'school' | 'university' | 'secondary';
+export type InstitutionType = 'school' | 'university' | 'secondary';

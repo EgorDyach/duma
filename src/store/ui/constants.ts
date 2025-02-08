@@ -44,5 +44,10 @@ export const uiInitialState: UIState = {
       isEditing: false,
       value: null,
     },
+    addShift: {
+      isOpened: false,
+      isEditing: false,
+      value: null,
+    },
   },
 };
