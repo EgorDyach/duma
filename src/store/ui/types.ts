@@ -12,7 +12,7 @@ export type ModalContent<T> = {
 
 export type ModalTypes =
   | 'addGroup'
-  | 'addAuditory'
+  | 'addRoom'
   | 'addLessonTime'
   | 'addSubject'
   | 'addShift'
@@ -25,7 +25,7 @@ export type ModalTypes =
 
 export type Modals = {
   addGroup: Group;
-  addAuditory: Room;
+  addRoom: Room;
   addLessonTime: LessonTime;
   addSubject: Subject;
   addShift: Shift;

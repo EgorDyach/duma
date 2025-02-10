@@ -9,7 +9,7 @@ export const uiInitialState: UIState = {
       isEditing: false,
       value: null,
     },
-    addAuditory: {
+    addRoom: {
       isOpened: false,
       isEditing: false,
       value: null,
