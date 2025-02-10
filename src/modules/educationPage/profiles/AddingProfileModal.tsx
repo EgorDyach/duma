@@ -7,32 +7,32 @@ import {
 } from '@components/Modal/ModalStyles';
 import { useSelector } from 'react-redux';
 import { uiSelectors } from '@store/ui';
-import { MODAL_NAME } from './ShiftModule';
+import { MODAL_NAME } from './ProfileModule';
 import { useAppDispatch } from '@hooks/useAppDispatch';
 import {
-  fetchAddShift,
-  fetchRemoveShift,
-  fetchUpdateShift,
+  fetchAddProfile,
+  fetchRemoveProfile,
+  fetchUpdateProfile,
 } from '@store/institution/thunks';
 
-const ITEM_INIT_DATA: Shift = {
-  number: 0,
+const ITEM_INIT_DATA: Profile = {
+  name: '',
 };
 
-export const AddingShiftModal = () => {
+export const AddingProfileModal = () => {
   const dispatch = useAppDispatch();
   const modals = useSelector(uiSelectors.getModals);
   const currentModal = modals[MODAL_NAME];
-  const [newItem, setNewItem] = useState<Shift>(
+  const [newItem, setNewItem] = useState<Profile>(
     currentModal.value || ITEM_INIT_DATA,
   );
 
   const handleAdd = () => {
     if (currentModal.isEditing)
       return dispatch(
-        fetchUpdateShift(newItem, currentModal.value!.id as number),
+        fetchUpdateProfile(newItem, currentModal.value!.id as number),
       );
-    dispatch(fetchAddShift(newItem));
+    dispatch(fetchAddProfile(newItem));
   };
 
   return (
@@ -40,19 +40,17 @@ export const AddingShiftModal = () => {
       <Flex gap="30px" justify="space-between">
         <Flex gap="10px">
           <StyledModalTitle $top="xsmall">
-            {currentModal.isEditing ? 'Изменить смену' : 'Новая смена'}
+            {currentModal.isEditing ? 'Изменить профиль' : 'Новый профиль'}
           </StyledModalTitle>
           <StyledModalInput
-            type="number"
-            min={0}
             placeholder="Введите значение..."
             onChange={(e) =>
               setNewItem((prev) => ({
                 ...prev,
-                number: Number(e.target.value),
+                name: e.target.value,
               }))
             }
-            value={newItem.number}
+            value={newItem.name}
           />
         </Flex>
       </Flex>
@@ -66,7 +64,9 @@ export const AddingShiftModal = () => {
             {currentModal.isEditing && currentModal.value && (
               <StyledModalAdd
                 onClick={() => {
-                  dispatch(fetchRemoveShift(currentModal.value!.id as number));
+                  dispatch(
+                    fetchRemoveProfile(currentModal.value!.id as number),
+                  );
                 }}
               >
                 Удалить

@@ -1,28 +1,26 @@
 type Teacher = {
-  createdAt?: string;
-  deletedAt?: {};
-  updatedAt?: string;
+  createdat?: string;
+  deletedat?: {};
+  updatedat?: string;
   id?: number;
   institution_id?: number;
   fullname: string;
   holidays?: Holiday[];
 };
 
-type Holiday = (HolidayDate | HolidayWeekDay) & {
-  createdAt?: string;
-  deletedAt?: {};
-  updatedAt?: string;
+type Holiday = {
+  createdat?: string;
+  deletedat?: {};
+  updatedat?: string;
   id?: number;
   institution_id?: number;
+  date: string;
 };
 
-type HolidayDate = { date: string };
-type HolidayWeekDay = { weekday: number };
-
 type Subject = {
-  createdAt?: string;
-  deletedAt?: {};
-  updatedAt?: string;
+  createdat?: string;
+  deletedat?: {};
+  updatedat?: string;
   id?: number;
   name: string;
   tags?: string[];
@@ -30,22 +28,22 @@ type Subject = {
 };
 
 type Shift = {
-  createdAt?: string;
-  deletedAt?: {};
-  updatedAt?: string;
-  ID?: number;
+  createdat?: string;
+  deletedat?: {};
+  updatedat?: string;
+  id?: number;
   number: number;
   institution_id?: number;
 };
 
 type Group = {
-  createdAt?: string;
-  deletedAt?: {};
-  updatedAt?: string;
+  createdat?: string;
+  deletedat?: {};
+  updatedat?: string;
   id?: number;
   name: string;
-  shift?: number;
-  studentsCount: number;
+  shift_id: number;
+  studentscount: number;
   profile_id?: number;
   disciplines?: string[];
   holidays?: Holiday[];
@@ -53,9 +51,9 @@ type Group = {
 };
 
 type Discipline = {
-  createdAt?: string;
-  deletedAt?: {};
-  updatedAt?: string;
+  createdat?: string;
+  deletedat?: {};
+  updatedat?: string;
   id?: number;
   institution_id?: number;
   groups: Group[];
@@ -65,9 +63,9 @@ type Discipline = {
 };
 
 type Course = {
-  createdAt?: string;
-  deletedAt?: {};
-  updatedAt?: string;
+  createdat?: string;
+  deletedat?: {};
+  updatedat?: string;
   id?: number;
   institution_id?: number;
   discipline_id: number;
@@ -75,29 +73,29 @@ type Course = {
 };
 
 type LessonTime = {
-  createdAt?: string;
-  deletedAt?: {};
-  updatedAt?: string;
+  createdat?: string;
+  deletedat?: {};
+  updatedat?: string;
   id?: number;
   institution_id?: number;
   shift_id: number;
-  startTime: string;
-  endTime: string;
+  starttime: string;
+  endtime: string;
 };
 
 type Profile = {
-  createdAt?: string;
-  deletedAt?: {};
-  updatedAt?: string;
+  createdat?: string;
+  deletedat?: {};
+  updatedat?: string;
   id?: number;
   institution_id?: number;
   name: string;
 };
 
 type Room = {
-  createdAt?: string;
-  deletedAt?: {};
-  updatedAt?: string;
+  createdat?: string;
+  deletedat?: {};
+  updatedat?: string;
   id?: number;
   institution_id?: number;
   tags?: string[];

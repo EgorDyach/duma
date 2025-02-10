@@ -3,6 +3,9 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import toast from 'react-hot-toast';
 import ShiftModule from './shifts/ShiftModule';
+import ProfileModule from './profiles/ProfileModule';
+import TeacherModule from './teachers/TeacherModule';
+import GroupModule from './groups/GroupModule';
 
 const Wrapper = styled(Flex)`
   background-color: #fff;
@@ -1056,6 +1059,9 @@ const EducationPage: React.FC = () => {
   return (
     <Wrapper>
       <ShiftModule />
+      <ProfileModule />
+      <TeacherModule />
+      <GroupModule />
       <Flex gap="16px" justify="end" align="center" $top="large">
         <StyledButton
           $isActive

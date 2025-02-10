@@ -37,6 +37,7 @@ import {
   requestUpdateProfile,
 } from '@lib/api';
 import { uiActions } from '@store/ui';
+import toLowerCaseKeys from '@lib/toLowerCaseKeys';
 
 export const fetchAddRoom = (item: Room) => async (dispatch: AppDispatch) => {
   try {
@@ -327,7 +328,9 @@ export const fetchUpdateProfile =
 export const fetchAllRooms = () => async (dispatch: AppDispatch) => {
   try {
     const { message } = await requestAllRoom();
-    dispatch(institutionActions.setRooms(message));
+    dispatch(
+      institutionActions.setRooms(message.map((el) => toLowerCaseKeys(el))),
+    );
   } catch (e) {
     if (e instanceof AxiosError) return showErrorNotification(e.message);
     if (typeof e === 'string') return showErrorNotification(e);
@@ -337,7 +340,9 @@ export const fetchAllRooms = () => async (dispatch: AppDispatch) => {
 export const fetchAllSubjects = () => async (dispatch: AppDispatch) => {
   try {
     const { message } = await requestAllSubject();
-    dispatch(institutionActions.setSubjects(message));
+    dispatch(
+      institutionActions.setSubjects(message.map((el) => toLowerCaseKeys(el))),
+    );
   } catch (e) {
     if (e instanceof AxiosError) return showErrorNotification(e.message);
     if (typeof e === 'string') return showErrorNotification(e);
@@ -347,7 +352,9 @@ export const fetchAllSubjects = () => async (dispatch: AppDispatch) => {
 export const fetchAllTeachers = () => async (dispatch: AppDispatch) => {
   try {
     const { message } = await requestAllTeacher();
-    dispatch(institutionActions.setTeachers(message));
+    dispatch(
+      institutionActions.setTeachers(message.map((el) => toLowerCaseKeys(el))),
+    );
   } catch (e) {
     if (e instanceof AxiosError) return showErrorNotification(e.message);
     if (typeof e === 'string') return showErrorNotification(e);
@@ -357,7 +364,11 @@ export const fetchAllTeachers = () => async (dispatch: AppDispatch) => {
 export const fetchAllDisciplines = () => async (dispatch: AppDispatch) => {
   try {
     const { message } = await requestAllDiscipline();
-    dispatch(institutionActions.setDisciplines(message));
+    dispatch(
+      institutionActions.setDisciplines(
+        message.map((el) => toLowerCaseKeys(el)),
+      ),
+    );
   } catch (e) {
     if (e instanceof AxiosError) return showErrorNotification(e.message);
     if (typeof e === 'string') return showErrorNotification(e);
@@ -367,7 +378,11 @@ export const fetchAllDisciplines = () => async (dispatch: AppDispatch) => {
 export const fetchAllLessonTimes = () => async (dispatch: AppDispatch) => {
   try {
     const { message } = await requestAllLessonTime();
-    dispatch(institutionActions.setLessonTimes(message));
+    dispatch(
+      institutionActions.setLessonTimes(
+        message.map((el) => toLowerCaseKeys(el)),
+      ),
+    );
   } catch (e) {
     if (e instanceof AxiosError) return showErrorNotification(e.message);
     if (typeof e === 'string') return showErrorNotification(e);
@@ -377,7 +392,9 @@ export const fetchAllLessonTimes = () => async (dispatch: AppDispatch) => {
 export const fetchAllShifts = () => async (dispatch: AppDispatch) => {
   try {
     const { message } = await requestAllShift();
-    dispatch(institutionActions.setShifts(message));
+    dispatch(
+      institutionActions.setShifts(message.map((el) => toLowerCaseKeys(el))),
+    );
   } catch (e) {
     if (e instanceof AxiosError) return showErrorNotification(e.message);
     if (typeof e === 'string') return showErrorNotification(e);
@@ -387,7 +404,9 @@ export const fetchAllShifts = () => async (dispatch: AppDispatch) => {
 export const fetchAllGroups = () => async (dispatch: AppDispatch) => {
   try {
     const { message } = await requestAllGroup();
-    dispatch(institutionActions.setGroups(message));
+    dispatch(
+      institutionActions.setGroups(message.map((el) => toLowerCaseKeys(el))),
+    );
   } catch (e) {
     if (e instanceof AxiosError) return showErrorNotification(e.message);
     if (typeof e === 'string') return showErrorNotification(e);
@@ -397,7 +416,9 @@ export const fetchAllGroups = () => async (dispatch: AppDispatch) => {
 export const fetchAllProfiles = () => async (dispatch: AppDispatch) => {
   try {
     const { message } = await requestAllProfile();
-    dispatch(institutionActions.setProfiles(message));
+    dispatch(
+      institutionActions.setProfiles(message.map((el) => toLowerCaseKeys(el))),
+    );
   } catch (e) {
     if (e instanceof AxiosError) return showErrorNotification(e.message);
     if (typeof e === 'string') return showErrorNotification(e);

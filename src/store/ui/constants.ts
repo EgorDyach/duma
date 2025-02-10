@@ -4,7 +4,7 @@ export const uiInitialState: UIState = {
   user: null,
   requests: {},
   modals: {
-    addClass: {
+    addGroup: {
       isOpened: false,
       isEditing: false,
       value: null,
@@ -45,6 +45,16 @@ export const uiInitialState: UIState = {
       value: null,
     },
     addShift: {
+      isOpened: false,
+      isEditing: false,
+      value: null,
+    },
+    addProfile: {
+      isOpened: false,
+      isEditing: false,
+      value: null,
+    },
+    addTeacher: {
       isOpened: false,
       isEditing: false,
       value: null,

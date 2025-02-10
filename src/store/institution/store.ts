@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { InstitutionState, institutionStateName } from './types';
 import { institutionInitialState } from './constants';
 
-function getId(item: any): string | number | undefined {
+export function getId(item: any): string | number | undefined {
   return item.id || item.ID || item.Id;
 }
 

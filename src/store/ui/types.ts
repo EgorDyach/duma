@@ -11,26 +11,30 @@ export type ModalContent<T> = {
 };
 
 export type ModalTypes =
-  | 'addClass'
+  | 'addGroup'
   | 'addAuditory'
   | 'addLessonTime'
   | 'addSubject'
+  | 'addShift'
+  | 'addProfile'
+  | 'addTeacher'
+  | 'addSchool'
   | 'addSecondary'
   | 'addUniversity'
-  | 'addSchool'
-  | 'addShift'
   | 'GenerateModal';
 
 export type Modals = {
-  addClass: Group;
+  addGroup: Group;
   addAuditory: Room;
   addLessonTime: LessonTime;
   addSubject: Subject;
+  addShift: Shift;
+  addProfile: Profile;
+  addTeacher: Teacher;
   addSecondary: InstitutionsAdmin;
   addUniversity: InstitutionsAdmin;
   addSchool: InstitutionsAdmin;
   GenerateModal: string;
-  addShift: Shift;
 };
 
 export type UIState = {
