@@ -77,6 +77,8 @@ export const AddingGroupModal: React.FC = () => {
       ...newItem,
       holidays: holidays.map((el) => ({ date: el.toISOString() })),
     };
+    if (newItemWithHolidays.profile_id === -1)
+      delete newItemWithHolidays.profile_id;
     if (currentModal.isEditing) {
       return dispatch(
         fetchUpdateGroup(newItemWithHolidays, currentModal.value!.id as number),
