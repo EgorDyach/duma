@@ -50,10 +50,15 @@ const Button: FC<
     onClick: VoidFunction;
     isLoading: boolean;
     lowPadding?: boolean;
+    className?: string;
   }
-> = ({ children, onClick, isLoading, lowPadding }) => {
+> = ({ children, onClick, isLoading, lowPadding, className }) => {
   return (
-    <ButtonContainer onClick={onClick} style={{ height: lowPadding ? 32 : 55 }}>
+    <ButtonContainer
+      className={className}
+      onClick={onClick}
+      style={{ height: lowPadding ? 32 : 55 }}
+    >
       {' '}
       {isLoading && <Spinner />}
       {!isLoading && children}

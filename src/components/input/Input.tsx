@@ -15,7 +15,7 @@ const Input: React.FC<InputProps> = ({
   value,
   type,
   label,
-  onChange,
+  _onChange,
   error,
   placeholder,
   suffix,
@@ -40,7 +40,7 @@ const Input: React.FC<InputProps> = ({
           type={type}
           placeholder={placeholder}
           value={value}
-          onChange={(e) => onChange(e.currentTarget.value)}
+          onChange={(e) => _onChange(e.currentTarget.value)}
           onFocus={onFocus}
           onBlur={onBlur}
           disabled={disabled}
