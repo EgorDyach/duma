@@ -94,7 +94,7 @@ const TagGenerator: React.FC<TagGeneratorProps> = ({
       <InputContainer>
         <Input
           value={inputValue}
-          _onChange={(e) => setInputValue(e)}
+          onChange={(e) => setInputValue(e)}
           onKeyDown={(e) => e.key === 'Enter' && addTag()}
           placeholder="Название тега..."
           name={''}

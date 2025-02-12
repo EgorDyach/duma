@@ -9,4 +9,5 @@ export const institutionInitialState: InstitutionState = {
   shifts: [],
   groups: [],
   profiles: [],
+  courses: [],
 };

@@ -35,6 +35,7 @@ export const StyledModalContent = styled.div`
   margin: auto;
   background: #fff;
   max-width: 1000px;
+  min-width: 320px;
   border-radius: ${radius.xmedium};
   padding: ${indent.large};
 `;

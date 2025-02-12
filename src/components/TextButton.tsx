@@ -7,11 +7,11 @@ const textButtonSizes: Record<TextButtonSize, string> = {
   small: '86px',
   medium: '180px',
   large: '240px',
-  fullSize: '100%',
+  full: '100%',
   fit: 'fit-content',
 };
 
-type TextButtonSize = 'small' | 'medium' | 'large' | 'fullSize' | 'fit';
+type TextButtonSize = 'small' | 'medium' | 'large' | 'full' | 'fit';
 
 interface TextButtonProps {
   text: string;
@@ -45,7 +45,7 @@ const TextButton: FC<TextButtonProps> = ({
   openEditing,
   style,
   textSize = 'default',
-  size = 'fullSize',
+  size = 'full',
 }) => {
   return (
     <StyledButton

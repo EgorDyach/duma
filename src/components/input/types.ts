@@ -1,13 +1,13 @@
 import { InputHTMLAttributes, ReactNode } from 'react';
-
-export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
+export interface InputProps
+  extends Omit<InputHTMLAttributes<HTMLInputElement>, 'onChange'> {
   suffix?: ReactNode;
   disabled?: boolean;
   label?: string;
   type?: string;
   value: string;
   theme?: 'light' | 'dark';
-  _onChange: (e: string) => void;
+  onChange: (value: string) => void; // оставляем типизацию как строку
   error?: string;
   placeholder?: string;
   onBlur?: VoidFunction;

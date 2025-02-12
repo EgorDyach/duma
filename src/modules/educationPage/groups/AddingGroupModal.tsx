@@ -29,7 +29,7 @@ const ITEM_INIT_DATA: Group = {
   profile_id: -1,
 };
 
-const ShiftsList = styled.ul`
+export const ShiftsList = styled.ul`
   display: flex;
   gap: 10px;
   max-width: 450px;

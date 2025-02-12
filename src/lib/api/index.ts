@@ -280,3 +280,29 @@ export const requestAllDiscipline = async (): Promise<
     'https://puzzlesignlanguage.online/api/v1/get/discipline',
   );
 };
+
+export const requestCreateCourse = async (data: Course): Promise<void> => {
+  await request.post('https://puzzlesignlanguage.online/api/v1/create/course', [
+    data,
+  ]);
+};
+export const requestDeleteCourse = async (data: {
+  id: string | number;
+}): Promise<void> => {
+  await request.delete(
+    'https://puzzlesignlanguage.online/api/v1/delete/course',
+    {
+      data: [data],
+    },
+  );
+};
+export const requestUpdateCourse = async (data: Course): Promise<void> => {
+  await request.put('https://puzzlesignlanguage.online/api/v1/update/course', [
+    data,
+  ]);
+};
+export const requestAllCourse = async (): Promise<Response<Course[]>> => {
+  return await request.get(
+    'https://puzzlesignlanguage.online/api/v1/get/course',
+  );
+};

@@ -45,7 +45,6 @@ const TeacherModule = () => {
           style={{
             display: 'flex',
             flexDirection: 'column',
-            maxHeight: 'calc(1 * 42px)',
             overflowX: 'auto',
             alignContent: 'start',
             width: '100%',

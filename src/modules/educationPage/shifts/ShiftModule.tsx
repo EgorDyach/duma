@@ -45,7 +45,6 @@ const ShiftModule = () => {
           style={{
             display: 'flex',
             flexDirection: 'column',
-            maxHeight: 'calc(1 * 42px)',
             overflowX: 'auto',
             alignContent: 'start',
             width: '100%',
@@ -59,7 +58,7 @@ const ShiftModule = () => {
             .map((item) => {
               return (
                 <TextButton
-                  key={item.ID}
+                  key={item.id}
                   text={String(item.number)}
                   size="small"
                   openEditing={() =>

@@ -9,6 +9,7 @@ export type InstitutionState = {
   shifts: Shift[];
   groups: Group[];
   profiles: Profile[];
+  courses: Course[];
 };
 
 export type StoreWithInstitutionState = {

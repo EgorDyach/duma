@@ -35,6 +35,10 @@ import {
   requestUpdateSubject,
   requestUpdateTeacher,
   requestUpdateProfile,
+  requestAllCourse,
+  requestCreateCourse,
+  requestDeleteCourse,
+  requestUpdateCourse,
 } from '@lib/api';
 import { uiActions } from '@store/ui';
 import toLowerCaseKeys from '@lib/toLowerCaseKeys';
@@ -364,10 +368,14 @@ export const fetchAllTeachers = () => async (dispatch: AppDispatch) => {
 export const fetchAllDisciplines = () => async (dispatch: AppDispatch) => {
   try {
     const { message } = await requestAllDiscipline();
+    const { message: courses } = await requestAllCourse();
     dispatch(
       institutionActions.setDisciplines(
         message.map((el) => toLowerCaseKeys(el)),
       ),
+    );
+    dispatch(
+      institutionActions.setCourses(courses.map((el) => toLowerCaseKeys(el))),
     );
   } catch (e) {
     if (e instanceof AxiosError) return showErrorNotification(e.message);
@@ -425,3 +433,52 @@ export const fetchAllProfiles = () => async (dispatch: AppDispatch) => {
     showErrorNotification('Что-то пошло не так...');
   }
 };
+export const fetchAllCourses = () => async (dispatch: AppDispatch) => {
+  try {
+    const { message } = await requestAllCourse();
+    dispatch(
+      institutionActions.setCourses(message.map((el) => toLowerCaseKeys(el))),
+    );
+  } catch (e) {
+    if (e instanceof AxiosError) return showErrorNotification(e.message);
+    if (typeof e === 'string') return showErrorNotification(e);
+    showErrorNotification('Что-то пошло не так...');
+  }
+};
+
+export const fetchAddCourse =
+  (item: Course) => async (dispatch: AppDispatch) => {
+    try {
+      await requestCreateCourse(item);
+      dispatch(institutionActions.addCourse(item));
+      dispatch(uiActions.closeModals());
+    } catch (e) {
+      if (e instanceof AxiosError) return showErrorNotification(e.message);
+      if (typeof e === 'string') return showErrorNotification(e);
+      showErrorNotification('Что-то пошло не так...');
+    }
+  };
+export const fetchRemoveCourse =
+  (id: string | number) => async (dispatch: AppDispatch) => {
+    try {
+      await requestDeleteCourse({ id });
+      dispatch(institutionActions.removeCourse(id));
+      dispatch(uiActions.closeModals());
+    } catch (e) {
+      if (e instanceof AxiosError) return showErrorNotification(e.message);
+      if (typeof e === 'string') return showErrorNotification(e);
+      showErrorNotification('Что-то пошло не так...');
+    }
+  };
+export const fetchUpdateCourse =
+  (data: Course, id: string | number) => async (dispatch: AppDispatch) => {
+    try {
+      await requestUpdateCourse(data);
+      dispatch(institutionActions.updateCourse({ data, id }));
+      dispatch(uiActions.closeModals());
+    } catch (e) {
+      if (e instanceof AxiosError) return showErrorNotification(e.message);
+      if (typeof e === 'string') return showErrorNotification(e);
+      showErrorNotification('Что-то пошло не так...');
+    }
+  };

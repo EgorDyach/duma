@@ -59,5 +59,10 @@ export const uiInitialState: UIState = {
       isEditing: false,
       value: null,
     },
+    addDiscipline: {
+      isOpened: false,
+      isEditing: false,
+      value: null,
+    },
   },
 };

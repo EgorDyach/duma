@@ -9,6 +9,7 @@ import GroupModule from './groups/GroupModule';
 import SubjectModule from './subjects/SubjectModule';
 import RoomModule from './rooms/RoomModule';
 import LessonTimeModule from './lessonTime/LessonTimeModule';
+import DisciplineModule from './disciplines/DisciplineModule';
 
 const Wrapper = styled(Flex)`
   background-color: #fff;
@@ -1068,6 +1069,7 @@ const EducationPage: React.FC = () => {
       <SubjectModule />
       <RoomModule />
       <LessonTimeModule />
+      <DisciplineModule />
       <Flex gap="16px" justify="end" align="center" $top="large">
         <StyledButton
           $isActive

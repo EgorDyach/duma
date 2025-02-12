@@ -22,7 +22,7 @@ export const getShifts = (s: StoreWithInstitutionState): Shift[] =>
 export const getLessonTimes = (s: StoreWithInstitutionState): LessonTime[] =>
   getState(s).lessonTimes;
 
-export const getDiscplines = (s: StoreWithInstitutionState): Discipline[] =>
+export const getDisciplines = (s: StoreWithInstitutionState): Discipline[] =>
   getState(s).disciplines;
 
 export const getGroups = (s: StoreWithInstitutionState): Group[] =>
@@ -30,3 +30,6 @@ export const getGroups = (s: StoreWithInstitutionState): Group[] =>
 
 export const getProfiles = (s: StoreWithInstitutionState): Profile[] =>
   getState(s).profiles;
+
+export const getCourses = (s: StoreWithInstitutionState): Course[] =>
+  getState(s).courses;
