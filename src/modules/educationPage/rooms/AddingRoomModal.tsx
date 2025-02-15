@@ -1,3 +1,4 @@
+import { getId } from '@store/institution/store';
 import Flex from '@components/Flex';
 import { useState } from 'react';
 import {
@@ -31,7 +32,7 @@ export const AddingRoomModal = () => {
   const handleAdd = () => {
     if (currentModal.isEditing)
       return dispatch(
-        fetchUpdateRoom(newItem, currentModal.value!.id as number),
+        fetchUpdateRoom(newItem, getId(currentModal.value) as number),
       );
     dispatch(fetchAddRoom(newItem));
   };
@@ -45,7 +46,7 @@ export const AddingRoomModal = () => {
           </StyledModalTitle>
         </Flex>
       </Flex>
-      <Flex gap='30px' $top='xlarge'>
+      <Flex gap="30px" $top="xlarge">
         <StyledModalInput
           placeholder="Введите название..."
           onChange={(e) =>
@@ -80,7 +81,7 @@ export const AddingRoomModal = () => {
               <StyledModalAdd
                 onClick={() => {
                   dispatch(
-                    fetchRemoveRoom(currentModal.value!.id as number),
+                    fetchRemoveRoom(getId(currentModal.value) as number),
                   );
                 }}
               >

@@ -1,3 +1,4 @@
+import { getId } from '@store/institution/store';
 import Flex from '@components/Flex';
 import { useState } from 'react';
 import {
@@ -33,7 +34,7 @@ export const AddingSubjectModal = () => {
   const handleAdd = () => {
     if (currentModal.isEditing)
       return dispatch(
-        fetchUpdateSubject(newItem, currentModal.value!.id as number),
+        fetchUpdateSubject(newItem, getId(currentModal.value) as number),
       );
     dispatch(fetchAddSubject(newItem));
   };
@@ -74,7 +75,7 @@ export const AddingSubjectModal = () => {
               <StyledModalAdd
                 onClick={() => {
                   dispatch(
-                    fetchRemoveSubject(currentModal.value!.id as number),
+                    fetchRemoveSubject(getId(currentModal.value) as number),
                   );
                 }}
               >

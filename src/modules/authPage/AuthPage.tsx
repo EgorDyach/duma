@@ -12,6 +12,7 @@ import { showErrorNotification } from '@lib/utils/notification';
 import SessionService from '@lib/utils/sessionService';
 import { useAppDispatch } from '@hooks/useAppDispatch';
 import { uiActions } from '@store/ui';
+import { institutionActions } from '@store/institution';
 
 const StyledFlex = styled(Flex)`
   width: 80vw;
@@ -82,6 +83,14 @@ export const AuthPage: FC<AuthProps> = ({ isAdmin = false }) => {
         console.log(res);
         dispatch(uiActions.setUser(res.message));
         dispatch(uiActions.setRequestFinished('getUser'));
+        dispatch(institutionActions.setCourses([]));
+        dispatch(institutionActions.setDisciplines([]));
+        dispatch(institutionActions.setGroups([]));
+        dispatch(institutionActions.setLessonTimes([]));
+        dispatch(institutionActions.setProfiles([]));
+        dispatch(institutionActions.setShifts([]));
+        dispatch(institutionActions.setSubjects([]));
+        dispatch(institutionActions.setTeachers([]));
         SessionService.login(res.message.token, saving);
         navigate('/');
       }

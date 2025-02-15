@@ -1,3 +1,4 @@
+import { getId } from '@store/institution/store';
 import Flex from '@components/Flex';
 import { useState } from 'react';
 import {
@@ -30,7 +31,7 @@ export const AddingShiftModal = () => {
   const handleAdd = () => {
     if (currentModal.isEditing)
       return dispatch(
-        fetchUpdateShift(newItem, currentModal.value!.id as number),
+        fetchUpdateShift(newItem, getId(currentModal.value) as number),
       );
     dispatch(fetchAddShift(newItem));
   };
@@ -66,7 +67,9 @@ export const AddingShiftModal = () => {
             {currentModal.isEditing && currentModal.value && (
               <StyledModalAdd
                 onClick={() => {
-                  dispatch(fetchRemoveShift(currentModal.value!.id as number));
+                  dispatch(
+                    fetchRemoveShift(getId(currentModal.value) as number),
+                  );
                 }}
               >
                 Удалить

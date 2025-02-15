@@ -10,10 +10,10 @@ export const adminInitialState: AdminState = {
 
 export const educationTypeMap: Record<
   InstitutionType | 'default',
-  'schools' | 'secondaries' | 'universities' | 'otherEducations'
+  'schools' | 'secondaries' | 'universities' | 'otherInstitutions'
 > = {
   school: 'schools',
   secondary: 'secondaries',
   university: 'universities',
-  default: 'otherEducations',
+  default: 'otherInstitutions',
 };

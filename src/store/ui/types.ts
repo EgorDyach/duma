@@ -19,6 +19,7 @@ export type ModalTypes =
   | 'addProfile'
   | 'addTeacher'
   | 'addSchool'
+  | 'addCourse'
   | 'addDiscipline'
   | 'addSecondary'
   | 'addUniversity'
@@ -33,6 +34,7 @@ export type Modals = {
   addProfile: Profile;
   addTeacher: Teacher;
   addDiscipline: Discipline;
+  addCourse: Course;
   addSecondary: InstitutionsAdmin;
   addUniversity: InstitutionsAdmin;
   addSchool: InstitutionsAdmin;

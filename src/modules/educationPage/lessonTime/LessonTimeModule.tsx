@@ -1,7 +1,7 @@
 import ContentLoader from '@components/ContentLoader';
 import Flex from '@components/Flex';
 import { Modal } from '@components/Modal/Modal';
-import TextButton from '@components/TextButton';
+import Button from '@components/TextButton';
 import { Title } from '@components/Title';
 import { useAppDispatch } from '@hooks/useAppDispatch';
 import { institutionSelectors } from '@store/institution';
@@ -10,6 +10,7 @@ import { useSelector } from 'react-redux';
 import { AddingLessonTimeModal } from './AddingLessonTimeModal';
 import { useEffectOnce } from '@hooks/useEffectOnce';
 import { fetchAllLessonTimes } from '@store/institution/thunks';
+import { Text } from '@components/Typography';
 
 export const MODAL_NAME = 'addLessonTime';
 
@@ -40,24 +41,11 @@ const LessonTimeModule = () => {
       </Title>
       {requests['lessonTime'] === 'pending' && <ContentLoader size={32} />}
       {requests['lessonTime'] !== 'pending' && (
-        <Flex
-          wrap="wrap"
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            overflowX: 'auto',
-            alignContent: 'start',
-            width: '100%',
-          }}
-          justify="start"
-          basis="24%"
-          gap="11px"
-        >
+        <Flex wrap="wrap" gap="11px">
           {lessonTimes.map((item) => {
             return (
-              <TextButton
+              <Button
                 key={item.id}
-                text={`${item.starttime.slice(11, 16)} - ${item.endtime.slice(11, 16)}`}
                 size="large"
                 openEditing={() =>
                   dispatch(
@@ -68,7 +56,11 @@ const LessonTimeModule = () => {
                     }),
                   )
                 }
-              />
+              >
+                <Text>
+                  {item.starttime.slice(11, 16)} - {item.endtime.slice(11, 16)}
+                </Text>
+              </Button>
             );
           })}
         </Flex>

@@ -1,6 +1,6 @@
 import Flex from '@components/Flex';
 import { AddingUniversityModal } from './AddingUniversityModal';
-import TextButton from '@components/TextButton';
+import Button from '@components/TextButton';
 import { Title } from '@components/Title';
 import { useAppDispatch } from '@hooks/useAppDispatch';
 import { adminSelectors } from '@store/admin';
@@ -74,20 +74,22 @@ const UniversityModule = () => {
                   >
                     <PenIcon width="24px" height="24px" />
                   </button>
-                  <TextButton
+                  <Button
                     key={item.institution.ID}
-                    text={item.institution.name}
                     // @ts-ignore
                     size="full"
                     openEditing={() => {}}
-                  />
-                  <TextButton
+                  >
+                    {item.institution.name}
+                  </Button>
+                  <Button
                     key={item.institution.ID}
-                    text={item.fullname}
                     // @ts-ignore
                     size="full"
                     openEditing={() => {}}
-                  />
+                  >
+                    {item.fullname}
+                  </Button>
                 </Flex>
               ))}
             </Flex>

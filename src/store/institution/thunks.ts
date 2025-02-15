@@ -45,8 +45,12 @@ import toLowerCaseKeys from '@lib/toLowerCaseKeys';
 
 export const fetchAddRoom = (item: Room) => async (dispatch: AppDispatch) => {
   try {
-    await requestCreateRoom(item);
-    dispatch(institutionActions.addRoom(item));
+    const { message } = await requestCreateRoom(item);
+    dispatch(
+      institutionActions.setRooms(
+        message.Rooms.map((el) => toLowerCaseKeys(el)),
+      ),
+    );
     dispatch(uiActions.closeModals());
   } catch (e) {
     if (e instanceof AxiosError) return showErrorNotification(e.message);
@@ -81,8 +85,12 @@ export const fetchUpdateRoom =
 export const fetchAddSubject =
   (item: Subject) => async (dispatch: AppDispatch) => {
     try {
-      await requestCreateSubject(item);
-      dispatch(institutionActions.addSubject(item));
+      const { message } = await requestCreateSubject(item);
+      dispatch(
+        institutionActions.setSubjects(
+          message.Subjects.map((el) => toLowerCaseKeys(el)),
+        ),
+      );
       dispatch(uiActions.closeModals());
     } catch (e) {
       if (e instanceof AxiosError) return showErrorNotification(e.message);
@@ -117,8 +125,12 @@ export const fetchUpdateSubject =
 export const fetchAddTeacher =
   (item: Teacher) => async (dispatch: AppDispatch) => {
     try {
-      await requestCreateTeacher(item);
-      dispatch(institutionActions.addTeacher(item));
+      const { message } = await requestCreateTeacher(item);
+      dispatch(
+        institutionActions.setTeachers(
+          message.Teachers.map((el) => toLowerCaseKeys(el)),
+        ),
+      );
       dispatch(uiActions.closeModals());
     } catch (e) {
       if (e instanceof AxiosError) return showErrorNotification(e.message);
@@ -153,8 +165,12 @@ export const fetchUpdateTeacher =
 export const fetchAddDiscipline =
   (item: Discipline) => async (dispatch: AppDispatch) => {
     try {
-      await requestCreateDiscipline(item);
-      dispatch(institutionActions.addDiscipline(item));
+      const { message } = await requestCreateDiscipline(item);
+      dispatch(
+        institutionActions.setDisciplines(
+          message.Disciplines.map((el) => toLowerCaseKeys(el)),
+        ),
+      );
       dispatch(uiActions.closeModals());
     } catch (e) {
       if (e instanceof AxiosError) return showErrorNotification(e.message);
@@ -189,8 +205,12 @@ export const fetchUpdateDiscipline =
 export const fetchAddLessonTime =
   (item: LessonTime) => async (dispatch: AppDispatch) => {
     try {
-      await requestCreateLessonTime(item);
-      dispatch(institutionActions.addLessonTime(item));
+      const { message } = await requestCreateLessonTime(item);
+      dispatch(
+        institutionActions.setLessonTimes(
+          message.LessonTimes.map((el) => toLowerCaseKeys(el)),
+        ),
+      );
       dispatch(uiActions.closeModals());
     } catch (e) {
       if (e instanceof AxiosError) return showErrorNotification(e.message);
@@ -224,8 +244,12 @@ export const fetchUpdateLessonTime =
   };
 export const fetchAddShift = (item: Shift) => async (dispatch: AppDispatch) => {
   try {
-    await requestCreateShift(item);
-    dispatch(institutionActions.addShift(item));
+    const { message } = await requestCreateShift(item);
+    dispatch(
+      institutionActions.setShifts(
+        message.Shifts.map((el) => toLowerCaseKeys(el)),
+      ),
+    );
     dispatch(uiActions.closeModals());
   } catch (e) {
     if (e instanceof AxiosError) return showErrorNotification(e.message);
@@ -259,8 +283,12 @@ export const fetchUpdateShift =
   };
 export const fetchAddGroup = (item: Group) => async (dispatch: AppDispatch) => {
   try {
-    await requestCreateGroup(item);
-    dispatch(institutionActions.addGroup(item));
+    const { message } = await requestCreateGroup(item);
+    dispatch(
+      institutionActions.setGroups(
+        message.Groups.map((el) => toLowerCaseKeys(el)),
+      ),
+    );
     dispatch(uiActions.closeModals());
   } catch (e) {
     if (e instanceof AxiosError) return showErrorNotification(e.message);
@@ -295,8 +323,12 @@ export const fetchUpdateGroup =
 export const fetchAddProfile =
   (item: Profile) => async (dispatch: AppDispatch) => {
     try {
-      await requestCreateProfile(item);
-      dispatch(institutionActions.addProfile(item));
+      const { message } = await requestCreateProfile(item);
+      dispatch(
+        institutionActions.setProfiles(
+          message.Profiles.map((el) => toLowerCaseKeys(el)),
+        ),
+      );
       dispatch(uiActions.closeModals());
     } catch (e) {
       if (e instanceof AxiosError) return showErrorNotification(e.message);
@@ -449,8 +481,12 @@ export const fetchAllCourses = () => async (dispatch: AppDispatch) => {
 export const fetchAddCourse =
   (item: Course) => async (dispatch: AppDispatch) => {
     try {
-      await requestCreateCourse(item);
-      dispatch(institutionActions.addCourse(item));
+      const { message } = await requestCreateCourse(item);
+      dispatch(
+        institutionActions.setCourses(
+          message.Courses.map((el) => toLowerCaseKeys(el)),
+        ),
+      );
       dispatch(uiActions.closeModals());
     } catch (e) {
       if (e instanceof AxiosError) return showErrorNotification(e.message);

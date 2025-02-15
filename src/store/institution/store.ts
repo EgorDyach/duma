@@ -9,6 +9,7 @@ export function getId(item: any): string | number | undefined {
 function createListReducers<T>(key: keyof InstitutionState) {
   return {
     set: (state: InstitutionState, { payload }: PayloadAction<T[]>) => {
+      console.log(payload);
       (state[key] as T[]) = payload;
     },
     add: (state: InstitutionState, { payload }: PayloadAction<T>) => {

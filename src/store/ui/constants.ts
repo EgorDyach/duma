@@ -64,5 +64,10 @@ export const uiInitialState: UIState = {
       isEditing: false,
       value: null,
     },
+    addCourse: {
+      isOpened: false,
+      isEditing: false,
+      value: null,
+    },
   },
 };

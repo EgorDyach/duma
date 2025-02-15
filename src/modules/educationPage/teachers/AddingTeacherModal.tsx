@@ -14,8 +14,7 @@ import {
   fetchRemoveTeacher,
   fetchUpdateTeacher,
 } from '@store/institution/thunks';
-import { Text } from '@components/Typography';
-import MultiDatePicker from '@components/MultiDatepicker'; // Импорт компонента
+import { getId } from '@store/institution/store';
 
 const ITEM_INIT_DATA: Teacher = {
   fullname: '',
@@ -32,24 +31,21 @@ export const AddingTeacherModal: React.FC = () => {
   );
 
   // Состояние выбранных дат, полученное из MultiDatePicker
-  const [holidays, setHolidays] = useState<Date[]>(
-    newItem.holidays?.map((el) => new Date(el.date)) || [],
-  );
+  // const [holidays, setHolidays] = useState<Date[]>(
+  //   newItem.holidays?.map((el) => new Date(el.date)) || [],
+  // );
 
   const handleAdd = () => {
-    const newItemWithHolidays = {
-      ...newItem,
-      holidays: holidays.map((el) => ({ date: el.toISOString() })),
-    };
+    // const newItemWithHolidays = {
+    //   ...newItem,
+    //   holidays: holidays.map((el) => ({ date: el.toISOString() })),
+    // };
     if (currentModal.isEditing) {
       return dispatch(
-        fetchUpdateTeacher(
-          newItemWithHolidays,
-          currentModal.value!.id as number,
-        ),
+        fetchUpdateTeacher(newItem, getId(currentModal.value) as number),
       );
     }
-    dispatch(fetchAddTeacher(newItemWithHolidays));
+    dispatch(fetchAddTeacher(newItem));
   };
 
   return (
@@ -69,23 +65,22 @@ export const AddingTeacherModal: React.FC = () => {
         </Flex>
       </Flex>
 
-      <Flex gap="10px" direction="column">
+      {/* <Flex gap="10px" direction="column">
         <Text>
           {currentModal.isEditing ? 'Изменить выходные' : 'Добавить выходные'}
         </Text>
 
-        {/* Используем MultiDatePicker и получаем выбранные даты через onChange */}
         <MultiDatePicker value={holidays} onChange={setHolidays} />
-      </Flex>
+      </Flex> */}
 
-      <Flex justify="flex-end">
+      <Flex $top="medium" justify="flex-end">
         <StyledModalAdd onClick={handleAdd}>
           {currentModal.isEditing ? 'Изменить' : 'Добавить'}
         </StyledModalAdd>
         {currentModal.isEditing && currentModal.value && (
           <StyledModalAdd
             onClick={() =>
-              dispatch(fetchRemoveTeacher(currentModal.value!.id as number))
+              dispatch(fetchRemoveTeacher(getId(currentModal.value) as number))
             }
           >
             Удалить

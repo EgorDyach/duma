@@ -1,3 +1,4 @@
+import { getId } from '@store/institution/store';
 import Flex from '@components/Flex';
 import { useState } from 'react';
 import {
@@ -30,7 +31,7 @@ export const AddingProfileModal = () => {
   const handleAdd = () => {
     if (currentModal.isEditing)
       return dispatch(
-        fetchUpdateProfile(newItem, currentModal.value!.id as number),
+        fetchUpdateProfile(newItem, getId(currentModal.value) as number),
       );
     dispatch(fetchAddProfile(newItem));
   };
@@ -65,7 +66,7 @@ export const AddingProfileModal = () => {
               <StyledModalAdd
                 onClick={() => {
                   dispatch(
-                    fetchRemoveProfile(currentModal.value!.id as number),
+                    fetchRemoveProfile(getId(currentModal.value) as number),
                   );
                 }}
               >

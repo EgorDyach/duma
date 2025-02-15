@@ -50,10 +50,13 @@ const createRequestInstance = (addAuthHeader: boolean): AppApi => {
 export const request = createRequestInstance(true);
 export const noAuthRequest = createRequestInstance(false);
 
-export const requestCreateRoom = async (data: Room): Promise<void> => {
-  await request.post('https://puzzlesignlanguage.online/api/v1/create/Room', [
-    data,
-  ]);
+export const requestCreateRoom = async (
+  data: Room,
+): Promise<Response<{ Info: string; Rooms: Room[] }>> => {
+  return await request.post(
+    'https://puzzlesignlanguage.online/api/v1/create/Room',
+    [data],
+  );
 };
 export const requestUpdateRoom = async (data: Room): Promise<void> => {
   await request.put('https://puzzlesignlanguage.online/api/v1/update/Room', [
@@ -78,8 +81,10 @@ export const requestAllRoom = async (): Promise<Response<Room[]>> => {
   );
 };
 //
-export const requestCreateTeacher = async (data: Teacher): Promise<void> => {
-  await request.post(
+export const requestCreateTeacher = async (
+  data: Teacher,
+): Promise<Response<{ Info: string; Teachers: Teacher[] }>> => {
+  return await request.post(
     'https://puzzlesignlanguage.online/api/v1/create/teacher',
     [data],
   );
@@ -105,10 +110,13 @@ export const requestAllTeacher = async (): Promise<Response<Teacher[]>> => {
     {},
   );
 };
-export const requestCreateGroup = async (data: Group): Promise<void> => {
-  await request.post('https://puzzlesignlanguage.online/api/v1/create/group', [
-    data,
-  ]);
+export const requestCreateGroup = async (
+  data: Group,
+): Promise<Response<{ Info: string; Groups: Group[] }>> => {
+  return await request.post(
+    'https://puzzlesignlanguage.online/api/v1/create/group',
+    [data],
+  );
 };
 export const requestUpdateGroup = async (data: Group): Promise<void> => {
   await request.put('https://puzzlesignlanguage.online/api/v1/update/group', [
@@ -131,8 +139,10 @@ export const requestAllGroup = async (): Promise<Response<Group[]>> => {
     {},
   );
 };
-export const requestCreateSubject = async (data: Subject): Promise<void> => {
-  await request.post(
+export const requestCreateSubject = async (
+  data: Subject,
+): Promise<Response<{ Info: string; Subjects: Subject[] }>> => {
+  return await request.post(
     'https://puzzlesignlanguage.online/api/v1/create/subject',
     [data],
   );
@@ -159,8 +169,10 @@ export const requestAllSubject = async (): Promise<Response<Subject[]>> => {
   );
 };
 
-export const requestCreateProfile = async (data: Profile): Promise<void> => {
-  await request.post(
+export const requestCreateProfile = async (
+  data: Profile,
+): Promise<Response<{ Info: string; Profiles: Profile[] }>> => {
+  return await request.post(
     'https://puzzlesignlanguage.online/api/v1/create/profile',
     [data],
   );
@@ -188,8 +200,8 @@ export const requestAllProfile = async (): Promise<Response<Profile[]>> => {
 };
 export const requestCreateLessonTime = async (
   data: LessonTime,
-): Promise<void> => {
-  await request.post(
+): Promise<Response<{ Info: string; LessonTimes: LessonTime[] }>> => {
+  return await request.post(
     'https://puzzlesignlanguage.online/api/v1/create/lessontime',
     [data],
   );
@@ -221,10 +233,13 @@ export const requestAllLessonTime = async (): Promise<
   );
 };
 
-export const requestCreateShift = async (data: Shift): Promise<void> => {
-  await request.post('https://puzzlesignlanguage.online/api/v1/create/shift', [
-    data,
-  ]);
+export const requestCreateShift = async (
+  data: Shift,
+): Promise<Response<{ Info: string; Shifts: Shift[] }>> => {
+  return await request.post(
+    'https://puzzlesignlanguage.online/api/v1/create/shift',
+    [data],
+  );
 };
 export const requestDeleteShift = async (data: {
   id: string | number;
@@ -249,8 +264,8 @@ export const requestAllShift = async (): Promise<Response<Shift[]>> => {
 
 export const requestCreateDiscipline = async (
   data: Discipline,
-): Promise<void> => {
-  await request.post(
+): Promise<Response<{ Info: string; Disciplines: Discipline[] }>> => {
+  return await request.post(
     'https://puzzlesignlanguage.online/api/v1/create/discipline',
     [data],
   );
@@ -281,10 +296,13 @@ export const requestAllDiscipline = async (): Promise<
   );
 };
 
-export const requestCreateCourse = async (data: Course): Promise<void> => {
-  await request.post('https://puzzlesignlanguage.online/api/v1/create/course', [
-    data,
-  ]);
+export const requestCreateCourse = async (
+  data: Course,
+): Promise<Response<{ Info: string; Courses: Course[] }>> => {
+  return await request.post(
+    'https://puzzlesignlanguage.online/api/v1/create/course',
+    [data],
+  );
 };
 export const requestDeleteCourse = async (data: {
   id: string | number;

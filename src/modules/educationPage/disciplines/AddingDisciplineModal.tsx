@@ -1,3 +1,4 @@
+import { getId } from '@store/institution/store';
 import Flex from '@components/Flex';
 import { useState } from 'react';
 import {
@@ -43,7 +44,7 @@ export const AddingDisciplineModal = () => {
       return dispatch(
         fetchUpdateDiscipline(
           formattedDiscipline,
-          currentModal.value!.id as number,
+          getId(currentModal.value) as number,
         ),
       );
     dispatch(fetchAddDiscipline(formattedDiscipline));
@@ -156,7 +157,7 @@ export const AddingDisciplineModal = () => {
               <StyledModalAdd
                 onClick={() => {
                   dispatch(
-                    fetchRemoveDiscipline(currentModal.value!.id as number),
+                    fetchRemoveDiscipline(getId(currentModal.value) as number),
                   );
                 }}
               >

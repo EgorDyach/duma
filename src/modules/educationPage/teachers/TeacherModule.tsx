@@ -1,7 +1,7 @@
 import ContentLoader from '@components/ContentLoader';
 import Flex from '@components/Flex';
 import { Modal } from '@components/Modal/Modal';
-import TextButton from '@components/TextButton';
+import Button from '@components/TextButton';
 import { Title } from '@components/Title';
 import { useAppDispatch } from '@hooks/useAppDispatch';
 import { institutionSelectors } from '@store/institution';
@@ -10,6 +10,7 @@ import { useSelector } from 'react-redux';
 import { AddingTeacherModal } from './AddingTeacherModal';
 import { useEffectOnce } from '@hooks/useEffectOnce';
 import { fetchAllTeachers } from '@store/institution/thunks';
+import { Text } from '@components/Typography';
 
 export const MODAL_NAME = 'addTeacher';
 
@@ -40,24 +41,11 @@ const TeacherModule = () => {
       </Title>
       {requests['teachers'] === 'pending' && <ContentLoader size={32} />}
       {requests['teachers'] !== 'pending' && (
-        <Flex
-          wrap="wrap"
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            overflowX: 'auto',
-            alignContent: 'start',
-            width: '100%',
-          }}
-          justify="start"
-          basis="24%"
-          gap="11px"
-        >
+        <Flex wrap="wrap" gap="11px">
           {teachers.map((item) => {
             return (
-              <TextButton
+              <Button
                 key={item.id}
-                text={String(item.fullname)}
                 size="large"
                 openEditing={() =>
                   dispatch(
@@ -68,7 +56,9 @@ const TeacherModule = () => {
                     }),
                   )
                 }
-              />
+              >
+                <Text>{item.fullname}</Text>
+              </Button>
             );
           })}
         </Flex>

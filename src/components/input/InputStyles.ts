@@ -1,9 +1,10 @@
 import Flex from '@components/Flex';
 import { Text } from '@components/Typography';
+import { withIndentStyles } from '@hocs/withIndentStyles';
 import { content } from '@lib/theme/colors';
 import styled from 'styled-components';
 
-export const StyledInput = styled.input`
+export const StyledInput = withIndentStyles(styled.input`
   color: #333;
   padding: 12px 15px;
   border-radius: 6px;
@@ -15,7 +16,7 @@ export const StyledInput = styled.input`
   &:disabled {
     color: #999;
   }
-`;
+`);
 
 export const StyledLabel = styled(Text)`
   color: rgba(0, 0, 0, 0.31);

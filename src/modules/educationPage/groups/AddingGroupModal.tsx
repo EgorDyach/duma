@@ -15,7 +15,6 @@ import {
   fetchUpdateGroup,
 } from '@store/institution/thunks';
 import { Text } from '@components/Typography';
-import MultiDatePicker from '@components/MultiDatepicker';
 import styled from 'styled-components';
 import { institutionSelectors } from '@store/institution';
 import { getId } from '@store/institution/store';
@@ -38,6 +37,7 @@ export const ShiftsList = styled.ul`
   padding: 10px 0;
   list-style: none;
   margin: 0;
+  flex-wrap: wrap;
 
   li {
     background: #f5f5f5;
@@ -68,20 +68,23 @@ export const AddingGroupModal: React.FC = () => {
   );
 
   // Состояние выбранных дат, полученное из MultiDatePicker
-  const [holidays, setHolidays] = useState<Date[]>(
-    newItem.holidays?.map((el) => new Date(el.date)) || [],
-  );
+  // const [holidays, setHolidays] = useState<Date[]>(
+  //   newItem.holidays?.map((el) => new Date(el.date)) || [],
+  // );
 
   const handleAdd = () => {
     const newItemWithHolidays = {
       ...newItem,
-      holidays: holidays.map((el) => ({ date: el.toISOString() })),
+      // holidays: holidays.map((el) => ({ date: el.toISOString() })),
     };
     if (newItemWithHolidays.profile_id === -1)
       delete newItemWithHolidays.profile_id;
     if (currentModal.isEditing) {
       return dispatch(
-        fetchUpdateGroup(newItemWithHolidays, currentModal.value!.id as number),
+        fetchUpdateGroup(
+          newItemWithHolidays,
+          getId(currentModal.value) as number,
+        ),
       );
     }
     dispatch(fetchAddGroup(newItemWithHolidays));
@@ -102,9 +105,10 @@ export const AddingGroupModal: React.FC = () => {
         </Flex>
       </Flex>
 
-      <Flex direction="column">
+      <Flex $top="medium" direction="column">
         <Text>Количество учеников</Text>
         <StyledInput
+          $top="small"
           min={0}
           value={String(newItem.studentscount)}
           onChange={(e) =>
@@ -113,10 +117,8 @@ export const AddingGroupModal: React.FC = () => {
           type="number"
         />
       </Flex>
-      <Flex direction="column">
-        <Text>
-          {currentModal.isEditing ? 'Изменить смену' : 'Добавить смену'}
-        </Text>
+      <Flex $top="small" direction="column">
+        <Text>Смена</Text>
         <ShiftsList>
           {shifts.map((el) => (
             <li
@@ -141,10 +143,8 @@ export const AddingGroupModal: React.FC = () => {
           ))}
         </ShiftsList>
       </Flex>
-      <Flex direction="column">
-        <Text>
-          {currentModal.isEditing ? 'Изменить профиль' : 'Добавить профиль'}
-        </Text>
+      <Flex $top="small" direction="column">
+        <Text>Профиль</Text>
         <ShiftsList>
           <li
             style={{
@@ -191,22 +191,22 @@ export const AddingGroupModal: React.FC = () => {
           ))}
         </ShiftsList>
       </Flex>
-      <Flex gap="10px" direction="column">
+      {/* <Flex gap="10px" direction="column">
         <Text>
           {currentModal.isEditing ? 'Изменить выходные' : 'Добавить выходные'}
         </Text>
 
         <MultiDatePicker value={holidays} onChange={setHolidays} />
-      </Flex>
+      </Flex> */}
 
-      <Flex justify="flex-end">
+      <Flex $top="medium" justify="flex-end">
         <StyledModalAdd onClick={handleAdd}>
           {currentModal.isEditing ? 'Изменить' : 'Добавить'}
         </StyledModalAdd>
         {currentModal.isEditing && currentModal.value && (
           <StyledModalAdd
             onClick={() =>
-              dispatch(fetchRemoveGroup(currentModal.value!.id as number))
+              dispatch(fetchRemoveGroup(getId(currentModal.value) as number))
             }
           >
             Удалить

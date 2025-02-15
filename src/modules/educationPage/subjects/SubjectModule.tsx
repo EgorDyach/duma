@@ -1,7 +1,7 @@
 import ContentLoader from '@components/ContentLoader';
 import Flex from '@components/Flex';
 import { Modal } from '@components/Modal/Modal';
-import TextButton from '@components/TextButton';
+import Button from '@components/TextButton';
 import { Title } from '@components/Title';
 import { useAppDispatch } from '@hooks/useAppDispatch';
 import { institutionSelectors } from '@store/institution';
@@ -10,6 +10,7 @@ import { useSelector } from 'react-redux';
 import { AddingSubjectModal } from './AddingSubjectModal';
 import { useEffectOnce } from '@hooks/useEffectOnce';
 import { fetchAllSubjects } from '@store/institution/thunks';
+import { Text } from '@components/Typography';
 
 export const MODAL_NAME = 'addSubject';
 
@@ -40,39 +41,26 @@ const SubjectModule = () => {
       </Title>
       {requests['shifts'] === 'pending' && <ContentLoader size={32} />}
       {requests['shifts'] !== 'pending' && (
-        <Flex
-          wrap="wrap"
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            overflowX: 'auto',
-            alignContent: 'start',
-            width: '100%',
-          }}
-          justify="start"
-          basis="24%"
-          gap="11px"
-        >
-          {shifts
-            // .sort((a, b) => a.number - b.number)
-            .map((item) => {
-              return (
-                <TextButton
-                  key={item.id}
-                  text={String(item.name)}
-                  size="small"
-                  openEditing={() =>
-                    dispatch(
-                      uiActions.openModal({
-                        modalName: 'addSubject',
-                        isEditing: true,
-                        value: item,
-                      }),
-                    )
-                  }
-                />
-              );
-            })}
+        <Flex wrap="wrap" gap="11px">
+          {shifts.map((item) => {
+            return (
+              <Button
+                key={item.id}
+                size="small"
+                openEditing={() =>
+                  dispatch(
+                    uiActions.openModal({
+                      modalName: 'addSubject',
+                      isEditing: true,
+                      value: item,
+                    }),
+                  )
+                }
+              >
+                <Text>{item.name}</Text>
+              </Button>
+            );
+          })}
         </Flex>
       )}
     </Flex>

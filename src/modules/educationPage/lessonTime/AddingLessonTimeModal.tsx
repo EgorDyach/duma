@@ -1,3 +1,4 @@
+import { getId } from '@store/institution/store';
 import Flex from '@components/Flex';
 import { useState } from 'react';
 import {
@@ -63,12 +64,12 @@ export const AddingLessonTimeModal = () => {
   const handleAdd = () => {
     const item = {
       ...newItem,
-      starttime: `2025-02-02T${newItem.starttime.replace('-', ':')}:00Z`,
-      endtime: `2025-02-02T${newItem.endtime.replace('-', ':')}:00Z`,
+      starttime: `2025-03-03T${newItem.starttime.replace('-', ':')}:00Z`,
+      endtime: `2025-03-03T${newItem.endtime.replace('-', ':')}:00Z`,
     };
     if (currentModal.isEditing)
       return dispatch(
-        fetchUpdateLessonTime(item, currentModal.value!.id as number),
+        fetchUpdateLessonTime(item, getId(currentModal.value) as number),
       );
     dispatch(fetchAddLessonTime(item));
   };
@@ -140,7 +141,7 @@ export const AddingLessonTimeModal = () => {
               <StyledModalAdd
                 onClick={() => {
                   dispatch(
-                    fetchRemoveProfile(currentModal.value!.id as number),
+                    fetchRemoveProfile(getId(currentModal.value) as number),
                   );
                 }}
               >
