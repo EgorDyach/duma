@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import SchoolModule from './school/SchoolModule';
 import { useEffectOnce } from '@hooks/useEffectOnce';
 import { useAppDispatch } from '@hooks/useAppDispatch';
-import { fetchEducations } from '@store/admin/thunks';
+import { fetchInstitutions } from '@store/admin/thunks';
 import UniversityModule from './university/UniversityModule';
 import SecondaryModule from './secondary/SecondaryModule';
 import { StyledButton } from '@modules/educationPage/EducationPage';
@@ -18,7 +18,7 @@ const Wrapper = styled(Flex)`
 const AdminPage = () => {
   const dispatch = useAppDispatch();
   useEffectOnce(() => {
-    dispatch(fetchEducations());
+    dispatch(fetchInstitutions());
   });
   return (
     <Wrapper>

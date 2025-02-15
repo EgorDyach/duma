@@ -12,10 +12,10 @@ export type UserDuma = {
 };
 
 export type InstitutionsAdmin = {
-  ID?: number;
-  CreatedAt?: string;
-  UpdatedAt?: string;
-  DeletedAt?: null | string;
+  id?: number;
+  createdat?: string;
+  updatedat?: string;
+  deletedat?: null | string;
   uuid?: string;
   email: string;
   password?: string;
@@ -31,7 +31,7 @@ export type Institution = {
   UpdatedAt?: string;
   DeletedAt?: null | string;
   name: string;
-  type: InstitutionType;
+  institution_type: InstitutionType;
 };
 
 export type InstitutionType = 'school' | 'university' | 'secondary';

@@ -16,7 +16,10 @@ const adminSlice = createSlice({
     setUniversities(state, { payload }: PayloadAction<InstitutionsAdmin[]>) {
       state.universities = payload;
     },
-    setOtherEducations(state, { payload }: PayloadAction<InstitutionsAdmin[]>) {
+    setOtherInstitutions(
+      state,
+      { payload }: PayloadAction<InstitutionsAdmin[]>,
+    ) {
       state.otherInstitutions = payload;
     },
     removeItem(state, { payload }: PayloadAction<string>) {
@@ -33,7 +36,8 @@ const adminSlice = createSlice({
     },
     addItem(state, { payload }: PayloadAction<InstitutionsAdmin>) {
       const educationKey =
-        educationTypeMap[payload.institution.type] || educationTypeMap.default;
+        educationTypeMap[payload.institution.institution_type] ||
+        educationTypeMap.default;
 
       state[educationKey] = [...state[educationKey], payload].sort((a, b) =>
         a.institution.name.localeCompare(b.institution.name),
@@ -41,10 +45,11 @@ const adminSlice = createSlice({
     },
     editItem(state, { payload }: PayloadAction<InstitutionsAdmin>) {
       const educationKey =
-        educationTypeMap[payload.institution.type] || educationTypeMap.default;
+        educationTypeMap[payload.institution.institution_type] ||
+        educationTypeMap.default;
 
       state[educationKey] = [
-        ...state[educationKey].filter((el) => el.ID !== payload.ID),
+        ...state[educationKey].filter((el) => el.id !== payload.id),
         payload,
       ].sort((a, b) => a.institution.name.localeCompare(b.institution.name));
     },

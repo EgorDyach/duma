@@ -8,6 +8,7 @@ import { uiActions, uiSelectors } from '@store/ui';
 import { useSelector } from 'react-redux';
 import { Modal } from '@components/Modal/Modal';
 import PenIcon from '@components/icons/PenIcon';
+import { Text } from '@components/Typography';
 
 export const MODAL_NAME = 'addSchool';
 
@@ -79,16 +80,20 @@ const SchoolModule = () => {
                     // @ts-ignore
                     size="full"
                     openEditing={() => {}}
+                    style={{ width: '100%' }}
                   >
-                    {item.institution.name}
+                    <Text>{item.institution.name}</Text>
                   </Button>
                   <Button
                     key={item.institution.ID}
                     // @ts-ignore
                     size="full"
                     openEditing={() => {}}
+                    style={{ width: '100%' }}
                   >
-                    {item.fullname}
+                    <Text>
+                      <Text>{item.fullname}</Text>
+                    </Text>
                   </Button>
                 </Flex>
               ))}

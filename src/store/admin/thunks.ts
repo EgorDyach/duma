@@ -2,49 +2,56 @@ import { showErrorNotification } from '@lib/utils/notification';
 import { uiActions } from '@store/ui';
 import { AppDispatch } from '..';
 import {
-  requestAddEducation$,
-  requestEditEducation$,
-  requestEducations,
-  requestRemoveEducation$,
+  requestAddInstitution$,
+  requestEditInstitution$,
+  requestInstitutions,
+  requestRemoveInstitution$,
 } from '@lib/api/admin';
 import { adminActions } from '.';
 import { InstitutionsAdmin } from '@type/user';
+import toLowerCaseKeys from '@lib/toLowerCaseKeys';
 
-export const fetchEducations =
+export const fetchInstitutions =
   () =>
   async (dispatch: AppDispatch): Promise<void> => {
     dispatch(uiActions.setRequestStarted('educations'));
     try {
-      const educations = await requestEducations();
+      const educations = await requestInstitutions();
+      console.log(educations);
       const data: Record<string, InstitutionsAdmin[]> = {
         school: [],
         university: [],
         secondary: [],
-        otherEducations: [],
+        otherInstitutions: [],
       };
-      educations.message.forEach((el) => {
-        console.log(el.institution.type, el);
-        if (el.institution.type in data) data[el.institution.type].push(el);
-        else data['otherEducations'].push(el);
-      });
+      educations.message
+        .map((el) => toLowerCaseKeys(el))
+        .forEach((el) => {
+          console.log(el.institution);
+          if (el.institution.institution_type in data)
+            data[el.institution.institution_type].push(el);
+          else data['otherInstitutions'].push(el);
+        });
       console.log(data);
       dispatch(adminActions.setSchools(data.school));
       dispatch(adminActions.setSecondaries(data.secondary));
       dispatch(adminActions.setUniversities(data.university));
-      dispatch(adminActions.setOtherEducations(data.otherEducations));
+      dispatch(adminActions.setOtherInstitutions(data.otherInstitutions));
     } catch (error) {
-      showErrorNotification('Ошибка при получении учреждений');
+      showErrorNotification(
+        `Ошибка при получении учреждений: ${String(error)}`,
+      );
     } finally {
       dispatch(uiActions.setRequestFinished('educations'));
     }
   };
 
-export const fetchDeleteEducation =
+export const fetchDeleteInstitution =
   (email: string) =>
   async (dispatch: AppDispatch): Promise<void> => {
     dispatch(uiActions.setRequestStarted('educations'));
     try {
-      await requestRemoveEducation$(email);
+      await requestRemoveInstitution$(email);
       dispatch(adminActions.removeItem(email));
       dispatch(uiActions.closeModals());
     } catch (error) {
@@ -54,13 +61,13 @@ export const fetchDeleteEducation =
     }
   };
 5;
-export const fetchEditEducation =
+export const fetchEditInstitution =
   (newItem: InstitutionsAdmin) =>
   async (dispatch: AppDispatch): Promise<void> => {
     dispatch(uiActions.setRequestStarted('educations'));
     if (!newItem.password) delete newItem.password;
     try {
-      await requestEditEducation$({ ...newItem });
+      await requestEditInstitution$({ ...newItem });
       dispatch(adminActions.editItem(newItem));
       dispatch(uiActions.closeModals());
     } catch (error) {
@@ -70,12 +77,12 @@ export const fetchEditEducation =
     }
   };
 
-export const fetchAddEducation =
+export const fetchAddInstitution =
   (newItem: InstitutionsAdmin) =>
   async (dispatch: AppDispatch): Promise<void> => {
     dispatch(uiActions.setRequestStarted('educations'));
     try {
-      await requestAddEducation$(newItem);
+      await requestAddInstitution$(newItem);
       dispatch(adminActions.addItem(newItem));
       dispatch(uiActions.closeModals());
     } catch (error) {

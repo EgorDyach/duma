@@ -13,18 +13,18 @@ import { uiSelectors } from '@store/ui';
 import { MODAL_NAME } from './SchoolModule';
 import { useAppDispatch } from '@hooks/useAppDispatch';
 import {
-  fetchAddEducation,
-  fetchDeleteEducation,
-  fetchEditEducation,
+  fetchAddInstitution,
+  fetchDeleteInstitution,
+  fetchEditInstitution,
 } from '@store/admin/thunks';
 import { generatePassword } from './helpers';
 
 const ITEM_INIT_DATA: InstitutionsAdmin = {
-  ID: new Date().getTime(),
+  id: new Date().getTime(),
   email: '',
   fullname: '',
   institution: {
-    type: 'school',
+    institution_type: 'school',
     name: '',
   },
 };
@@ -38,8 +38,8 @@ export const AddingSchoolModal = () => {
   );
 
   const handleAdd = () => {
-    if (currentModal.isEditing) return dispatch(fetchEditEducation(newItem));
-    dispatch(fetchAddEducation(newItem));
+    if (currentModal.isEditing) return dispatch(fetchEditInstitution(newItem));
+    dispatch(fetchAddInstitution(newItem));
   };
 
   return (
@@ -155,7 +155,7 @@ export const AddingSchoolModal = () => {
             {currentModal.isEditing && currentModal.value && (
               <StyledModalAdd
                 onClick={() => {
-                  dispatch(fetchDeleteEducation(currentModal.value!.email));
+                  dispatch(fetchDeleteInstitution(currentModal.value!.email));
                 }}
               >
                 Удалить

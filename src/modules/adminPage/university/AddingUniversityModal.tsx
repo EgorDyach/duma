@@ -13,18 +13,18 @@ import { uiActions, uiSelectors } from '@store/ui';
 import { MODAL_NAME } from './UniversityModule';
 import { useAppDispatch } from '@hooks/useAppDispatch';
 import {
-  fetchAddEducation,
-  fetchDeleteEducation,
-  fetchEditEducation,
+  fetchAddInstitution,
+  fetchDeleteInstitution,
+  fetchEditInstitution,
 } from '@store/admin/thunks';
 import { generatePassword } from './helpers';
 
 const ITEM_INIT_DATA: InstitutionsAdmin = {
-  ID: new Date().getTime(),
+  id: new Date().getTime(),
   email: '',
   fullname: '',
   institution: {
-    type: 'university',
+    institution_type: 'university',
     name: '',
   },
 };
@@ -40,10 +40,11 @@ export const AddingUniversityModal = () => {
   const handleAdd = () => {
     const addingItem = {
       ...newItem,
-      ID: newItem.ID || new Date().getTime(),
+      id: newItem.id || new Date().getTime(),
     };
-    if (currentModal.isEditing) return dispatch(fetchEditEducation(addingItem));
-    dispatch(fetchAddEducation(addingItem));
+    if (currentModal.isEditing)
+      return dispatch(fetchEditInstitution(addingItem));
+    dispatch(fetchAddInstitution(addingItem));
   };
 
   return (
@@ -161,7 +162,7 @@ export const AddingUniversityModal = () => {
             {currentModal.isEditing && currentModal.value && (
               <StyledModalAdd
                 onClick={() => {
-                  dispatch(fetchDeleteEducation(currentModal.value!.email));
+                  dispatch(fetchDeleteInstitution(currentModal.value!.email));
                   dispatch(uiActions.closeModals());
                 }}
               >
