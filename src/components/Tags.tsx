@@ -4,6 +4,7 @@ import Input from '@components/input/Input';
 import Button from '@modules/authPage/Button';
 import CloseIcon from './icons/CloseIcon';
 import { Text } from './Typography';
+import { showErrorNotification } from '@lib/utils/notification';
 
 interface TagGeneratorProps {
   tags: string[];
@@ -27,6 +28,7 @@ const TagList = styled.div`
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
+  margin-top: 8px;
 `;
 
 const TagItem = styled.div`
@@ -71,7 +73,7 @@ const TagGenerator: React.FC<TagGeneratorProps> = ({
     if (inputValue.trim() && !tags.includes(inputValue.trim())) {
       setTags([...tags, inputValue.trim()]);
       setInputValue('');
-    }
+    } else showErrorNotification('Данный тег существует!');
   };
 
   const removeTag = (index: number) => {
@@ -81,18 +83,9 @@ const TagGenerator: React.FC<TagGeneratorProps> = ({
 
   return (
     <Container className={className}>
-      <TagList>
-        {tags.map((tag, index) => (
-          <TagItem key={index}>
-            <Text>{tag}</Text>
-            <IconButton onClick={() => removeTag(index)}>
-              <CloseIcon width="16px" height="16px" color="#ef4444" />
-            </IconButton>
-          </TagItem>
-        ))}
-      </TagList>
       <InputContainer>
         <Input
+          label="Название тега"
           value={inputValue}
           onChange={(e) => setInputValue(e)}
           onKeyDown={(e) => e.key === 'Enter' && addTag()}
@@ -103,6 +96,16 @@ const TagGenerator: React.FC<TagGeneratorProps> = ({
           Добавить
         </SubmitButton>
       </InputContainer>
+      <TagList>
+        {tags.map((tag, index) => (
+          <TagItem key={index}>
+            <Text>{tag}</Text>
+            <IconButton onClick={() => removeTag(index)}>
+              <CloseIcon width="16px" height="16px" color="#ef4444" />
+            </IconButton>
+          </TagItem>
+        ))}
+      </TagList>
     </Container>
   );
 };

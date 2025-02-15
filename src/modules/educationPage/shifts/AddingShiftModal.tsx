@@ -3,7 +3,6 @@ import Flex from '@components/Flex';
 import { useState } from 'react';
 import {
   StyledModalTitle,
-  StyledModalInput,
   StyledModalAdd,
 } from '@components/Modal/ModalStyles';
 import { useSelector } from 'react-redux';
@@ -15,6 +14,10 @@ import {
   fetchRemoveShift,
   fetchUpdateShift,
 } from '@store/institution/thunks';
+import { validateShift } from './helpers';
+import { institutionSelectors } from '@store/institution';
+import { showErrorNotification } from '@lib/utils/notification';
+import Input from '@components/input/Input';
 
 const ITEM_INIT_DATA: Shift = {
   number: 0,
@@ -23,12 +26,16 @@ const ITEM_INIT_DATA: Shift = {
 export const AddingShiftModal = () => {
   const dispatch = useAppDispatch();
   const modals = useSelector(uiSelectors.getModals);
+  const shifts = useSelector(institutionSelectors.getShifts);
   const currentModal = modals[MODAL_NAME];
   const [newItem, setNewItem] = useState<Shift>(
     currentModal.value || ITEM_INIT_DATA,
   );
 
   const handleAdd = () => {
+    const validateError = validateShift(newItem, shifts);
+    if (validateError) return showErrorNotification(validateError);
+
     if (currentModal.isEditing)
       return dispatch(
         fetchUpdateShift(newItem, getId(currentModal.value) as number),
@@ -43,19 +50,23 @@ export const AddingShiftModal = () => {
           <StyledModalTitle $top="xsmall">
             {currentModal.isEditing ? 'Изменить смену' : 'Новая смена'}
           </StyledModalTitle>
-          <StyledModalInput
-            type="number"
-            min={0}
-            placeholder="Введите значение..."
-            onChange={(e) =>
-              setNewItem((prev) => ({
-                ...prev,
-                number: Number(e.target.value),
-              }))
-            }
-            value={newItem.number}
-          />
         </Flex>
+      </Flex>
+      <Flex $top="medium">
+        <Input
+          style={{ width: '100%' }}
+          label="Номер смены"
+          type="number"
+          min={0}
+          placeholder="Введите значение..."
+          onChange={(e) =>
+            setNewItem((prev) => ({
+              ...prev,
+              number: Number(e),
+            }))
+          }
+          value={String(newItem.number)}
+        />
       </Flex>
 
       <Flex justify="flex-end">
@@ -64,6 +75,7 @@ export const AddingShiftModal = () => {
             <StyledModalAdd onClick={handleAdd}>
               {currentModal.isEditing ? 'Изменить' : 'Добавить'}
             </StyledModalAdd>
+
             {currentModal.isEditing && currentModal.value && (
               <StyledModalAdd
                 onClick={() => {

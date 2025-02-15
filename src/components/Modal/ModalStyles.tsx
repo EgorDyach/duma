@@ -48,6 +48,7 @@ export const StyledModalTitle = styled(SubHeader)`
   color: #b4b4b9;
   padding: 3px 24px;
   text-align: left;
+  width: fit-content;
   border-radius: 10px;
 `;
 

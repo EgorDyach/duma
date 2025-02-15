@@ -3,7 +3,6 @@ import Flex from '@components/Flex';
 import { useState } from 'react';
 import {
   StyledModalTitle,
-  StyledModalInput,
   StyledModalAdd,
 } from '@components/Modal/ModalStyles';
 import { useSelector } from 'react-redux';
@@ -16,7 +15,10 @@ import {
   fetchUpdateSubject,
 } from '@store/institution/thunks';
 import Tags from '@components/Tags';
-import { Text } from '@components/Typography';
+import Input from '@components/input/Input';
+import { validateSubject } from './helpers';
+import { showErrorNotification } from '@lib/utils/notification';
+import { institutionSelectors } from '@store/institution';
 
 const ITEM_INIT_DATA: Subject = {
   name: '',
@@ -26,12 +28,16 @@ const ITEM_INIT_DATA: Subject = {
 export const AddingSubjectModal = () => {
   const dispatch = useAppDispatch();
   const modals = useSelector(uiSelectors.getModals);
+  const subjects = useSelector(institutionSelectors.getSubjects);
   const currentModal = modals[MODAL_NAME];
   const [newItem, setNewItem] = useState<Subject>(
     currentModal.value || ITEM_INIT_DATA,
   );
 
   const handleAdd = () => {
+    const validateError = validateSubject(newItem, subjects);
+    if (validateError) return showErrorNotification(validateError);
+
     if (currentModal.isEditing)
       return dispatch(
         fetchUpdateSubject(newItem, getId(currentModal.value) as number),
@@ -41,25 +47,26 @@ export const AddingSubjectModal = () => {
 
   return (
     <>
-      <Flex gap="30px" justify="space-between">
-        <Flex gap="10px">
-          <StyledModalTitle $top="xsmall">
-            {currentModal.isEditing ? 'Изменить предмет' : 'Новый предмет'}
-          </StyledModalTitle>
-          <StyledModalInput
-            placeholder="Введите название..."
-            onChange={(e) =>
-              setNewItem((prev) => ({
-                ...prev,
-                name: e.target.value,
-              }))
-            }
-            value={newItem.name}
-          />
-        </Flex>
+      <StyledModalTitle $top="xsmall">
+        {currentModal.isEditing ? 'Изменить предмет' : 'Новый предмет'}
+      </StyledModalTitle>
+
+      <Flex $top="medium">
+        <Input
+          style={{ width: '100%' }}
+          label="Название"
+          placeholder="Введите значение..."
+          onChange={(e) =>
+            setNewItem((prev) => ({
+              ...prev,
+              name: e,
+            }))
+          }
+          value={newItem.name}
+        />
       </Flex>
-      <Flex direction="column">
-        <Text>Теги</Text>
+
+      <Flex $top="medium" direction="column">
         <Tags
           setTags={(n) => setNewItem((prev) => ({ ...prev, tags: n }))}
           tags={newItem.tags ?? []}

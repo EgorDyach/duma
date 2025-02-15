@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import Flex from '@components/Flex';
 import {
   StyledModalTitle,
-  StyledModalInput,
   StyledModalAdd,
 } from '@components/Modal/ModalStyles';
 import { useSelector } from 'react-redux';
@@ -15,6 +14,9 @@ import {
   fetchUpdateTeacher,
 } from '@store/institution/thunks';
 import { getId } from '@store/institution/store';
+import { validateTeacher } from './helpers';
+import { showErrorNotification } from '@lib/utils/notification';
+import Input from '@components/input/Input';
 
 const ITEM_INIT_DATA: Teacher = {
   fullname: '',
@@ -30,39 +32,44 @@ export const AddingTeacherModal: React.FC = () => {
     currentModal.value || ITEM_INIT_DATA,
   );
 
-  // Состояние выбранных дат, полученное из MultiDatePicker
-  // const [holidays, setHolidays] = useState<Date[]>(
-  //   newItem.holidays?.map((el) => new Date(el.date)) || [],
-  // );
-
   const handleAdd = () => {
-    // const newItemWithHolidays = {
-    //   ...newItem,
-    //   holidays: holidays.map((el) => ({ date: el.toISOString() })),
-    // };
+    const newItemWithHolidays = {
+      ...newItem,
+    };
+
+    const validateError = validateTeacher(newItem);
+    if (validateError) return showErrorNotification(validateError);
+
     if (currentModal.isEditing) {
       return dispatch(
-        fetchUpdateTeacher(newItem, getId(currentModal.value) as number),
+        fetchUpdateTeacher(
+          newItemWithHolidays,
+          getId(currentModal.value) as number,
+        ),
       );
     }
-    dispatch(fetchAddTeacher(newItem));
+    dispatch(fetchAddTeacher(newItemWithHolidays));
   };
 
   return (
     <>
-      <Flex gap="30px" justify="space-between">
-        <Flex gap="10px">
-          <StyledModalTitle>
-            {currentModal.isEditing ? 'Изменить учителя' : 'Новый учитель'}
-          </StyledModalTitle>
-          <StyledModalInput
-            placeholder="Введите полное ФИО..."
-            onChange={(e) =>
-              setNewItem({ ...newItem, fullname: e.target.value })
-            }
-            value={newItem.fullname}
-          />
-        </Flex>
+      <StyledModalTitle>
+        {currentModal.isEditing ? 'Изменить учителя' : 'Новый учитель'}
+      </StyledModalTitle>
+
+      <Flex $top="medium">
+        <Input
+          style={{ width: '100%' }}
+          label="Фамилия Имя Отчество"
+          placeholder="Введите ФИО..."
+          onChange={(e) =>
+            setNewItem((prev) => ({
+              ...prev,
+              fullname: e,
+            }))
+          }
+          value={newItem.fullname}
+        />
       </Flex>
 
       {/* <Flex gap="10px" direction="column">
@@ -73,7 +80,7 @@ export const AddingTeacherModal: React.FC = () => {
         <MultiDatePicker value={holidays} onChange={setHolidays} />
       </Flex> */}
 
-      <Flex $top="medium" justify="flex-end">
+      <Flex gap="16px" $top="medium" justify="flex-end">
         <StyledModalAdd onClick={handleAdd}>
           {currentModal.isEditing ? 'Изменить' : 'Добавить'}
         </StyledModalAdd>

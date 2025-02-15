@@ -13,5 +13,5 @@ export interface InputProps
   onBlur?: VoidFunction;
   onFocus?: VoidFunction;
   onSubmit?: VoidFunction;
-  name: string;
+  name?: string;
 }

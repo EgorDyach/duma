@@ -17,6 +17,8 @@ import {
 } from '@store/institution/thunks';
 import styled from 'styled-components';
 import { institutionSelectors } from '@store/institution';
+import { validateLessonTime } from './helpers';
+import { showErrorNotification } from '@lib/utils/notification';
 
 const ShiftsList = styled.ul`
   display: flex;
@@ -49,7 +51,7 @@ const ShiftsList = styled.ul`
 const ITEM_INIT_DATA: LessonTime = {
   starttime: '',
   endtime: '',
-  shift_id: 0,
+  shift_id: -1,
 };
 
 export const AddingLessonTimeModal = () => {
@@ -67,6 +69,10 @@ export const AddingLessonTimeModal = () => {
       starttime: `2025-03-03T${newItem.starttime.replace('-', ':')}:00Z`,
       endtime: `2025-03-03T${newItem.endtime.replace('-', ':')}:00Z`,
     };
+
+    const validateError = validateLessonTime(newItem);
+    if (validateError) return showErrorNotification(validateError);
+
     if (currentModal.isEditing)
       return dispatch(
         fetchUpdateLessonTime(item, getId(currentModal.value) as number),

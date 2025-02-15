@@ -18,12 +18,14 @@ import { Text } from '@components/Typography';
 import { StyledInput } from '@components/input/InputStyles';
 import { ShiftsList } from '../groups/AddingGroupModal';
 import { institutionSelectors } from '@store/institution';
+import { validateDiscipline } from './helpers';
+import { showErrorNotification } from '@lib/utils/notification';
 
 const ITEM_INIT_DATA: Discipline = {
   groups: [],
   hours: 0,
   discipline_type: '',
-  subject_id: 0,
+  subject_id: -1,
 };
 
 export const AddingDisciplineModal = () => {
@@ -38,8 +40,13 @@ export const AddingDisciplineModal = () => {
   const [groupsChoosed, setGroupsChoosed] = useState(
     currentModal.value?.groups || [],
   );
+
   const handleAdd = () => {
     const formattedDiscipline = { ...newItem, groups: groupsChoosed };
+
+    const validateError = validateDiscipline(newItem);
+    if (validateError) return showErrorNotification(validateError);
+
     if (currentModal.isEditing)
       return dispatch(
         fetchUpdateDiscipline(

@@ -78,7 +78,7 @@ const DisciplineModule = () => {
               <StyledFlex
                 direction="column"
                 key={item.id}
-                style={{ marginBottom: 24 }}
+                style={{ marginBottom: 10 }}
               >
                 <Flex align="center" justify="space-between">
                   <Text
@@ -117,7 +117,7 @@ const DisciplineModule = () => {
                         isEditing: true,
                         value: {
                           discipline_id: item.id as number,
-                          teacher_id: 0,
+                          teacher_id: -1,
                         },
                         modalName: 'addCourse',
                       }),

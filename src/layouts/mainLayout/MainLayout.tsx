@@ -61,7 +61,9 @@ export const MainLayout: FC<PropsWithChildren> = ({ children }) => {
         <Flex gap="8px" align="center">
           <HeaderAvatar />
           <Flex align="start" direction="column" gap="2px">
-            <Text $color="#fff" $size="medium"></Text>
+            <Text $color="#fff" $size="medium">
+              {user && 'institution_id' in user ? user.fullname : ''}
+            </Text>
             <Text $color="#FFFFFF59" $size="small">
               {user && isAdmin(user) ? 'Администратор Думы' : 'администратор'}
             </Text>

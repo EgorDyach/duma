@@ -1,5 +1,5 @@
 import Flex from '@components/Flex';
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import {
   StyledModalTitle,
   StyledModalAdd,
@@ -12,12 +12,13 @@ import { Text } from '@components/Typography';
 import { ShiftsList } from '../groups/AddingGroupModal';
 import { institutionSelectors } from '@store/institution';
 import { showErrorNotification } from '@lib/utils/notification';
+import { validateCourse } from './helpers';
 
 export const MODAL_NAME = 'addCourse';
 
 const ITEM_INIT_DATA: Course = {
   discipline_id: -1,
-  teacher_id: 0,
+  teacher_id: -1,
 };
 
 export const AddingCourseModal = () => {
@@ -37,15 +38,13 @@ export const AddingCourseModal = () => {
   );
 
   const handleAdd = () => {
-    // if (currentModal.isEditing)
-    //   return dispatch(
-    //     fetchUpdateCourse(newItem, getId(currentModal.value) as number),
-    //   );
+    const validateError = validateCourse(newItem);
+    if (validateError) return showErrorNotification(validateError);
+
     dispatch(fetchAddCourse(newItem));
   };
 
   if (!currentDiscipline) {
-    console.log(disciplines);
     dispatch(uiActions.closeModals());
     showErrorNotification('Не удалось открыть дисциплину!');
     return <></>;
@@ -56,22 +55,6 @@ export const AddingCourseModal = () => {
     [subjects, currentDiscipline?.subject_id],
   );
 
-  useEffect(() => {
-    console.log(
-      'ababa',
-      currentSubject,
-      currentDiscipline,
-      disciplines,
-      newItem,
-      subjects,
-    );
-  }, [
-    disciplines,
-    newItem.discipline_id,
-    subjects,
-    currentDiscipline?.subject_id,
-  ]);
-
   return (
     <>
       <Flex gap="30px" justify="space-between">
@@ -79,7 +62,7 @@ export const AddingCourseModal = () => {
           <StyledModalTitle $top="xsmall">
             Преподаватель для{' '}
             {currentSubject?.name
-              ? `${currentSubject.name} (${currentDiscipline?.discipline_type})`
+              ? `${currentSubject.name} ${currentDiscipline?.discipline_type ? `(${currentDiscipline?.discipline_type})` : ''}`
               : 'Неизвестный предмет'}
           </StyledModalTitle>
         </Flex>
@@ -91,7 +74,10 @@ export const AddingCourseModal = () => {
           {teachers
             .filter(
               (el) =>
-                !courses.map((q) => q.teacher_id).includes(el.id as number),
+                !courses
+                  .filter((q) => q.discipline_id === currentDiscipline.id)
+                  .map((q) => q.teacher_id)
+                  .includes(el.id as number),
             )
             .map((el) => (
               <li

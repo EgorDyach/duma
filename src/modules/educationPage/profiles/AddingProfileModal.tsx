@@ -3,7 +3,6 @@ import Flex from '@components/Flex';
 import { useState } from 'react';
 import {
   StyledModalTitle,
-  StyledModalInput,
   StyledModalAdd,
 } from '@components/Modal/ModalStyles';
 import { useSelector } from 'react-redux';
@@ -15,6 +14,10 @@ import {
   fetchRemoveProfile,
   fetchUpdateProfile,
 } from '@store/institution/thunks';
+import { validateProfile } from './helpers';
+import { institutionSelectors } from '@store/institution';
+import { showErrorNotification } from '@lib/utils/notification';
+import Input from '@components/input/Input';
 
 const ITEM_INIT_DATA: Profile = {
   name: '',
@@ -23,12 +26,16 @@ const ITEM_INIT_DATA: Profile = {
 export const AddingProfileModal = () => {
   const dispatch = useAppDispatch();
   const modals = useSelector(uiSelectors.getModals);
+  const profiles = useSelector(institutionSelectors.getProfiles);
   const currentModal = modals[MODAL_NAME];
   const [newItem, setNewItem] = useState<Profile>(
     currentModal.value || ITEM_INIT_DATA,
   );
 
   const handleAdd = () => {
+    const validateError = validateProfile(newItem, profiles);
+    if (validateError) return showErrorNotification(validateError);
+
     if (currentModal.isEditing)
       return dispatch(
         fetchUpdateProfile(newItem, getId(currentModal.value) as number),
@@ -38,24 +45,23 @@ export const AddingProfileModal = () => {
 
   return (
     <>
-      <Flex gap="30px" justify="space-between">
-        <Flex gap="10px">
-          <StyledModalTitle $top="xsmall">
-            {currentModal.isEditing ? 'Изменить профиль' : 'Новый профиль'}
-          </StyledModalTitle>
-          <StyledModalInput
-            placeholder="Введите значение..."
-            onChange={(e) =>
-              setNewItem((prev) => ({
-                ...prev,
-                name: e.target.value,
-              }))
-            }
-            value={newItem.name}
-          />
-        </Flex>
+      <StyledModalTitle $top="xsmall">
+        {currentModal.isEditing ? 'Изменить профиль' : 'Новый профиль'}
+      </StyledModalTitle>
+      <Flex $top="medium">
+        <Input
+          style={{ width: '100%' }}
+          label="Название"
+          placeholder="Введите значение..."
+          onChange={(e) =>
+            setNewItem((prev) => ({
+              ...prev,
+              name: e,
+            }))
+          }
+          value={newItem.name}
+        />
       </Flex>
-
       <Flex justify="flex-end">
         <Flex direction="column">
           <Flex gap="16px" $top="large" justify="start">

@@ -3,7 +3,6 @@ import Flex from '@components/Flex';
 import { useState } from 'react';
 import {
   StyledModalTitle,
-  StyledModalInput,
   StyledModalAdd,
 } from '@components/Modal/ModalStyles';
 import { useSelector } from 'react-redux';
@@ -15,6 +14,10 @@ import {
   fetchRemoveRoom,
   fetchUpdateRoom,
 } from '@store/institution/thunks';
+import { validateRoom } from './helpers';
+import { institutionSelectors } from '@store/institution';
+import { showErrorNotification } from '@lib/utils/notification';
+import Input from '@components/input/Input';
 
 const ITEM_INIT_DATA: Room = {
   name: '',
@@ -24,12 +27,16 @@ const ITEM_INIT_DATA: Room = {
 export const AddingRoomModal = () => {
   const dispatch = useAppDispatch();
   const modals = useSelector(uiSelectors.getModals);
+  const rooms = useSelector(institutionSelectors.getRooms);
   const currentModal = modals[MODAL_NAME];
   const [newItem, setNewItem] = useState<Room>(
     currentModal.value || ITEM_INIT_DATA,
   );
 
   const handleAdd = () => {
+    const validateError = validateRoom(newItem, rooms);
+    if (validateError) return showErrorNotification(validateError);
+
     if (currentModal.isEditing)
       return dispatch(
         fetchUpdateRoom(newItem, getId(currentModal.value) as number),
@@ -46,28 +53,32 @@ export const AddingRoomModal = () => {
           </StyledModalTitle>
         </Flex>
       </Flex>
-      <Flex gap="30px" $top="xlarge">
-        <StyledModalInput
+      <Flex gap="16px" direction="column" $top="medium">
+        <Input
+          name=""
+          label="Название"
           placeholder="Введите название..."
           onChange={(e) =>
             setNewItem((prev) => ({
               ...prev,
-              name: e.target.value,
+              name: e,
             }))
           }
           value={newItem.name}
         />
-        <StyledModalInput
+        <Input
+          name=""
           type="number"
           min={0}
+          label="Вместимость"
           placeholder="Введите значение вместимости..."
           onChange={(e) =>
             setNewItem((prev) => ({
               ...prev,
-              capacity: Number(e.target.value),
+              capacity: Number(e),
             }))
           }
-          value={newItem.capacity}
+          value={String(newItem.capacity)}
         />
       </Flex>
 

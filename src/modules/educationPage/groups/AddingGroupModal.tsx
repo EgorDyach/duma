@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import Flex from '@components/Flex';
 import {
   StyledModalTitle,
-  StyledModalInput,
   StyledModalAdd,
 } from '@components/Modal/ModalStyles';
 import { useSelector } from 'react-redux';
@@ -19,6 +18,9 @@ import styled from 'styled-components';
 import { institutionSelectors } from '@store/institution';
 import { getId } from '@store/institution/store';
 import { StyledInput } from '@components/input/InputStyles';
+import Input from '@components/input/Input';
+import { validateGroup } from './helpers';
+import { showErrorNotification } from '@lib/utils/notification';
 
 const ITEM_INIT_DATA: Group = {
   holidays: [],
@@ -62,6 +64,7 @@ export const AddingGroupModal: React.FC = () => {
   const modals = useSelector(uiSelectors.getModals);
   const currentModal = modals[MODAL_NAME];
   const shifts = useSelector(institutionSelectors.getShifts);
+  const groups = useSelector(institutionSelectors.getGroups);
   const profiles = useSelector(institutionSelectors.getProfiles);
   const [newItem, setNewItem] = useState<Group>(
     currentModal.value || ITEM_INIT_DATA,
@@ -79,6 +82,9 @@ export const AddingGroupModal: React.FC = () => {
     };
     if (newItemWithHolidays.profile_id === -1)
       delete newItemWithHolidays.profile_id;
+    const validateError = validateGroup(newItem, groups);
+    if (validateError) return showErrorNotification(validateError);
+
     if (currentModal.isEditing) {
       return dispatch(
         fetchUpdateGroup(
@@ -92,19 +98,23 @@ export const AddingGroupModal: React.FC = () => {
 
   return (
     <>
-      <Flex gap="30px" justify="space-between">
-        <Flex gap="10px">
-          <StyledModalTitle>
-            {currentModal.isEditing ? 'Изменить группу' : 'Новая группа'}
-          </StyledModalTitle>
-          <StyledModalInput
-            placeholder="Введите название группы..."
-            onChange={(e) => setNewItem({ ...newItem, name: e.target.value })}
-            value={newItem.name}
-          />
-        </Flex>
+      <StyledModalTitle>
+        {currentModal.isEditing ? 'Изменить группу' : 'Новая группа'}
+      </StyledModalTitle>
+      <Flex $top="medium">
+        <Input
+          style={{ width: '100%' }}
+          label="Название "
+          placeholder="Введите значение..."
+          onChange={(e) =>
+            setNewItem((prev) => ({
+              ...prev,
+              name: e,
+            }))
+          }
+          value={newItem.name}
+        />
       </Flex>
-
       <Flex $top="medium" direction="column">
         <Text>Количество учеников</Text>
         <StyledInput
