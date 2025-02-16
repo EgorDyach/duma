@@ -12,7 +12,7 @@ import { MODAL_NAME } from './LessonTimeModule';
 import { useAppDispatch } from '@hooks/useAppDispatch';
 import {
   fetchAddLessonTime,
-  fetchRemoveProfile,
+  fetchRemoveLessonTime,
   fetchUpdateLessonTime,
 } from '@store/institution/thunks';
 import styled from 'styled-components';
@@ -49,8 +49,8 @@ const ShiftsList = styled.ul`
 `;
 
 const ITEM_INIT_DATA: LessonTime = {
-  starttime: '',
-  endtime: '',
+  start_time: '',
+  end_time: '',
   shift_id: -1,
 };
 
@@ -66,10 +66,7 @@ export const AddingLessonTimeModal = () => {
   const handleAdd = () => {
     const item = {
       ...newItem,
-      starttime: `2025-03-03T${newItem.starttime.replace('-', ':')}:00Z`,
-      endtime: `2025-03-03T${newItem.endtime.replace('-', ':')}:00Z`,
     };
-
     const validateError = validateLessonTime(newItem);
     if (validateError) return showErrorNotification(validateError);
 
@@ -95,10 +92,10 @@ export const AddingLessonTimeModal = () => {
             onChange={(e) =>
               setNewItem((prev) => ({
                 ...prev,
-                starttime: e.target.value,
+                start_time: e.target.value,
               }))
             }
-            value={newItem.starttime}
+            value={newItem.start_time}
           />
           <StyledModalInput
             placeholder="Введите значение..."
@@ -106,10 +103,10 @@ export const AddingLessonTimeModal = () => {
             onChange={(e) =>
               setNewItem((prev) => ({
                 ...prev,
-                endtime: e.target.value,
+                end_time: e.target.value,
               }))
             }
-            value={newItem.endtime}
+            value={newItem.end_time}
           />
         </Flex>
       </Flex>
@@ -147,7 +144,7 @@ export const AddingLessonTimeModal = () => {
               <StyledModalAdd
                 onClick={() => {
                   dispatch(
-                    fetchRemoveProfile(getId(currentModal.value) as number),
+                    fetchRemoveLessonTime(getId(currentModal.value) as number),
                   );
                 }}
               >

@@ -168,7 +168,12 @@ export const fetchAddDiscipline =
       const { message } = await requestCreateDiscipline(item);
       dispatch(
         institutionActions.setDisciplines(
-          message.Disciplines.map((el) => toLowerCaseKeys(el)),
+          message.Disciplines.map((el) =>
+            toLowerCaseKeys({
+              ...el,
+              groups: el.groups.map((q) => toLowerCaseKeys(q)),
+            }),
+          ),
         ),
       );
       dispatch(uiActions.closeModals());
@@ -194,7 +199,15 @@ export const fetchUpdateDiscipline =
   (data: Discipline, id: string | number) => async (dispatch: AppDispatch) => {
     try {
       await requestUpdateDiscipline(data);
-      dispatch(institutionActions.updateDiscipline({ data, id }));
+      dispatch(
+        institutionActions.updateDiscipline({
+          data: toLowerCaseKeys({
+            ...data,
+            groups: data.groups.map((q) => toLowerCaseKeys(q)),
+          }),
+          id,
+        }),
+      );
       dispatch(uiActions.closeModals());
     } catch (e) {
       if (e instanceof AxiosError) return showErrorNotification(e.message);
@@ -208,7 +221,7 @@ export const fetchAddLessonTime =
       const { message } = await requestCreateLessonTime(item);
       dispatch(
         institutionActions.setLessonTimes(
-          message.LessonTimes.map((el) => toLowerCaseKeys(el)),
+          message['Lesson Times'].map((el) => toLowerCaseKeys(el)),
         ),
       );
       dispatch(uiActions.closeModals());
@@ -222,6 +235,7 @@ export const fetchRemoveLessonTime =
   (id: string | number) => async (dispatch: AppDispatch) => {
     try {
       await requestDeleteLessonTime({ id });
+      console.log(id);
       dispatch(institutionActions.removeLessonTime(id));
       dispatch(uiActions.closeModals());
     } catch (e) {
@@ -403,7 +417,14 @@ export const fetchAllDisciplines = () => async (dispatch: AppDispatch) => {
     const { message: courses } = await requestAllCourse();
     dispatch(
       institutionActions.setDisciplines(
-        message.map((el) => toLowerCaseKeys(el)),
+        message.map((el) =>
+          toLowerCaseKeys(
+            toLowerCaseKeys({
+              ...el,
+              groups: el.groups.map((q) => toLowerCaseKeys(q)),
+            }),
+          ),
+        ),
       ),
     );
     dispatch(

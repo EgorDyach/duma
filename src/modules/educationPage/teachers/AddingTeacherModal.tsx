@@ -17,6 +17,8 @@ import { getId } from '@store/institution/store';
 import { validateTeacher } from './helpers';
 import { showErrorNotification } from '@lib/utils/notification';
 import Input from '@components/input/Input';
+import MultiDatePicker from '@components/MultiDatepicker';
+import { Text } from '@components/Typography';
 
 const ITEM_INIT_DATA: Teacher = {
   fullname: '',
@@ -31,10 +33,13 @@ export const AddingTeacherModal: React.FC = () => {
   const [newItem, setNewItem] = useState<Teacher>(
     currentModal.value || ITEM_INIT_DATA,
   );
-
+  const [holidays, setHolidays] = useState<Date[]>(
+    newItem.holidays?.map((el) => new Date(el.date)) || [],
+  );
   const handleAdd = () => {
     const newItemWithHolidays = {
       ...newItem,
+      holidays: holidays.map((el) => ({ date: el.toISOString() })),
     };
 
     const validateError = validateTeacher(newItem);
@@ -72,13 +77,11 @@ export const AddingTeacherModal: React.FC = () => {
         />
       </Flex>
 
-      {/* <Flex gap="10px" direction="column">
-        <Text>
-          {currentModal.isEditing ? 'Изменить выходные' : 'Добавить выходные'}
-        </Text>
+      <Flex $top="medium" gap="10px" direction="column">
+        <Text>Выходные и отпуска</Text>
 
         <MultiDatePicker value={holidays} onChange={setHolidays} />
-      </Flex> */}
+      </Flex>
 
       <Flex gap="16px" $top="medium" justify="flex-end">
         <StyledModalAdd onClick={handleAdd}>

@@ -12,7 +12,7 @@ import {
   fetchAllDisciplines,
   fetchRemoveCourse,
 } from '@store/institution/thunks';
-import { Text } from '@components/Typography';
+import { SubHeader, Text } from '@components/Typography';
 import styled from 'styled-components';
 import {
   AddingCourseModal,
@@ -108,8 +108,15 @@ const DisciplineModule = () => {
                   </EditText>
                 </Flex>
 
-                <Text $top="small">Группы</Text>
-                {item.groups && item.groups.map((el) => <Text>{el.name}</Text>)}
+                <SubHeader $top="small">Группы</SubHeader>
+                <Flex $top="small">
+                  {item.groups &&
+                    item.groups.map((el) => (
+                      <Button>
+                        <Text>{el.name}</Text>
+                      </Button>
+                    ))}
+                </Flex>
                 <Title
                   action={() => {
                     dispatch(

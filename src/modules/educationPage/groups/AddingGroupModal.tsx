@@ -21,6 +21,7 @@ import { StyledInput } from '@components/input/InputStyles';
 import Input from '@components/input/Input';
 import { validateGroup } from './helpers';
 import { showErrorNotification } from '@lib/utils/notification';
+import MultiDatePicker from '@components/MultiDatepicker';
 
 const ITEM_INIT_DATA: Group = {
   holidays: [],
@@ -70,15 +71,14 @@ export const AddingGroupModal: React.FC = () => {
     currentModal.value || ITEM_INIT_DATA,
   );
 
-  // Состояние выбранных дат, полученное из MultiDatePicker
-  // const [holidays, setHolidays] = useState<Date[]>(
-  //   newItem.holidays?.map((el) => new Date(el.date)) || [],
-  // );
+  const [holidays, setHolidays] = useState<Date[]>(
+    newItem.holidays?.map((el) => new Date(el.date)) || [],
+  );
 
   const handleAdd = () => {
     const newItemWithHolidays = {
       ...newItem,
-      // holidays: holidays.map((el) => ({ date: el.toISOString() })),
+      holidays: holidays.map((el) => ({ date: el.toISOString() })),
     };
     if (newItemWithHolidays.profile_id === -1)
       delete newItemWithHolidays.profile_id;
@@ -201,13 +201,11 @@ export const AddingGroupModal: React.FC = () => {
           ))}
         </ShiftsList>
       </Flex>
-      {/* <Flex gap="10px" direction="column">
-        <Text>
-          {currentModal.isEditing ? 'Изменить выходные' : 'Добавить выходные'}
-        </Text>
+      <Flex gap="10px" direction="column">
+        <Text>Выходные и каникулы</Text>
 
         <MultiDatePicker value={holidays} onChange={setHolidays} />
-      </Flex> */}
+      </Flex>
 
       <Flex $top="medium" justify="flex-end">
         <StyledModalAdd onClick={handleAdd}>

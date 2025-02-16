@@ -58,7 +58,7 @@ const LessonTimeModule = () => {
                 }
               >
                 <Text>
-                  {item.starttime.slice(11, 16)} - {item.endtime.slice(11, 16)}
+                  {item.start_time.slice(0, 5)} - {item.end_time.slice(0, 5)}
                 </Text>
               </Button>
             );

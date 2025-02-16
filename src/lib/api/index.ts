@@ -200,7 +200,7 @@ export const requestAllProfile = async (): Promise<Response<Profile[]>> => {
 };
 export const requestCreateLessonTime = async (
   data: LessonTime,
-): Promise<Response<{ Info: string; LessonTimes: LessonTime[] }>> => {
+): Promise<Response<{ Info: string; 'Lesson Times': LessonTime[] }>> => {
   return await request.post(
     'https://puzzlesignlanguage.online/api/v1/create/lessontime',
     [data],

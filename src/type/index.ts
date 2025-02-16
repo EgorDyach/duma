@@ -79,8 +79,9 @@ type LessonTime = {
   id?: number;
   institution_id?: number;
   shift_id: number;
-  starttime: string;
-  endtime: string;
+  start_time: string;
+  end_time: string;
+  number?: number;
 };
 
 type Profile = {

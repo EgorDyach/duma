@@ -54,8 +54,7 @@ const DateList = styled.ul`
   gap: 10px;
   flex-wrap: nowrap;
   overflow-x: scroll;
-  min-height: 62px;
-  padding: 10px 0;
+  padding: 0px 0;
   list-style: none;
   margin: 0;
 
@@ -144,13 +143,13 @@ export const MultiDatePicker: React.FC<MultiDatePickerProps> = ({
 
   // Дни недели для чекбоксов
   const daysOfWeek: { name: string; value: number }[] = [
-    { name: 'Воскресенье', value: 0 },
     { name: 'Понедельник', value: 1 },
     { name: 'Вторник', value: 2 },
     { name: 'Среда', value: 3 },
     { name: 'Четверг', value: 4 },
     { name: 'Пятница', value: 5 },
     { name: 'Суббота', value: 6 },
+    { name: 'Воскресенье', value: 0 },
   ];
 
   // Возвращает все даты в заданном месяце для указанного дня недели (0..6)
