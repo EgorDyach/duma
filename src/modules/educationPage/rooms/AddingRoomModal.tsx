@@ -18,10 +18,12 @@ import { validateRoom } from './helpers';
 import { institutionSelectors } from '@store/institution';
 import { showErrorNotification } from '@lib/utils/notification';
 import Input from '@components/input/Input';
+import Tags from '@components/Tags';
 
 const ITEM_INIT_DATA: Room = {
   name: '',
   capacity: 0,
+  tags: [],
 };
 
 export const AddingRoomModal = () => {
@@ -81,7 +83,12 @@ export const AddingRoomModal = () => {
           value={String(newItem.capacity)}
         />
       </Flex>
-
+      <Flex $top="medium" direction="column">
+        <Tags
+          setTags={(n) => setNewItem((prev) => ({ ...prev, tags: n }))}
+          tags={newItem.tags ?? []}
+        />
+      </Flex>
       <Flex justify="flex-end">
         <Flex direction="column">
           <Flex gap="16px" $top="large" justify="start">
