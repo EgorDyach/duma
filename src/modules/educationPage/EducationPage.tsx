@@ -12,9 +12,11 @@ import LessonTimeModule from './lessonTime/LessonTimeModule';
 import DisciplineModule from './disciplines/DisciplineModule';
 import axios from 'axios';
 import { useAppDispatch } from '@hooks/useAppDispatch';
-import { uiActions } from '@store/ui';
+import { uiActions, uiSelectors } from '@store/ui';
 import { Modal } from '@components/Modal/Modal';
 import { GenerateModal } from '@components/Modal/ModalViews/GenerateModal';
+import { useSelector } from 'react-redux';
+import { showErrorNotification } from '@lib/utils/notification';
 
 const Wrapper = styled(Flex)`
   background-color: #fff;
@@ -38,7 +40,7 @@ export const StyledButton = styled.button<{
 const EducationPage: React.FC = () => {
   const [isServerLive, setIsServerLive] = useState(false);
   const dispatch = useAppDispatch();
-
+  const user = useSelector(uiSelectors.getUser);
   useEffect(() => {
     (async () => {
       try {
@@ -86,16 +88,16 @@ const EducationPage: React.FC = () => {
                 }
           }
           onClick={async () => {
+            if (!user || !('institution_id' in user))
+              return showErrorNotification('Не удалось скачать!');
             try {
-              await fetch('https://puzzlesignlanguage.online/xlsx_download', {
-                headers: {
-                  'Content-Type': 'application/json',
-                },
-                method: 'GET',
-              })
+              await axios
+                .get('https://puzzlesignlanguage.online/schedule/excel', {
+                  data: { institution_id: user.institution_id },
+                })
                 .then((resp) =>
                   resp.status === 200
-                    ? resp.blob()
+                    ? resp.data.blob()
                     : Promise.reject('Возникла неизвестная ошибка...'),
                 )
                 .then((blob) => {
