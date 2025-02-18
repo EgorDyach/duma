@@ -91,13 +91,16 @@ const EducationPage: React.FC = () => {
             if (!user || !('institution_id' in user))
               return showErrorNotification('Не удалось скачать!');
             try {
-              await axios
-                .get('https://puzzlesignlanguage.online/schedule/excel', {
-                  data: { body: {}, institution_id: user.institution_id },
-                })
+              await fetch('https://puzzlesignlanguage.online/schedule/excel', {
+                body: {
+                  // @ts-ignore
+                  body: {},
+                  institution_id: user.institution_id,
+                },
+              })
                 .then((resp) =>
                   resp.status === 200
-                    ? resp.data.blob()
+                    ? resp.blob()
                     : Promise.reject('Возникла неизвестная ошибка...'),
                 )
                 .then((blob) => {
