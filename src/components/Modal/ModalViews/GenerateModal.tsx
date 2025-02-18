@@ -6,14 +6,14 @@ import {
   StyledModalTitle,
   StyledModalAdd,
 } from '../ModalStyles';
-import { FC, useState } from 'react';
+import { useState } from 'react';
 import DatePicker from 'react-datepicker';
 import styled from 'styled-components';
-
-interface GenerateModalProps {
-  handleGenerate: (startDate: Date | null, endDate: Date | null) => void;
-  hideModal: VoidFunction;
-}
+import { useAppDispatch } from '@hooks/useAppDispatch';
+import { uiActions, uiSelectors } from '@store/ui';
+import axios from 'axios';
+import { useSelector } from 'react-redux';
+import { showErrorNotification } from '@lib/utils/notification';
 
 const StyledDatePicker = styled(DatePicker)`
   border: 2px solid #641aee;
@@ -26,12 +26,16 @@ const StyledDatePicker = styled(DatePicker)`
   }
 `;
 
-export const GenerateModal: FC<GenerateModalProps> = ({
-  hideModal,
-  handleGenerate,
-}) => {
+export const GenerateModal = () => {
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
+  const dispatch = useAppDispatch();
+  const user = useSelector(uiSelectors.getUser);
+  if (!user || !('institution_id' in user)) {
+    showErrorNotification('Невозможно сгенерировать расписание!');
+    dispatch(uiActions.closeModals());
+    return <></>;
+  }
   return (
     <StyledModalWrap $size={'default'}>
       <StyledModalContent>
@@ -42,7 +46,11 @@ export const GenerateModal: FC<GenerateModalProps> = ({
             </StyledModalTitle>
           </Flex>
 
-          <CloseIcon color={'#641AEE'} onClick={hideModal} size={28} />
+          <CloseIcon
+            color={'#641AEE'}
+            onClick={() => dispatch(uiActions.closeModals())}
+            size={28}
+          />
         </Flex>
 
         <Flex direction="column">
@@ -60,10 +68,18 @@ export const GenerateModal: FC<GenerateModalProps> = ({
             />
           </Flex>
           <Flex gap="16px" $top="large" justify="start">
-            <StyledModalAdd onClick={() => handleGenerate(startDate, endDate)}>
+            <StyledModalAdd
+              onClick={() =>
+                axios.post(
+                  `https://puzzlesignlanguage.online/schedule/generate?institution_id=${user.institution_id}&start_date=${startDate?.toISOString()}&end_date=${endDate?.toISOString()}`,
+                )
+              }
+            >
               Сгенерировать
             </StyledModalAdd>
-            <StyledModalAdd onClick={hideModal}>Отмена</StyledModalAdd>
+            <StyledModalAdd onClick={() => dispatch(uiActions.closeModals())}>
+              Отмена
+            </StyledModalAdd>
           </Flex>
         </Flex>
       </StyledModalContent>
