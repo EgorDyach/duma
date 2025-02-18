@@ -114,7 +114,9 @@ const EducationPage: React.FC = () => {
                   window.URL.revokeObjectURL(url);
                   toast.success('Файл успешно скачен!');
                 })
-                .catch(() => toast.error('Не удалось скачать!'));
+                .catch((error) =>
+                  toast.error('Не удалось скачать ' + `(${error})`),
+                );
             } catch (error) {
               toast.error('Не удалось скачать ' + `(${error})`);
             }
