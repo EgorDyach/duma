@@ -93,7 +93,7 @@ const EducationPage: React.FC = () => {
             try {
               await axios
                 .get('https://puzzlesignlanguage.online/schedule/excel', {
-                  data: { institution_id: user.institution_id },
+                  data: { body: {}, institution_id: user.institution_id },
                 })
                 .then((resp) =>
                   resp.status === 200
