@@ -90,14 +90,11 @@ const EducationPage: React.FC = () => {
             // if (!user || !('institution_id' in user))
             //   return showErrorNotification('БЛЯТЬ ИДИ НАХУЙ!');
             try {
-              await fetch('https://puzzlesignlanguage.online/schedule/excel', {
-                body: {
-                  // @ts-ignore
-                  body: {},
-                  // @ts-ignore
-                  institution_id: user.institution_id,
-                },
-              })
+              await fetch(
+                // @ts-ignore
+                `https://puzzlesignlanguage.online/schedule/get/excel?institution_id=${user.institution_id}`,
+                {},
+              )
                 .then((resp) =>
                   resp.status === 200
                     ? resp.blob()
@@ -141,7 +138,7 @@ const EducationPage: React.FC = () => {
               uiActions.openModal({
                 modalName: 'GenerateModal',
                 value: null,
-                isEditing: false,
+                isEditing: true,
               }),
             )
           }
