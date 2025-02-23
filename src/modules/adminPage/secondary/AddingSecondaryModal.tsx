@@ -18,6 +18,7 @@ import {
   fetchEditInstitution,
 } from '@store/admin/thunks';
 import { generatePassword } from './helpers';
+import { Text } from '@components/Typography';
 
 const ITEM_INIT_DATA: InstitutionsAdmin = {
   id: new Date().getTime(),
@@ -155,7 +156,10 @@ export const AddingSecondaryModal = () => {
         <Flex direction="column">
           <Flex gap="16px" $top="large" justify="start">
             <StyledModalAdd onClick={handleAdd}>
-              {currentModal.isEditing ? 'Изменить' : 'Добавить'}
+              <Text $size="small">
+                {' '}
+                {currentModal.isEditing ? 'Изменить' : 'Добавить'}
+              </Text>
             </StyledModalAdd>
             {currentModal.isEditing && currentModal.value && (
               <StyledModalAdd
@@ -164,7 +168,7 @@ export const AddingSecondaryModal = () => {
                   dispatch(uiActions.closeModals());
                 }}
               >
-                Удалить
+                <Text $size="small">Удалить</Text>
               </StyledModalAdd>
             )}
           </Flex>

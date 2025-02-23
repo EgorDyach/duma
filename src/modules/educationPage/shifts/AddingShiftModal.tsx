@@ -18,6 +18,7 @@ import { validateShift } from './helpers';
 import { institutionSelectors } from '@store/institution';
 import { showErrorNotification } from '@lib/utils/notification';
 import Input from '@components/input/Input';
+import { Text } from '@components/Typography';
 
 const ITEM_INIT_DATA: Shift = {
   number: 0,
@@ -73,7 +74,10 @@ export const AddingShiftModal = () => {
         <Flex direction="column">
           <Flex gap="16px" $top="large" justify="start">
             <StyledModalAdd onClick={handleAdd}>
-              {currentModal.isEditing ? 'Изменить' : 'Добавить'}
+              <Text $size="small">
+                {' '}
+                {currentModal.isEditing ? 'Изменить' : 'Добавить'}
+              </Text>
             </StyledModalAdd>
 
             {currentModal.isEditing && currentModal.value && (
@@ -84,7 +88,7 @@ export const AddingShiftModal = () => {
                   );
                 }}
               >
-                Удалить
+                <Text $size="small">Удалить</Text>
               </StyledModalAdd>
             )}
           </Flex>

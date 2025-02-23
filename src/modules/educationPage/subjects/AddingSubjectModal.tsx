@@ -19,6 +19,7 @@ import Input from '@components/input/Input';
 import { validateSubject } from './helpers';
 import { showErrorNotification } from '@lib/utils/notification';
 import { institutionSelectors } from '@store/institution';
+import { Text } from '@components/Typography';
 
 const ITEM_INIT_DATA: Subject = {
   name: '',
@@ -76,7 +77,10 @@ export const AddingSubjectModal = () => {
         <Flex direction="column">
           <Flex gap="16px" $top="large" justify="start">
             <StyledModalAdd onClick={handleAdd}>
-              {currentModal.isEditing ? 'Изменить' : 'Добавить'}
+              <Text $size="small">
+                {' '}
+                {currentModal.isEditing ? 'Изменить' : 'Добавить'}
+              </Text>
             </StyledModalAdd>
             {currentModal.isEditing && currentModal.value && (
               <StyledModalAdd
@@ -86,7 +90,7 @@ export const AddingSubjectModal = () => {
                   );
                 }}
               >
-                Удалить
+                <Text $size="small">Удалить</Text>
               </StyledModalAdd>
             )}
           </Flex>

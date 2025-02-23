@@ -27,7 +27,7 @@ const StyledMultiDropdown = styled.ul`
   border-radius: 10px;
   list-style: none;
   background: #f0f0f7;
-  overflow-y: scroll;
+  overflow-y: auto;
   max-width: 280px;
   width: 230px;
   text-align: center;

@@ -40,7 +40,6 @@ const AdminPage = () => {
           // @ts-ignore
           size="full"
           style={{ width: '100%' }}
-          openEditing={() => {}}
         >
           Название
         </StyledButton>
@@ -48,7 +47,6 @@ const AdminPage = () => {
           // @ts-ignore
           size="full"
           style={{ width: '100%' }}
-          openEditing={() => {}}
         >
           Администратор
         </StyledButton>

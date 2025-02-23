@@ -79,7 +79,6 @@ const UniversityModule = () => {
                     key={item.institution.ID}
                     // @ts-ignore
                     size="full"
-                    openEditing={() => {}}
                     style={{ width: '100%' }}
                   >
                     <Text>{item.institution.name}</Text>
@@ -88,7 +87,6 @@ const UniversityModule = () => {
                     key={item.institution.ID}
                     // @ts-ignore
                     size="full"
-                    openEditing={() => {}}
                     style={{ width: '100%' }}
                   >
                     <Text>

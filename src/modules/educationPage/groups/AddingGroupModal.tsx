@@ -36,7 +36,7 @@ export const ShiftsList = styled.ul`
   gap: 10px;
   max-width: 450px;
   flex-wrap: nowrap;
-  overflow-x: scroll;
+  overflow-x: auto;
   padding: 10px 0;
   list-style: none;
   margin: 0;
@@ -209,7 +209,10 @@ export const AddingGroupModal: React.FC = () => {
 
       <Flex $top="medium" justify="flex-end">
         <StyledModalAdd onClick={handleAdd}>
-          {currentModal.isEditing ? 'Изменить' : 'Добавить'}
+          <Text $size="small">
+            {' '}
+            {currentModal.isEditing ? 'Изменить' : 'Добавить'}
+          </Text>
         </StyledModalAdd>
         {currentModal.isEditing && currentModal.value && (
           <StyledModalAdd
@@ -217,7 +220,7 @@ export const AddingGroupModal: React.FC = () => {
               dispatch(fetchRemoveGroup(getId(currentModal.value) as number))
             }
           >
-            Удалить
+            <Text $size="small">Удалить</Text>
           </StyledModalAdd>
         )}
       </Flex>

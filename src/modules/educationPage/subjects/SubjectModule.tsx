@@ -47,7 +47,7 @@ const SubjectModule = () => {
               <Button
                 key={item.id}
                 size="small"
-                openEditing={() =>
+                onClick={() =>
                   dispatch(
                     uiActions.openModal({
                       modalName: 'addSubject',

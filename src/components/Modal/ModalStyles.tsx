@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { ModalWidth } from './constants';
 import { ItemTitle, SubHeader } from '@components/Typography';
 import Flex from '@components/Flex';
+import Button from '@components/Button';
 
 export const StyledModalWrap = styled.div<{ $size: ModalWidth }>(
   () => `
@@ -11,11 +12,11 @@ export const StyledModalWrap = styled.div<{ $size: ModalWidth }>(
     left: 50%;
     transform: translate(-50%, -50%);
     z-index: 1000;
-    width: inherit;
+    width: 100%;
     outline: 0;
     height: 100%;
     padding: 20px 0;
-    overflow: scroll;
+    overflow-y: auto;
     align-content: center;
   `,
 );
@@ -36,10 +37,10 @@ export const StyledModalContent = styled.div`
   margin: auto;
   background: #fff;
   max-width: 80vw;
+  width: fit-content;
   min-width: 320px;
   border-radius: ${radius.xmedium};
   padding: ${indent.large};
-  overflow: scroll;
 `;
 
 export const StyledModalTitle = styled(SubHeader)`
@@ -99,12 +100,4 @@ export const StyledModalButtons = styled(Flex)`
   width: 100%;
 `;
 
-export const StyledModalAdd = styled.button`
-  background: transparent;
-  border: 2px solid #641aee;
-  color: #641aee;
-  padding: 7px 37px;
-  border-radius: 12px;
-  font-size: 18px;
-  cursor: pointer;
-`;
+export const StyledModalAdd = Button;

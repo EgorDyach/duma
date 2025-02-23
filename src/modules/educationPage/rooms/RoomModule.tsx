@@ -47,7 +47,7 @@ const RoomModule = () => {
               <Button
                 key={item.id}
                 size="large"
-                openEditing={() =>
+                onClick={() =>
                   dispatch(
                     uiActions.openModal({
                       modalName: MODAL_NAME,

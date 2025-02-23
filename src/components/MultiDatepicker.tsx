@@ -53,7 +53,7 @@ const DateList = styled.ul`
   display: flex;
   gap: 10px;
   flex-wrap: nowrap;
-  overflow-x: scroll;
+  overflow-x: auto;
   padding: 0px 0;
   list-style: none;
   margin: 0;

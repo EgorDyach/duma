@@ -37,7 +37,7 @@ export const StyledButton = styled.button<{
 `;
 
 const EducationPage: React.FC = () => {
-  const [isServerLive, setIsServerLive] = useState(false);
+  const [isServerLive, setIsServerLive] = useState(true);
   const dispatch = useAppDispatch();
   const user = useSelector(uiSelectors.getUser);
   useEffect(() => {
@@ -46,7 +46,7 @@ const EducationPage: React.FC = () => {
         await axios.get('https://puzzlesignlanguage.online/status');
         setIsServerLive(true);
       } catch {
-        if (isServerLive) setIsServerLive(false);
+        if (isServerLive) setIsServerLive(true);
       }
     })();
     const interval = setInterval(async () => {
@@ -54,7 +54,7 @@ const EducationPage: React.FC = () => {
         await axios.get('https://puzzlesignlanguage.online/status');
         setIsServerLive(true);
       } catch {
-        if (isServerLive) setIsServerLive(false);
+        if (isServerLive) setIsServerLive(true);
       }
     }, 10000);
     return () => clearInterval(interval);
@@ -111,8 +111,6 @@ const EducationPage: React.FC = () => {
                 }
           }
           onClick={async () => {
-            // if (!user || !('institution_id' in user))
-            //   return showErrorNotification('БЛЯТЬ ИДИ НАХУЙ!');
             try {
               await fetch(
                 // @ts-ignore
@@ -122,7 +120,7 @@ const EducationPage: React.FC = () => {
                 .then((resp) =>
                   resp.status === 200
                     ? resp.blob()
-                    : Promise.reject('Возникла неизвестная ошибка...'),
+                    : Promise.reject('Не удалось скачать, попробуйте еще раз!'),
                 )
                 .then((blob) => {
                   const url = window.URL.createObjectURL(blob);

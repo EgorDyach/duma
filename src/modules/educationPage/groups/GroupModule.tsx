@@ -46,7 +46,7 @@ const GroupModule = () => {
             return (
               <Button
                 key={item.id}
-                openEditing={() =>
+                onClick={() =>
                   dispatch(
                     uiActions.openModal({
                       modalName: MODAL_NAME,

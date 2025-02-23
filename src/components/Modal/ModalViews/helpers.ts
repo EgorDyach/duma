@@ -9,3 +9,13 @@ export const getLocaleTime = (number: number): string => {
     return `минуты`;
   return `минут`;
 };
+
+export const validateGeneration = (
+  start: Date | null,
+  end: Date | null,
+): string | undefined => {
+  if (!start) return 'Необходимо выбрать начальную дату!';
+  if (!end) return 'Необходимо выбрать конечную дату!';
+  if (start.getTime() > end.getTime())
+    return 'Начальная дата должна быть раньше конечной!';
+};

@@ -54,11 +54,7 @@ const ShiftModule = () => {
       {requests['shifts'] !== 'pending' && (
         <Flex wrap="wrap" gap="11px">
           {shifts.map((item) => (
-            <Button
-              key={item.id}
-              size="small"
-              openEditing={() => handleEdit(item)}
-            >
+            <Button key={item.id} size="small" onClick={() => handleEdit(item)}>
               <Text>{item.number}</Text>
             </Button>
           ))}

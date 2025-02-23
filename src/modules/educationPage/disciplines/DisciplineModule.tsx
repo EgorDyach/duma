@@ -142,7 +142,7 @@ const DisciplineModule = () => {
                         (t) => t.id === el.teacher_id,
                       );
                       return teacher ? (
-                        <Button openEditing={() => {}}>
+                        <Button>
                           <Flex gap="12px">
                             <Text>{teacher.fullname}</Text>
                             <CloseIcon
@@ -163,7 +163,7 @@ const DisciplineModule = () => {
                 {/* <TextButton
                   text={}
                   size="full"
-                  openEditing={() =>
+                  onClick={() =>
                     dispatch(
                       uiActions.openModal({
                         modalName: 'addDiscipline',

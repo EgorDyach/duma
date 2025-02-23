@@ -28,7 +28,7 @@ const ShiftsList = styled.ul`
   gap: 10px;
   max-width: 450px;
   flex-wrap: nowrap;
-  overflow-x: scroll;
+  overflow-x: auto;
   padding: 10px 0;
   list-style: none;
   margin: 0;
@@ -150,7 +150,10 @@ export const AddingLessonTimeModal = () => {
         <Flex direction="column">
           <Flex gap="16px" $top="large" justify="start">
             <StyledModalAdd onClick={handleAdd}>
-              {currentModal.isEditing ? 'Изменить' : 'Добавить'}
+              <Text $size="small">
+                {' '}
+                {currentModal.isEditing ? 'Изменить' : 'Добавить'}
+              </Text>
             </StyledModalAdd>
             {currentModal.isEditing && currentModal.value && (
               <StyledModalAdd
@@ -160,7 +163,7 @@ export const AddingLessonTimeModal = () => {
                   );
                 }}
               >
-                Удалить
+                <Text $size="small">Удалить</Text>
               </StyledModalAdd>
             )}
           </Flex>
