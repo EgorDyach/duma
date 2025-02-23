@@ -9,7 +9,7 @@ import { Outlet, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
 const MainWrapper = styled(Flex)`
-  max-width: 1040px;
+  max-width: 1440px;
   margin: 0 auto;
 `;
 

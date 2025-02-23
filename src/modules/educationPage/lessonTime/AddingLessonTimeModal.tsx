@@ -3,7 +3,6 @@ import Flex from '@components/Flex';
 import { useState } from 'react';
 import {
   StyledModalTitle,
-  StyledModalInput,
   StyledModalAdd,
 } from '@components/Modal/ModalStyles';
 import { useSelector } from 'react-redux';
@@ -19,6 +18,10 @@ import styled from 'styled-components';
 import { institutionSelectors } from '@store/institution';
 import { validateLessonTime } from './helpers';
 import { showErrorNotification } from '@lib/utils/notification';
+import TimePicker from 'rc-time-picker';
+import 'rc-time-picker/assets/index.css';
+import { Text } from '@components/Typography';
+import moment from 'moment';
 
 const ShiftsList = styled.ul`
   display: flex;
@@ -49,8 +52,8 @@ const ShiftsList = styled.ul`
 `;
 
 const ITEM_INIT_DATA: LessonTime = {
-  start_time: '',
-  end_time: '',
+  start_time: '00:00',
+  end_time: '00:00',
   shift_id: -1,
 };
 
@@ -86,28 +89,6 @@ export const AddingLessonTimeModal = () => {
               ? 'Изменить время урока'
               : 'Новое время урока'}
           </StyledModalTitle>
-          <StyledModalInput
-            placeholder="Введите значение..."
-            type="time"
-            onChange={(e) =>
-              setNewItem((prev) => ({
-                ...prev,
-                start_time: e.target.value,
-              }))
-            }
-            value={newItem.start_time}
-          />
-          <StyledModalInput
-            placeholder="Введите значение..."
-            type="time"
-            onChange={(e) =>
-              setNewItem((prev) => ({
-                ...prev,
-                end_time: e.target.value,
-              }))
-            }
-            value={newItem.end_time}
-          />
         </Flex>
       </Flex>
       <ShiftsList>
@@ -133,7 +114,38 @@ export const AddingLessonTimeModal = () => {
           </li>
         ))}
       </ShiftsList>
-
+      <Flex direction="column">
+        <Text>Начало урока</Text>
+        <TimePicker
+          // @ts-ignore
+          style={{ width: 113, marginTop: 4 }}
+          defaultValue={moment(newItem.start_time, 'HH:mm')}
+          showSecond={false}
+          className="xxx"
+          onChange={(el) =>
+            setNewItem((prev) => ({
+              ...prev,
+              start_time: el ? el.format('HH:mm') : '',
+            }))
+          }
+        />
+      </Flex>
+      <Flex $top="medium" direction="column">
+        <Text>Окончание урока</Text>
+        <TimePicker
+          defaultValue={moment(newItem.end_time, 'HH:mm')}
+          // @ts-ignore
+          style={{ width: 113, marginTop: 4 }}
+          showSecond={false}
+          className="xxx"
+          onChange={(el) =>
+            setNewItem((prev) => ({
+              ...prev,
+              end_time: el ? el.format('HH:mm') : '',
+            }))
+          }
+        />
+      </Flex>
       <Flex justify="flex-end">
         <Flex direction="column">
           <Flex gap="16px" $top="large" justify="start">

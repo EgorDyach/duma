@@ -15,6 +15,7 @@ export const StyledModalWrap = styled.div<{ $size: ModalWidth }>(
     outline: 0;
     height: 100%;
     padding: 20px 0;
+    overflow: scroll;
     align-content: center;
   `,
 );
@@ -34,10 +35,11 @@ export const StyledModalContent = styled.div`
   position: relative;
   margin: auto;
   background: #fff;
-  max-width: 1000px;
+  max-width: 80vw;
   min-width: 320px;
   border-radius: ${radius.xmedium};
   padding: ${indent.large};
+  overflow: scroll;
 `;
 
 export const StyledModalTitle = styled(SubHeader)`

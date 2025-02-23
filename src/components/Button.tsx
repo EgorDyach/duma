@@ -34,7 +34,7 @@ const Button: FC<ButtonProps> = ({
   size = 'full',
 }) => {
   return (
-    <StyledButton style={style} $size={size} onDoubleClick={openEditing}>
+    <StyledButton style={style} $size={size} onClick={openEditing}>
       {children}
     </StyledButton>
   );

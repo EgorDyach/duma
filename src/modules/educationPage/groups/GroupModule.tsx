@@ -1,7 +1,7 @@
 import ContentLoader from '@components/ContentLoader';
 import Flex from '@components/Flex';
 import { Modal } from '@components/Modal/Modal';
-import Button from '@components/TextButton';
+import Button from '@components/Button';
 import { Title } from '@components/Title';
 import { useAppDispatch } from '@hooks/useAppDispatch';
 import { institutionSelectors } from '@store/institution';

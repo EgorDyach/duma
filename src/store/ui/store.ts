@@ -26,6 +26,7 @@ const uiSlice = createSlice({
       state.requests[payload] = 'idle';
     },
     closeModals(state) {
+      document.body.classList.remove('scrollBlock');
       Object.keys(state.modals).forEach((key) => {
         state.modals[key as keyof Modals] = {
           isOpened: false,
@@ -44,6 +45,7 @@ const uiSlice = createSlice({
         value: Modals[T] | null;
       }>,
     ) {
+      document.body.classList.add('scrollBlock');
       // @ts-ignore
       state.modals[payload.modalName] = {
         isOpened: true,

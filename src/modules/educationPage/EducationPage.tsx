@@ -73,7 +73,31 @@ const EducationPage: React.FC = () => {
       <RoomModule />
       <LessonTimeModule />
       <DisciplineModule />
-      <Flex gap="16px" justify="end" align="center" $top="large">
+      <Flex gap="16px" justify="start" align="center" $top="large">
+        <StyledButton
+          disabled={!isServerLive}
+          style={
+            isServerLive
+              ? { backgroundColor: '#35c452', borderColor: '#35c452' }
+              : {
+                  backgroundColor: '#f0414c',
+                  borderColor: '#f0414c',
+                  cursor: 'default',
+                }
+          }
+          $isActive
+          onClick={() =>
+            dispatch(
+              uiActions.openModal({
+                modalName: 'GenerateModal',
+                value: null,
+                isEditing: true,
+              }),
+            )
+          }
+        >
+          Сгенерировать
+        </StyledButton>
         <StyledButton
           $isActive
           disabled={!isServerLive}
@@ -120,30 +144,6 @@ const EducationPage: React.FC = () => {
           }}
         >
           Скачать
-        </StyledButton>
-        <StyledButton
-          disabled={!isServerLive}
-          style={
-            isServerLive
-              ? { backgroundColor: '#35c452', borderColor: '#35c452' }
-              : {
-                  backgroundColor: '#f0414c',
-                  borderColor: '#f0414c',
-                  cursor: 'default',
-                }
-          }
-          $isActive
-          onClick={() =>
-            dispatch(
-              uiActions.openModal({
-                modalName: 'GenerateModal',
-                value: null,
-                isEditing: true,
-              }),
-            )
-          }
-        >
-          Сгенерировать
         </StyledButton>
       </Flex>
     </Wrapper>

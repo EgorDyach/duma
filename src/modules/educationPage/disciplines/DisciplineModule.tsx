@@ -18,11 +18,11 @@ import {
   AddingCourseModal,
   MODAL_NAME as MODAL_COURSE_NAME,
 } from './AddingCourseModal';
-import Button from '@components/TextButton';
+import Button from '@components/Button';
 import CloseIcon from '@components/icons/CloseIcon';
 const StyledFlex = styled(Flex)`
   padding: 11px;
-  width: 100%;
+  /* width: 100%; */
   color: #641aee;
   border-radius: 9px;
   border: 1.2px solid #641aee;
@@ -34,6 +34,7 @@ const StyledFlex = styled(Flex)`
 const EditText = styled(Text)`
   color: #641aee;
   cursor: pointer;
+  margin-left: 32px;
 `;
 
 export const MODAL_NAME = 'addDiscipline';

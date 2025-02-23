@@ -5,7 +5,7 @@ import { DefaultToastOptions, Toaster } from 'react-hot-toast';
 import 'react-datepicker/dist/react-datepicker.css';
 import { Provider } from 'react-redux';
 import { store } from './store';
-
+import './index.css';
 const TOAST_OPTIONS: DefaultToastOptions = { style: { fontSize: 15 } };
 
 function App() {

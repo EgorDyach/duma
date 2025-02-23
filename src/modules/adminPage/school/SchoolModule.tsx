@@ -1,6 +1,6 @@
 import Flex from '@components/Flex';
 import { AddingSchoolModal } from '@modules/adminPage/school/AddingSchoolModal';
-import Button from '@components/TextButton';
+import Button from '@components/Button';
 import { Title } from '@components/Title';
 import { useAppDispatch } from '@hooks/useAppDispatch';
 import { adminSelectors } from '@store/admin';
