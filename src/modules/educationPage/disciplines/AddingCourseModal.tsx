@@ -110,7 +110,9 @@ export const AddingCourseModal = () => {
       <Flex justify="flex-end">
         <Flex direction="column">
           <Flex gap="16px" $top="large" justify="start">
-            <StyledModalAdd onClick={handleAdd}>Добавить</StyledModalAdd>
+            <StyledModalAdd onClick={handleAdd}>
+              <Text $size="small">Добавить</Text>
+            </StyledModalAdd>
           </Flex>
         </Flex>
       </Flex>
