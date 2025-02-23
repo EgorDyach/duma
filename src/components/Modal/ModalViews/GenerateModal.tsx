@@ -25,6 +25,10 @@ const StyledDatePicker = styled(DatePicker)`
   }
 `;
 
+const StyledIcon = styled(CloseIcon)`
+  cursor: pointer;
+`;
+
 export const GenerateModal = () => {
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
@@ -44,7 +48,7 @@ export const GenerateModal = () => {
           </StyledModalTitle>
         </Flex>
 
-        <CloseIcon
+        <StyledIcon
           color={'#641AEE'}
           onClick={() => dispatch(uiActions.closeModals())}
           size={28}

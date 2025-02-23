@@ -31,6 +31,10 @@ const StyledFlex = styled(Flex)`
     color 0.2s ease-in-out;
 `;
 
+const StyledIcon = styled(CloseIcon)`
+  cursor: pointer;
+`;
+
 const EditText = styled(Text)`
   color: #641aee;
   cursor: pointer;
@@ -145,7 +149,7 @@ const DisciplineModule = () => {
                         <Button>
                           <Flex gap="12px">
                             <Text>{teacher.fullname}</Text>
-                            <CloseIcon
+                            <StyledIcon
                               color="red"
                               width="20px"
                               height="20px"

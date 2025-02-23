@@ -10,10 +10,20 @@ import { ModalTypes } from '@store/ui/types';
 import { useSelector } from 'react-redux';
 import { uiActions, uiSelectors } from '@store/ui';
 import { useAppDispatch } from '@hooks/useAppDispatch';
+import styled from 'styled-components';
 
 interface ModalProps extends PropsWithChildren {
   modalName: ModalTypes;
 }
+
+const StyledIcon = styled(CloseIcon)`
+  cursor: pointer;
+  width: 28px !important;
+  height: 28px !important;
+  position: absolute;
+  top: 25px;
+  right: 25px;
+`;
 
 export const Modal: FC<ModalProps> = ({ children, modalName }) => {
   const modals = useSelector(uiSelectors.getModals);
@@ -30,18 +40,7 @@ export const Modal: FC<ModalProps> = ({ children, modalName }) => {
       <StyledModalWrap $size={'default'}>
         <StyledModalContent>
           {children}
-          <CloseIcon
-            style={{
-              width: 28,
-              height: 28,
-              position: 'absolute',
-              top: 25,
-              right: 25,
-            }}
-            color={'#641AEE'}
-            onClick={hideModal}
-            size={28}
-          />
+          <StyledIcon color={'#641AEE'} onClick={hideModal} />
         </StyledModalContent>
       </StyledModalWrap>
     </Portal>

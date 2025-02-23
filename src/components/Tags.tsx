@@ -61,6 +61,9 @@ const IconButton = styled.button`
     background: transparent;
   }
 `;
+const StyledIcon = styled(CloseIcon)`
+  cursor: pointer;
+`;
 
 const TagGenerator: React.FC<TagGeneratorProps> = ({
   tags,
@@ -101,7 +104,7 @@ const TagGenerator: React.FC<TagGeneratorProps> = ({
           <TagItem key={index}>
             <Text>{tag}</Text>
             <IconButton onClick={() => removeTag(index)}>
-              <CloseIcon width="16px" height="16px" color="#ef4444" />
+              <StyledIcon width="16px" height="16px" color="#ef4444" />
             </IconButton>
           </TagItem>
         ))}
