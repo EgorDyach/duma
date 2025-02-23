@@ -35,7 +35,7 @@ const StyledIcon = styled(CloseIcon)`
   cursor: pointer;
 `;
 
-const EditText = styled(Text)`
+const EditText = styled(Button)`
   color: #641aee;
   cursor: pointer;
   margin-left: 32px;
@@ -109,7 +109,7 @@ const DisciplineModule = () => {
                       )
                     }
                   >
-                    Изменить
+                    <Text $size="small">Изменить</Text>
                   </EditText>
                 </Flex>
 

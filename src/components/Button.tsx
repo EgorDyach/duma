@@ -9,6 +9,7 @@ interface ButtonProps extends PropsWithChildren {
   size?: ButtonSize;
   style?: CSSProperties;
   textSize?: FontSize;
+  className?: string;
 }
 
 const StyledButton = styled.button<{
@@ -46,10 +47,16 @@ const Button: FC<ButtonProps> = ({
   children,
   onClick,
   style,
+  className,
   size = 'full',
 }) => {
   return (
-    <StyledButton style={style} $size={size} onClick={onClick}>
+    <StyledButton
+      className={className}
+      style={style}
+      $size={size}
+      onClick={onClick}
+    >
       {children}
     </StyledButton>
   );
