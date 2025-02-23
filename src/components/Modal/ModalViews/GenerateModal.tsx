@@ -8,7 +8,10 @@ import { useAppDispatch } from '@hooks/useAppDispatch';
 import { uiActions, uiSelectors } from '@store/ui';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
-import { showErrorNotification } from '@lib/utils/notification';
+import {
+  showErrorNotification,
+  showSuccessNotification,
+} from '@lib/utils/notification';
 import Button from '@components/Button';
 import toast from 'react-hot-toast';
 import { Text } from '@components/Typography';
@@ -108,7 +111,7 @@ export const GenerateModal = () => {
                 } catch (error) {
                   toast.error('Не удалось скачать ' + `(${error})`);
                 }
-                showErrorNotification('Расписание сгенерировано!');
+                showSuccessNotification('Расписание сгенерировано!');
               } catch (e) {
                 showErrorNotification(
                   'Не удалось сгенерировать расписание, попробуйте снова!',
