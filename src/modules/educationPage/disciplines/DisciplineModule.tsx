@@ -78,93 +78,104 @@ const DisciplineModule = () => {
       {requests['disciplines'] === 'pending' && <ContentLoader size={32} />}
       {requests['disciplines'] !== 'pending' && (
         <Flex style={{ width: '100%' }} wrap="wrap" gap="11px">
-          {disciplines.map((item) => {
-            return (
-              <StyledFlex
-                direction="column"
-                key={item.id}
-                style={{ marginBottom: 10 }}
-              >
-                <Flex align="center" justify="space-between">
-                  <Text
-                    $color="#641aee"
-                    $size="subheader"
-                    style={{ fontSize: 20 }}
-                  >
-                    {String(
-                      subjects.find((el) => el.id === item.subject_id)?.name ??
-                        'Не указано',
-                    )}
-                    {item.discipline_type ? ` – ${item.discipline_type}` : ''} (
-                    {item.hours} ч.)
-                  </Text>
-                  <EditText
-                    onClick={() =>
+          {[...disciplines]
+            .sort((a, b) => a.hours - b.hours)
+            .sort((a, b) =>
+              (
+                subjects.find((el) => el.id === a?.subject_id) || {
+                  name: '1',
+                }
+              ).name.localeCompare(
+                subjects.find((el) => el.id === b?.subject_id)?.name || '1',
+              ),
+            )
+            .map((item) => {
+              return (
+                <StyledFlex
+                  direction="column"
+                  key={item.id}
+                  style={{ marginBottom: 10 }}
+                >
+                  <Flex align="center" justify="space-between">
+                    <Text
+                      $color="#641aee"
+                      $size="subheader"
+                      style={{ fontSize: 20 }}
+                    >
+                      {String(
+                        subjects.find((el) => el.id === item.subject_id)
+                          ?.name ?? 'Не указано',
+                      )}
+                      {item.discipline_type ? ` – ${item.discipline_type}` : ''}{' '}
+                      ({item.hours} ч.)
+                    </Text>
+                    <EditText
+                      onClick={() =>
+                        dispatch(
+                          uiActions.openModal({
+                            modalName: 'addDiscipline',
+                            value: item,
+                            isEditing: true,
+                          }),
+                        )
+                      }
+                    >
+                      <Text $size="small">Изменить</Text>
+                    </EditText>
+                  </Flex>
+
+                  <SubHeader $top="small">Группы</SubHeader>
+                  <Flex $top="small">
+                    {item.groups &&
+                      item.groups.map((el) => (
+                        <Button>
+                          <Text>{el.name}</Text>
+                        </Button>
+                      ))}
+                  </Flex>
+                  <Title
+                    action={() => {
                       dispatch(
                         uiActions.openModal({
-                          modalName: 'addDiscipline',
-                          value: item,
                           isEditing: true,
+                          value: {
+                            discipline_id: item.id as number,
+                            teacher_id: -1,
+                          },
+                          modalName: 'addCourse',
                         }),
-                      )
-                    }
+                      );
+                    }}
                   >
-                    <Text $size="small">Изменить</Text>
-                  </EditText>
-                </Flex>
-
-                <SubHeader $top="small">Группы</SubHeader>
-                <Flex $top="small">
-                  {item.groups &&
-                    item.groups.map((el) => (
-                      <Button>
-                        <Text>{el.name}</Text>
-                      </Button>
-                    ))}
-                </Flex>
-                <Title
-                  action={() => {
-                    dispatch(
-                      uiActions.openModal({
-                        isEditing: true,
-                        value: {
-                          discipline_id: item.id as number,
-                          teacher_id: -1,
-                        },
-                        modalName: 'addCourse',
-                      }),
-                    );
-                  }}
-                >
-                  Учителя
-                </Title>
-                <Flex wrap="wrap" gap="11px">
-                  {courses
-                    .filter((el) => el.discipline_id === item.id)
-                    .map((el) => {
-                      const teacher = teachers.find(
-                        (t) => t.id === el.teacher_id,
-                      );
-                      return teacher ? (
-                        <Button>
-                          <Flex gap="12px">
-                            <Text>{teacher.fullname}</Text>
-                            <StyledIcon
-                              color="red"
-                              width="20px"
-                              height="20px"
-                              onClick={() =>
-                                dispatch(fetchRemoveCourse(el.id as number))
-                              }
-                            />
-                          </Flex>
-                        </Button>
-                      ) : (
-                        ''
-                      );
-                    })}
-                </Flex>
-                {/* <TextButton
+                    Учителя
+                  </Title>
+                  <Flex wrap="wrap" gap="11px">
+                    {courses
+                      .filter((el) => el.discipline_id === item.id)
+                      .map((el) => {
+                        const teacher = teachers.find(
+                          (t) => t.id === el.teacher_id,
+                        );
+                        return teacher ? (
+                          <Button>
+                            <Flex gap="12px">
+                              <Text>{teacher.fullname}</Text>
+                              <StyledIcon
+                                color="red"
+                                width="20px"
+                                height="20px"
+                                onClick={() =>
+                                  dispatch(fetchRemoveCourse(el.id as number))
+                                }
+                              />
+                            </Flex>
+                          </Button>
+                        ) : (
+                          ''
+                        );
+                      })}
+                  </Flex>
+                  {/* <TextButton
                   text={}
                   size="full"
                   onClick={() =>
@@ -177,9 +188,9 @@ const DisciplineModule = () => {
                     )
                   }
                 /> */}
-              </StyledFlex>
-            );
-          })}
+                </StyledFlex>
+              );
+            })}
         </Flex>
       )}
     </Flex>

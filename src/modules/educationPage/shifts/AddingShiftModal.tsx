@@ -58,6 +58,7 @@ export const AddingShiftModal = () => {
           style={{ width: '100%' }}
           label="Номер смены"
           type="number"
+          onWheel={(e) => e.currentTarget.blur()}
           min={0}
           placeholder="Введите значение..."
           onChange={(e) =>

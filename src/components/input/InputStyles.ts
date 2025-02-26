@@ -13,6 +13,9 @@ export const StyledInput = withIndentStyles(styled.input`
   outline: none;
   font-size: 16px;
   width: 100%;
+  &::placeholder {
+    color: #aaa;
+  }
   &:disabled {
     color: #999;
   }

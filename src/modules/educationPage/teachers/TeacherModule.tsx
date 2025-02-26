@@ -42,25 +42,27 @@ const TeacherModule = () => {
       {requests['teachers'] === 'pending' && <ContentLoader size={32} />}
       {requests['teachers'] !== 'pending' && (
         <Flex wrap="wrap" gap="11px">
-          {teachers.map((item) => {
-            return (
-              <Button
-                key={item.id}
-                size="large"
-                onClick={() =>
-                  dispatch(
-                    uiActions.openModal({
-                      modalName: MODAL_NAME,
-                      isEditing: true,
-                      value: item,
-                    }),
-                  )
-                }
-              >
-                <Text>{item.fullname}</Text>
-              </Button>
-            );
-          })}
+          {[...teachers]
+            .sort((a, b) => a.fullname.localeCompare(b.fullname))
+            .map((item) => {
+              return (
+                <Button
+                  key={item.id}
+                  size="large"
+                  onClick={() =>
+                    dispatch(
+                      uiActions.openModal({
+                        modalName: MODAL_NAME,
+                        isEditing: true,
+                        value: item,
+                      }),
+                    )
+                  }
+                >
+                  <Text>{item.fullname}</Text>
+                </Button>
+              );
+            })}
         </Flex>
       )}
     </Flex>

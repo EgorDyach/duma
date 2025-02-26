@@ -70,6 +70,7 @@ export const AddingRoomModal = () => {
           value={newItem.name}
         />
         <Input
+          onWheel={(e) => e.currentTarget.blur()}
           name=""
           type="number"
           min={0}

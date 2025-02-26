@@ -42,24 +42,26 @@ const GroupModule = () => {
       {requests['groups'] === 'pending' && <ContentLoader size={32} />}
       {requests['groups'] !== 'pending' && (
         <Flex wrap="wrap" gap="11px">
-          {groups.map((item) => {
-            return (
-              <Button
-                key={item.id}
-                onClick={() =>
-                  dispatch(
-                    uiActions.openModal({
-                      modalName: MODAL_NAME,
-                      isEditing: true,
-                      value: item,
-                    }),
-                  )
-                }
-              >
-                <Text>{item.name}</Text>
-              </Button>
-            );
-          })}
+          {[...groups]
+            .sort((a, b) => a.name.localeCompare(b.name))
+            .map((item) => {
+              return (
+                <Button
+                  key={item.id}
+                  onClick={() =>
+                    dispatch(
+                      uiActions.openModal({
+                        modalName: MODAL_NAME,
+                        isEditing: true,
+                        value: item,
+                      }),
+                    )
+                  }
+                >
+                  <Text>{item.name}</Text>
+                </Button>
+              );
+            })}
         </Flex>
       )}
     </Flex>

@@ -79,6 +79,7 @@ export const AddingCourseModal = () => {
                   .map((q) => q.teacher_id)
                   .includes(el.id as number),
             )
+            .sort((a, b) => a.fullname.localeCompare(b.fullname))
             .map((el) => (
               <li
                 key={el.id}

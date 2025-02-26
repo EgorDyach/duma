@@ -42,25 +42,27 @@ const ProfileModule = () => {
       {requests['profiles'] === 'pending' && <ContentLoader size={32} />}
       {requests['profiles'] !== 'pending' && (
         <Flex wrap="wrap" gap="11px">
-          {profiles.map((item) => {
-            return (
-              <Button
-                key={item.id}
-                size="large"
-                onClick={() =>
-                  dispatch(
-                    uiActions.openModal({
-                      modalName: MODAL_NAME,
-                      isEditing: true,
-                      value: item,
-                    }),
-                  )
-                }
-              >
-                <Text>{item.name}</Text>
-              </Button>
-            );
-          })}
+          {[...profiles]
+            .sort((a, b) => a.name.localeCompare(b.name))
+            .map((item) => {
+              return (
+                <Button
+                  key={item.id}
+                  size="large"
+                  onClick={() =>
+                    dispatch(
+                      uiActions.openModal({
+                        modalName: MODAL_NAME,
+                        isEditing: true,
+                        value: item,
+                      }),
+                    )
+                  }
+                >
+                  <Text>{item.name}</Text>
+                </Button>
+              );
+            })}
         </Flex>
       )}
     </Flex>

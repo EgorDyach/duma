@@ -50,51 +50,53 @@ const SecondaryModule = () => {
               basis="100%"
               gap="11px"
             >
-              {secondaries.map((item) => (
-                <Flex gap="16px" align="center">
-                  <button
-                    onClick={() =>
-                      dispatch(
-                        uiActions.openModal({
-                          modalName: MODAL_NAME,
-                          isEditing: true,
-                          value: item,
-                        }),
-                      )
-                    }
-                    style={{
-                      alignItems: 'center',
-                      display: 'flex',
-                      justifyContent: 'center',
-                      background: 'white',
-                      borderRadius: 8,
-                      width: 32,
-                      height: 32,
-                      cursor: 'pointer',
-                    }}
-                  >
-                    <PenIcon width="24px" height="24px" />
-                  </button>
-                  <Button
-                    key={item.institution.ID}
-                    // @ts-ignore
-                    size="full"
-                    style={{ width: '100%' }}
-                  >
-                    <Text>{item.institution.name}</Text>
-                  </Button>
-                  <Button
-                    key={item.institution.ID}
-                    // @ts-ignore
-                    size="full"
-                    style={{ width: '100%' }}
-                  >
-                    <Text>
-                      <Text>{item.fullname}</Text>
-                    </Text>
-                  </Button>
-                </Flex>
-              ))}
+              {[...secondaries]
+                .sort((a, b) => a.fullname.localeCompare(b.fullname))
+                .map((item) => (
+                  <Flex gap="16px" align="center">
+                    <button
+                      onClick={() =>
+                        dispatch(
+                          uiActions.openModal({
+                            modalName: MODAL_NAME,
+                            isEditing: true,
+                            value: item,
+                          }),
+                        )
+                      }
+                      style={{
+                        alignItems: 'center',
+                        display: 'flex',
+                        justifyContent: 'center',
+                        background: 'white',
+                        borderRadius: 8,
+                        width: 32,
+                        height: 32,
+                        cursor: 'pointer',
+                      }}
+                    >
+                      <PenIcon width="24px" height="24px" />
+                    </button>
+                    <Button
+                      key={item.institution.ID}
+                      // @ts-ignore
+                      size="full"
+                      style={{ width: '100%' }}
+                    >
+                      <Text>{item.institution.name}</Text>
+                    </Button>
+                    <Button
+                      key={item.institution.ID}
+                      // @ts-ignore
+                      size="full"
+                      style={{ width: '100%' }}
+                    >
+                      <Text>
+                        <Text>{item.fullname}</Text>
+                      </Text>
+                    </Button>
+                  </Flex>
+                ))}
             </Flex>
           </>
         )}

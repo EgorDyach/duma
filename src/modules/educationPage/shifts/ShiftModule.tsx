@@ -53,11 +53,17 @@ const ShiftModule = () => {
       {requests['shifts'] === 'pending' && <ContentLoader size={32} />}
       {requests['shifts'] !== 'pending' && (
         <Flex wrap="wrap" gap="11px">
-          {shifts.map((item) => (
-            <Button key={item.id} size="small" onClick={() => handleEdit(item)}>
-              <Text>{item.number}</Text>
-            </Button>
-          ))}
+          {[...shifts]
+            .sort((a, b) => String(a.number).localeCompare(String(b.number)))
+            .map((item) => (
+              <Button
+                key={item.id}
+                size="small"
+                onClick={() => handleEdit(item)}
+              >
+                <Text>{item.number}</Text>
+              </Button>
+            ))}
         </Flex>
       )}
     </Flex>

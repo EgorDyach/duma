@@ -44,12 +44,10 @@ export const StyledModalContent = styled.div`
 `;
 
 export const StyledModalTitle = styled(SubHeader)`
-  font-size: 16px;
   line-height: 20px;
-  font-weight: 400;
-  background-color: #f0f0f7;
-  color: #b4b4b9;
-  padding: 3px 24px;
+  font-weight: 600;
+  margin-right: 50px;
+  color: black;
   text-align: left;
   width: fit-content;
   border-radius: 10px;

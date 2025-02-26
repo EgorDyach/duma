@@ -38,6 +38,9 @@ const Input: React.FC<InputProps> = ({
       <Flex>
         <StyledInput
           type={type}
+          onWheel={
+            type === 'number' ? (e) => e.currentTarget.blur() : props.onWheel
+          }
           placeholder={placeholder}
           value={value}
           onChange={(e) => onChange(e.currentTarget.value)}

@@ -42,27 +42,33 @@ const LessonTimeModule = () => {
       {requests['lessonTime'] === 'pending' && <ContentLoader size={32} />}
       {requests['lessonTime'] !== 'pending' && (
         <Flex wrap="wrap" gap="11px">
-          {lessonTimes.map((item) => {
-            return (
-              <Button
-                key={item.id}
-                size="large"
-                onClick={() =>
-                  dispatch(
-                    uiActions.openModal({
-                      modalName: MODAL_NAME,
-                      isEditing: true,
-                      value: item,
-                    }),
-                  )
-                }
-              >
-                <Text>
-                  {item.start_time.slice(0, 5)} - {item.end_time.slice(0, 5)}
-                </Text>
-              </Button>
-            );
-          })}
+          {[...lessonTimes]
+            .sort((a, b) =>
+              `${a.start_time}-${a.end_time}`.localeCompare(
+                `${b.start_time}-${b.end_time}`,
+              ),
+            )
+            .map((item) => {
+              return (
+                <Button
+                  key={item.id}
+                  size="large"
+                  onClick={() =>
+                    dispatch(
+                      uiActions.openModal({
+                        modalName: MODAL_NAME,
+                        isEditing: true,
+                        value: item,
+                      }),
+                    )
+                  }
+                >
+                  <Text>
+                    {item.start_time.slice(0, 5)} - {item.end_time.slice(0, 5)}
+                  </Text>
+                </Button>
+              );
+            })}
         </Flex>
       )}
     </Flex>

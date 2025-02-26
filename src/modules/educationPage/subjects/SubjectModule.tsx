@@ -42,25 +42,27 @@ const SubjectModule = () => {
       {requests['shifts'] === 'pending' && <ContentLoader size={32} />}
       {requests['shifts'] !== 'pending' && (
         <Flex wrap="wrap" gap="11px">
-          {shifts.map((item) => {
-            return (
-              <Button
-                key={item.id}
-                size="small"
-                onClick={() =>
-                  dispatch(
-                    uiActions.openModal({
-                      modalName: 'addSubject',
-                      isEditing: true,
-                      value: item,
-                    }),
-                  )
-                }
-              >
-                <Text>{item.name}</Text>
-              </Button>
-            );
-          })}
+          {[...shifts]
+            .sort((a, b) => a.name.localeCompare(b.name))
+            .map((item) => {
+              return (
+                <Button
+                  key={item.id}
+                  size="small"
+                  onClick={() =>
+                    dispatch(
+                      uiActions.openModal({
+                        modalName: 'addSubject',
+                        isEditing: true,
+                        value: item,
+                      }),
+                    )
+                  }
+                >
+                  <Text>{item.name}</Text>
+                </Button>
+              );
+            })}
         </Flex>
       )}
     </Flex>

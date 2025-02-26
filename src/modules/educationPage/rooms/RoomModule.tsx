@@ -42,25 +42,27 @@ const RoomModule = () => {
       {requests['rooms'] === 'pending' && <ContentLoader size={32} />}
       {requests['rooms'] !== 'pending' && (
         <Flex wrap="wrap" gap="11px">
-          {rooms.map((item) => {
-            return (
-              <Button
-                key={item.id}
-                size="large"
-                onClick={() =>
-                  dispatch(
-                    uiActions.openModal({
-                      modalName: MODAL_NAME,
-                      isEditing: true,
-                      value: item,
-                    }),
-                  )
-                }
-              >
-                <Text>{item.name}</Text>
-              </Button>
-            );
-          })}
+          {[...rooms]
+            .sort((a, b) => a.name.localeCompare(b.name))
+            .map((item) => {
+              return (
+                <Button
+                  key={item.id}
+                  size="large"
+                  onClick={() =>
+                    dispatch(
+                      uiActions.openModal({
+                        modalName: MODAL_NAME,
+                        isEditing: true,
+                        value: item,
+                      }),
+                    )
+                  }
+                >
+                  <Text>{item.name}</Text>
+                </Button>
+              );
+            })}
         </Flex>
       )}
     </Flex>

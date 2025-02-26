@@ -124,6 +124,7 @@ export const AddingGroupModal: React.FC = () => {
           onChange={(e) =>
             setNewItem({ ...newItem, studentscount: Number(e.target.value) })
           }
+          onWheel={(e) => e.currentTarget.blur()}
           type="number"
         />
       </Flex>

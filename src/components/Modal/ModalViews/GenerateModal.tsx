@@ -36,6 +36,7 @@ export const GenerateModal = () => {
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
   const dispatch = useAppDispatch();
+  const [isLoading, setIsLoading] = useState(false);
   const user = useSelector(uiSelectors.getUser);
   if (!user || !('institution_id' in user)) {
     showErrorNotification('Невозможно сгенерировать расписание!');
@@ -77,6 +78,7 @@ export const GenerateModal = () => {
             onClick={async () => {
               const error = validateGeneration(startDate, endDate);
               if (error) return showErrorNotification(error);
+              setIsLoading(true);
               try {
                 await axios.post(
                   `https://puzzlesignlanguage.online/schedule/generate?institution_id=${user.institution_id}&start_date=${startDate?.toISOString()}&end_date=${endDate?.toISOString()}`,
@@ -104,20 +106,27 @@ export const GenerateModal = () => {
                       a.click();
                       window.URL.revokeObjectURL(url);
                       toast.success('Файл успешно скачен!');
+                      setIsLoading(false);
                     })
-                    .catch((error) =>
-                      toast.error('Не удалось скачать ' + `(${error})`),
-                    );
+                    .catch((error) => {
+                      toast.error('Не удалось скачать ' + `(${error})`);
+                      setIsLoading(false);
+                    });
                 } catch (error) {
                   toast.error('Не удалось скачать ' + `(${error})`);
+                  setIsLoading(false);
                 }
                 showSuccessNotification('Расписание сгенерировано!');
+                setIsLoading(false);
               } catch (e) {
                 showErrorNotification(
                   'Не удалось сгенерировать расписание, попробуйте снова!',
                 );
+                setIsLoading(false);
               }
             }}
+            isLoading={isLoading}
+            disabled={isLoading}
           >
             <Text $size="small">Сгенерировать</Text>
           </Button>
