@@ -41,9 +41,21 @@ export type Modals = {
   GenerateModal: string;
 };
 
+export type DisplayedTabs = {
+    shifts: boolean;
+    disciplines: boolean;
+    groups: boolean;
+    lessonTime: boolean;
+    profiles: boolean;
+    rooms: boolean;
+    subjects: boolean;
+    teachers: boolean;
+  };
+
 export type UIState = {
   user: User | null;
   requests: Record<string, RequestState>;
+  activeTabs: DisplayedTabs;
   modals: { [k in ModalTypes]: ModalContent<Modals[k]> };
 };
 

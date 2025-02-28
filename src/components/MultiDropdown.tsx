@@ -1,6 +1,7 @@
-import { AnyObject } from '@type/common';
 import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
+import Flex from './Flex';
+import Checkbox from './Checkbox';
 
 const StyledButton = styled.button`
   background-color: #fff;
@@ -14,14 +15,16 @@ const StyledButton = styled.button`
   max-width: 170px;
   width: 100%;
   color: #641aee;
+  font-size: 18px;
 `;
 
 const StyledMultiDropdown = styled.ul`
   position: absolute;
   padding: 6px;
-  bottom: -82px;
-  height: 180px;
-  transform: translateY(50%);
+  top: 42px;
+  /* bottom: -82px; */
+  /* height: 180px; */
+  /* transform: translateY(50%); */
   left: 0;
   margin: 0;
   border-radius: 10px;
@@ -29,38 +32,42 @@ const StyledMultiDropdown = styled.ul`
   background: #f0f0f7;
   overflow-y: auto;
   max-width: 280px;
-  width: 230px;
+  /* width: 230px; */
   text-align: center;
   z-index: 1000;
   color: #000;
 `;
 
 interface MultiDropdownProps<T> {
-  options: T[];
-  selectedOptions: T[];
-  setSelectedOptions: (n: T[]) => void;
+  options: { id: T; name: string }[];
+  selectedOptions: T[] | null;
+  setSelectedOptions: (n: T) => void;
+  label?: string;
 }
 
-const MultiDropdown: React.FC<
-  MultiDropdownProps<AnyObject & { id: number; name: string }>
-> = ({ options = [], selectedOptions, setSelectedOptions }) => {
+const MultiDropdown: React.FC<MultiDropdownProps<string>> = ({
+  options = [],
+  selectedOptions,
+  setSelectedOptions,
+  label,
+}) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleMultiDropdown = () => {
     setIsOpen(!isOpen);
   };
 
-  const handleOptionClick = (
-    option: AnyObject & { id: number; name: string },
-  ) => {
-    if (selectedOptions.some((selected) => selected.id === option.id)) {
-      setSelectedOptions(
-        selectedOptions.filter((selected) => selected.id !== option.id),
-      );
-    } else {
-      setSelectedOptions([...selectedOptions, option]);
-    }
-    setIsOpen(false);
+  const handleOptionClick = (id: string) => {
+    // if (selectedOptions) {
+    //   if (selectedOptions.some((selected) => selected === id)) {
+    //     setSelectedOptions(
+    //       selectedOptions.filter((selected) => selected !== id),
+    //     );
+    //   } else {
+    //     setSelectedOptions([...selectedOptions, id]);
+    //   }
+    // } else setSelectedOptions([id]);
+    setSelectedOptions(id);
   };
 
   const dropdownRef = useRef<HTMLUListElement>(null);
@@ -83,24 +90,31 @@ const MultiDropdown: React.FC<
   return (
     <div style={{ position: 'relative' }}>
       <StyledButton onClick={toggleMultiDropdown}>
-        {selectedOptions.length
-          ? selectedOptions.map((el) => el.name).join(', ')
-          : 'Выбрать'}
+        {label || 'Выбрать...'}
       </StyledButton>
       {isOpen && (
         <StyledMultiDropdown ref={dropdownRef}>
           {options.map((option) => (
-            <li
-              key={option.id}
-              onClick={() => handleOptionClick(option)}
-              style={{
-                cursor: 'pointer',
-                padding: 5,
-                fontSize: 18,
-              }}
-            >
-              {option.name}{' '}
-            </li>
+            <Flex key={option.id}>
+              <Checkbox
+                checked={
+                  selectedOptions ? selectedOptions.includes(option.id) : false
+                }
+                setChecked={() => {
+                  handleOptionClick(option.id);
+                }}
+              />
+              <li
+                onClick={() => handleOptionClick(option.id)}
+                style={{
+                  cursor: 'pointer',
+                  padding: 5,
+                  fontSize: 18,
+                }}
+              >
+                {option.name}{' '}
+              </li>
+            </Flex>
           ))}
         </StyledMultiDropdown>
       )}

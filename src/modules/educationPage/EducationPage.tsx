@@ -16,6 +16,7 @@ import { uiActions, uiSelectors } from '@store/ui';
 import { Modal } from '@components/Modal/Modal';
 import { GenerateModal } from '@components/Modal/ModalViews/GenerateModal';
 import { useSelector } from 'react-redux';
+import { DisplayedTabs } from '@store/ui/types';
 
 const Wrapper = styled(Flex)`
   background-color: #fff;
@@ -36,10 +37,23 @@ export const StyledButton = styled.button<{
   cursor: pointer;
 `;
 
+const modules = {
+  shifts: <ShiftModule key="shifts" />,
+  profiles: <ProfileModule key="profiles" />,
+  teachers: <TeacherModule key="teachers" />,
+  groups: <GroupModule key="groups" />,
+  subjects: <SubjectModule key="subjects" />,
+  rooms: <RoomModule key="rooms" />,
+  lessonTime: <LessonTimeModule key="lessonTime" />,
+  disciplines: <DisciplineModule key="disciplines" />,
+};
+
 const EducationPage: React.FC = () => {
   const [isServerLive, setIsServerLive] = useState(true);
   const dispatch = useAppDispatch();
   const user = useSelector(uiSelectors.getUser);
+  const activeTabs = useSelector(uiSelectors.getActiveTabs);
+
   useEffect(() => {
     (async () => {
       try {
@@ -65,14 +79,17 @@ const EducationPage: React.FC = () => {
       <Modal modalName="GenerateModal">
         <GenerateModal />
       </Modal>
-      <ShiftModule />
+      {/* <ShiftModule />
       <ProfileModule />
       <TeacherModule />
       <GroupModule />
       <SubjectModule />
       <RoomModule />
       <LessonTimeModule />
-      <DisciplineModule />
+      <DisciplineModule /> */}
+      {Object.keys(activeTabs)
+        .filter((tab) => activeTabs[tab as keyof DisplayedTabs] === true)
+        .map((tab) => modules[tab as keyof typeof modules])}
       <Flex gap="16px" justify="start" align="center" $top="large">
         <StyledButton
           disabled={!isServerLive}

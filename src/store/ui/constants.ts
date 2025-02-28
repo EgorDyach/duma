@@ -3,6 +3,16 @@ import { UIState } from './types';
 export const uiInitialState: UIState = {
   user: null,
   requests: {},
+  activeTabs:  {
+    shifts: true,
+    profiles: true,
+    teachers: true,
+    groups: true,
+    subjects: true,
+    rooms: true,
+    lessonTime: true,
+    disciplines: true,
+  },
   modals: {
     addGroup: {
       isOpened: false,
