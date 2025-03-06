@@ -1,3 +1,5 @@
+import { Filters } from './DisciplineModule';
+
 export const validateDiscipline = (
   newDiscipline: Discipline,
 ): string | undefined => {
@@ -14,4 +16,27 @@ export const validateDiscipline = (
 export const validateCourse = (newCourse: Course): string | undefined => {
   if (newCourse.discipline_id === -1) return 'Не выбрана дисциплина!';
   if (newCourse.teacher_id === -1) return 'Не выбран учитель!';
+};
+
+export const displayFilteredDisciplines = (
+  filters: Filters,
+  disciplines: Discipline[],
+) => {
+  let newDisciplines = [...disciplines];
+
+  if (filters.subject.length) {
+    newDisciplines = disciplines.filter((el) => {
+      return filters.subject.includes(el.subject_id);
+    });
+  }
+
+  if (filters.group.length) {
+    newDisciplines = disciplines.filter((el) => {
+      return filters.group.some((group) =>
+        el.groups.map((gr) => gr.id).includes(group),
+      );
+    });
+  }
+
+  return newDisciplines;
 };

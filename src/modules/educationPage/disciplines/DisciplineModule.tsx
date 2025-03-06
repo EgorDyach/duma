@@ -10,6 +10,8 @@ import { AddingDisciplineModal } from './AddingDisciplineModal';
 import { useEffectOnce } from '@hooks/useEffectOnce';
 import {
   fetchAllDisciplines,
+  fetchAllGroups,
+  fetchAllSubjects,
   fetchRemoveCourse,
 } from '@store/institution/thunks';
 import { SubHeader, Text } from '@components/Typography';
@@ -20,6 +22,10 @@ import {
 } from './AddingCourseModal';
 import Button from '@components/Button';
 import CloseIcon from '@components/icons/CloseIcon';
+import MultiDropdown from '@components/MultiDropdown';
+import { useEffect, useState } from 'react';
+import { displayFilteredDisciplines } from './helpers';
+
 const StyledFlex = styled(Flex)`
   padding: 11px;
   /* width: 100%; */
@@ -43,16 +49,45 @@ const EditText = styled(Button)`
 
 export const MODAL_NAME = 'addDiscipline';
 
+export type Filters = {
+  group: number[];
+  subject: number[];
+};
+
 const DisciplineModule = () => {
   const disciplines = useSelector(institutionSelectors.getDisciplines);
   const subjects = useSelector(institutionSelectors.getSubjects);
   const courses = useSelector(institutionSelectors.getCourses);
+  const groups = useSelector(institutionSelectors.getGroups);
   const teachers = useSelector(institutionSelectors.getTeachers);
   const requests = useSelector(uiSelectors.getRequests);
   const dispatch = useAppDispatch();
-  useEffectOnce(() => {
-    dispatch(fetchAllDisciplines());
+  const [filters, setFilters] = useState<Filters>({
+    group: [],
+    subject: [],
   });
+  const [displayedDisciplines, setDisplayedDisciplines] = useState(disciplines);
+
+  useEffectOnce(() => {
+    dispatch(fetchAllSubjects());
+    dispatch(fetchAllDisciplines());
+    dispatch(fetchAllGroups());
+  });
+
+  const setFilterField = (field: keyof Filters, value: number) => {
+    const newFilters = { ...filters };
+    if (filters[field]?.includes(value)) {
+      newFilters[field] = filters[field]?.filter((el) => el !== value) || null;
+    } else {
+      newFilters[field]?.push(value);
+    }
+    setFilters(newFilters);
+  };
+
+  useEffect(() => {
+    setDisplayedDisciplines(displayFilteredDisciplines(filters, disciplines));
+    console.log('filters updated');
+  }, [filters, disciplines]);
 
   return (
     <Flex flex="2" direction="column" gap="8px" align="start">
@@ -75,10 +110,50 @@ const DisciplineModule = () => {
       >
         Дисциплины
       </Title>
+      <Flex gap="10px" align="center">
+        <Button
+          onClick={() =>
+            setFilters({
+              group: [],
+              subject: [],
+            })
+          }
+        >
+          <Text>Сбросить фильтры</Text>
+        </Button>
+        <Text>Настроить фильтры:</Text>
+        <MultiDropdown
+          options={subjects.map((subject) => ({
+            id: +subject.id!,
+            name: subject.name,
+          }))}
+          selectedOptions={filters.subject}
+          setSelectedOptions={(index) => {
+            setFilterField('subject' as keyof Filters, +index);
+          }}
+          label="Предметы"
+        />
+        <MultiDropdown
+          options={groups.map((group) => ({
+            id: +group.id!,
+            name: group.name,
+          }))}
+          selectedOptions={filters.group}
+          setSelectedOptions={(index) => {
+            setFilterField('group' as keyof Filters, +index);
+          }}
+          label="Группы"
+        />
+      </Flex>
       {requests['disciplines'] === 'pending' && <ContentLoader size={32} />}
       {requests['disciplines'] !== 'pending' && (
-        <Flex style={{ width: '100%' }} wrap="wrap" gap="11px">
-          {[...disciplines]
+        <Flex
+          style={{ width: '100%' }}
+          wrap="wrap"
+          gap="11px"
+          direction="column"
+        >
+          {[...displayedDisciplines]
             .sort((a, b) => a.hours - b.hours)
             .sort((a, b) =>
               (
@@ -125,7 +200,7 @@ const DisciplineModule = () => {
                   </Flex>
 
                   <SubHeader $top="small">Группы</SubHeader>
-                  <Flex $top="small">
+                  <Flex $top="small" gap="10px">
                     {item.groups &&
                       item.groups.map((el) => (
                         <Button>

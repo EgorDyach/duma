@@ -379,7 +379,11 @@ export const fetchAllRooms = () => async (dispatch: AppDispatch) => {
   try {
     const { message } = await requestAllRoom();
     dispatch(
-      institutionActions.setRooms(message.map((el) => toLowerCaseKeys(el))),
+      institutionActions.setRooms(
+        message
+          .map((el) => toLowerCaseKeys(el))
+          .map((el) => ({...el, room: toLowerCaseKeys(el.room)})),
+      ),
     );
   } catch (e) {
     if (e instanceof AxiosError) return showErrorNotification(e.message);

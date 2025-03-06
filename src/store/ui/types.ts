@@ -41,21 +41,31 @@ export type Modals = {
   GenerateModal: string;
 };
 
-export type DisplayedTabs = {
-    shifts: boolean;
-    disciplines: boolean;
-    groups: boolean;
-    lessonTime: boolean;
-    profiles: boolean;
-    rooms: boolean;
-    subjects: boolean;
-    teachers: boolean;
-  };
+// export type DisplayedTabs = {
+//     shifts: boolean;
+//     disciplines: boolean;
+//     groups: boolean;
+//     lessonTime: boolean;
+//     profiles: boolean;
+//     rooms: boolean;
+//     subjects: boolean;
+//     teachers: boolean;
+//   };
+
+export type DisplayedTab =
+  | 'shifts'
+  | 'profiles'
+  | 'teachers'
+  | 'groups'
+  | 'subjects'
+  | 'rooms'
+  | 'lessonTime'
+  | 'disciplines';
 
 export type UIState = {
   user: User | null;
   requests: Record<string, RequestState>;
-  activeTabs: DisplayedTabs;
+  activeTab: DisplayedTab;
   modals: { [k in ModalTypes]: ModalContent<Modals[k]> };
 };
 

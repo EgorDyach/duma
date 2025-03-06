@@ -5,14 +5,14 @@ import Checkbox from './Checkbox';
 
 const StyledButton = styled.button`
   background-color: #fff;
-  padding: 6px;
+  padding: 11px;
   border-radius: 9px;
   border: 1.2px solid #641aee;
   transition:
     background-color 0.2s ease-in-out,
     color 0.2s ease-in-out;
   cursor: pointer;
-  max-width: 170px;
+  /* max-width: 170px; */
   width: 100%;
   color: #641aee;
   font-size: 18px;
@@ -21,7 +21,7 @@ const StyledButton = styled.button`
 const StyledMultiDropdown = styled.ul`
   position: absolute;
   padding: 6px;
-  top: 42px;
+  top: 48px;
   /* bottom: -82px; */
   /* height: 180px; */
   /* transform: translateY(50%); */
@@ -31,7 +31,7 @@ const StyledMultiDropdown = styled.ul`
   list-style: none;
   background: #f0f0f7;
   overflow-y: auto;
-  max-width: 280px;
+  /* max-width: 280px; */
   /* width: 230px; */
   text-align: center;
   z-index: 1000;
@@ -45,7 +45,7 @@ interface MultiDropdownProps<T> {
   label?: string;
 }
 
-const MultiDropdown: React.FC<MultiDropdownProps<string>> = ({
+const MultiDropdown: React.FC<MultiDropdownProps<string | number>> = ({
   options = [],
   selectedOptions,
   setSelectedOptions,
@@ -57,7 +57,7 @@ const MultiDropdown: React.FC<MultiDropdownProps<string>> = ({
     setIsOpen(!isOpen);
   };
 
-  const handleOptionClick = (id: string) => {
+  const handleOptionClick = (id: string | number) => {
     // if (selectedOptions) {
     //   if (selectedOptions.some((selected) => selected === id)) {
     //     setSelectedOptions(
@@ -67,6 +67,7 @@ const MultiDropdown: React.FC<MultiDropdownProps<string>> = ({
     //     setSelectedOptions([...selectedOptions, id]);
     //   }
     // } else setSelectedOptions([id]);
+    console.log(selectedOptions, id);
     setSelectedOptions(id);
   };
 
@@ -100,9 +101,7 @@ const MultiDropdown: React.FC<MultiDropdownProps<string>> = ({
                 checked={
                   selectedOptions ? selectedOptions.includes(option.id) : false
                 }
-                setChecked={() => {
-                  handleOptionClick(option.id);
-                }}
+                setChecked={() => handleOptionClick(option.id)}
               />
               <li
                 onClick={() => handleOptionClick(option.id)}
@@ -110,6 +109,7 @@ const MultiDropdown: React.FC<MultiDropdownProps<string>> = ({
                   cursor: 'pointer',
                   padding: 5,
                   fontSize: 18,
+                  textWrap: 'nowrap',
                 }}
               >
                 {option.name}{' '}
@@ -118,14 +118,6 @@ const MultiDropdown: React.FC<MultiDropdownProps<string>> = ({
           ))}
         </StyledMultiDropdown>
       )}
-      <div
-        style={{
-          display: 'flex',
-          overflowX: 'auto',
-          whiteSpace: 'nowrap',
-          marginTop: '10px',
-        }}
-      ></div>
     </div>
   );
 };

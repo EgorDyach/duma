@@ -16,7 +16,7 @@ import { uiActions, uiSelectors } from '@store/ui';
 import { Modal } from '@components/Modal/Modal';
 import { GenerateModal } from '@components/Modal/ModalViews/GenerateModal';
 import { useSelector } from 'react-redux';
-import { DisplayedTabs } from '@store/ui/types';
+import InstitutionNavigation from './navigation/InstitutionNavigation';
 
 const Wrapper = styled(Flex)`
   background-color: #fff;
@@ -52,7 +52,7 @@ const EducationPage: React.FC = () => {
   const [isServerLive, setIsServerLive] = useState(true);
   const dispatch = useAppDispatch();
   const user = useSelector(uiSelectors.getUser);
-  const activeTabs = useSelector(uiSelectors.getActiveTabs);
+  const activeTab = useSelector(uiSelectors.getActiveTabs);
 
   useEffect(() => {
     (async () => {
@@ -75,93 +75,90 @@ const EducationPage: React.FC = () => {
   }, []);
 
   return (
-    <Wrapper>
-      <Modal modalName="GenerateModal">
-        <GenerateModal />
-      </Modal>
-      {/* <ShiftModule />
-      <ProfileModule />
-      <TeacherModule />
-      <GroupModule />
-      <SubjectModule />
-      <RoomModule />
-      <LessonTimeModule />
-      <DisciplineModule /> */}
-      {Object.keys(activeTabs)
-        .filter((tab) => activeTabs[tab as keyof DisplayedTabs] === true)
-        .map((tab) => modules[tab as keyof typeof modules])}
-      <Flex gap="16px" justify="start" align="center" $top="large">
-        <StyledButton
-          disabled={!isServerLive}
-          style={
-            isServerLive
-              ? { backgroundColor: '#35c452', borderColor: '#35c452' }
-              : {
-                  backgroundColor: '#f0414c',
-                  borderColor: '#f0414c',
-                  cursor: 'default',
-                }
-          }
-          $isActive
-          onClick={() =>
-            dispatch(
-              uiActions.openModal({
-                modalName: 'GenerateModal',
-                value: null,
-                isEditing: true,
-              }),
-            )
-          }
-        >
-          Сгенерировать
-        </StyledButton>
-        <StyledButton
-          $isActive
-          disabled={!isServerLive}
-          style={
-            isServerLive
-              ? { backgroundColor: '#35c452', borderColor: '#35c452' }
-              : {
-                  backgroundColor: '#f0414c',
-                  borderColor: '#f0414c',
-                  cursor: 'default',
-                }
-          }
-          onClick={async () => {
-            try {
-              await fetch(
-                // @ts-ignore
-                `https://puzzlesignlanguage.online/schedule/get/excel?institution_id=${user.institution_id}`,
-                {},
-              )
-                .then((resp) =>
-                  resp.status === 200
-                    ? resp.blob()
-                    : Promise.reject('Не удалось скачать, попробуйте еще раз!'),
+    <>
+      <Flex gap="20px">
+        <InstitutionNavigation />
+        <Wrapper style={{ flex: 1 }}>
+          <Modal modalName="GenerateModal">
+            <GenerateModal />
+          </Modal>
+          {modules[activeTab]}
+          <Flex gap="16px" justify="start" align="center" $top="large">
+            <StyledButton
+              disabled={!isServerLive}
+              style={
+                isServerLive
+                  ? { backgroundColor: '#35c452', borderColor: '#35c452' }
+                  : {
+                      backgroundColor: '#f0414c',
+                      borderColor: '#f0414c',
+                      cursor: 'default',
+                    }
+              }
+              $isActive
+              onClick={() =>
+                dispatch(
+                  uiActions.openModal({
+                    modalName: 'GenerateModal',
+                    value: null,
+                    isEditing: true,
+                  }),
                 )
-                .then((blob) => {
-                  const url = window.URL.createObjectURL(blob);
-                  const a = document.createElement('a');
-                  a.style.display = 'none';
-                  a.href = url;
-                  a.download = 'Расписание.xlsx';
-                  document.body.appendChild(a);
-                  a.click();
-                  window.URL.revokeObjectURL(url);
-                  toast.success('Файл успешно скачен!');
-                })
-                .catch((error) =>
-                  toast.error('Не удалось скачать ' + `(${error})`),
-                );
-            } catch (error) {
-              toast.error('Не удалось скачать ' + `(${error})`);
-            }
-          }}
-        >
-          Скачать
-        </StyledButton>
+              }
+            >
+              Сгенерировать
+            </StyledButton>
+            <StyledButton
+              $isActive
+              disabled={!isServerLive}
+              style={
+                isServerLive
+                  ? { backgroundColor: '#35c452', borderColor: '#35c452' }
+                  : {
+                      backgroundColor: '#f0414c',
+                      borderColor: '#f0414c',
+                      cursor: 'default',
+                    }
+              }
+              onClick={async () => {
+                try {
+                  await fetch(
+                    // @ts-ignore
+                    `https://puzzlesignlanguage.online/schedule/get/excel?institution_id=${user.institution_id}`,
+                    {},
+                  )
+                    .then((resp) =>
+                      resp.status === 200
+                        ? resp.blob()
+                        : Promise.reject(
+                            'Не удалось скачать, попробуйте еще раз!',
+                          ),
+                    )
+                    .then((blob) => {
+                      const url = window.URL.createObjectURL(blob);
+                      const a = document.createElement('a');
+                      a.style.display = 'none';
+                      a.href = url;
+                      a.download = 'Расписание.xlsx';
+                      document.body.appendChild(a);
+                      a.click();
+                      window.URL.revokeObjectURL(url);
+                      toast.success('Файл успешно скачен!');
+                    })
+                    .catch((error) =>
+                      toast.error('Не удалось скачать ' + `(${error})`),
+                    );
+                } catch (error) {
+                  toast.error('Не удалось скачать ' + `(${error})`);
+                }
+              }}
+            >
+              Скачать
+            </StyledButton>
+          </Flex>
+        </Wrapper>
       </Flex>
-    </Wrapper>
+    </>
   );
   // </Wrapper>
 };

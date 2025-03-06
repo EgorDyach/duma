@@ -1,12 +1,10 @@
 import Flex from '@components/Flex';
-import MultiDropdown from '@components/MultiDropdown';
 import { Text } from '@components/Typography';
 import { isAdmin } from '@lib/utils/isAdmin';
 import SessionService from '@lib/utils/sessionService';
-import { uiActions, uiSelectors } from '@store/ui';
-import { DisplayedTabs } from '@store/ui/types';
+import { uiSelectors } from '@store/ui';
 import { FC, PropsWithChildren } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { Outlet, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
@@ -55,26 +53,26 @@ const ExitButton = styled.button`
 `;
 
 // Наверное надо перенести
-const tabs = [
-  { id: 'shifts', name: 'Смены' },
-  { id: 'profiles', name: 'Профили' },
-  { id: 'teachers', name: 'Учителя' },
-  { id: 'groups', name: 'Группы' },
-  { id: 'subjects', name: 'Предметы' },
-  { id: 'rooms', name: 'Аудитории' },
-  { id: 'lessonTime', name: 'Время урока' },
-  { id: 'disciplines', name: 'Дисциплины' },
-];
+// const tabs = [
+//   { id: 'shifts', name: 'Смены' },
+//   { id: 'profiles', name: 'Профили' },
+//   { id: 'teachers', name: 'Учителя' },
+//   { id: 'groups', name: 'Группы' },
+//   { id: 'subjects', name: 'Предметы' },
+//   { id: 'rooms', name: 'Аудитории' },
+//   { id: 'lessonTime', name: 'Время урока' },
+//   { id: 'disciplines', name: 'Дисциплины' },
+// ];
 
 export const MainLayout: FC<PropsWithChildren> = ({ children }) => {
   const navigate = useNavigate();
   const user = useSelector(uiSelectors.getUser);
-  const activeTabs = useSelector(uiSelectors.getActiveTabs);
-  const dispatch = useDispatch();
+  // const activeTabs = useSelector(uiSelectors.getActiveTabs);
+  // const dispatch = useDispatch();
 
-  const handleToggle = (item: keyof DisplayedTabs) => {
-    dispatch(uiActions.setActiveTabs(item));
-  };
+  // const handleToggle = (item: keyof DisplayedTabs) => {
+  //   dispatch(uiActions.setActiveTabs(item));
+  // };
 
   return (
     <MainWrapper direction="column">
@@ -89,7 +87,7 @@ export const MainLayout: FC<PropsWithChildren> = ({ children }) => {
               {user && isAdmin(user) ? 'Администратор Думы' : 'администратор'}
             </Text>
           </Flex>
-          <MultiDropdown
+          {/* <MultiDropdown
             options={tabs}
             selectedOptions={Object.keys(activeTabs).filter(
               (tab) => activeTabs[tab as keyof DisplayedTabs] === true,
@@ -98,7 +96,7 @@ export const MainLayout: FC<PropsWithChildren> = ({ children }) => {
               handleToggle(item as keyof DisplayedTabs)
             }
             label="Вид:"
-          />
+          /> */}
         </Flex>
         <ExitButton
           onClick={() => {

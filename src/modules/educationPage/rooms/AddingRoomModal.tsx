@@ -18,13 +18,16 @@ import { validateRoom } from './helpers';
 import { institutionSelectors } from '@store/institution';
 import { showErrorNotification } from '@lib/utils/notification';
 import Input from '@components/input/Input';
-import Tags from '@components/Tags';
+// import Tags from '@components/Tags';
 import { Text } from '@components/Typography';
 
 const ITEM_INIT_DATA: Room = {
-  name: '',
-  capacity: 0,
-  tags: [],
+  room: {
+    name: '',
+    capacity: 0,
+  },
+  roomlabels: [],
+  roomtaints: [],
 };
 
 export const AddingRoomModal = () => {
@@ -67,7 +70,7 @@ export const AddingRoomModal = () => {
               name: e,
             }))
           }
-          value={newItem.name}
+          value={newItem.room.name}
         />
         <Input
           onWheel={(e) => e.currentTarget.blur()}
@@ -82,14 +85,14 @@ export const AddingRoomModal = () => {
               capacity: Number(e),
             }))
           }
-          value={String(newItem.capacity)}
+          value={String(newItem.room.capacity)}
         />
       </Flex>
       <Flex $top="medium" direction="column">
-        <Tags
+        {/* <Tags
           setTags={(n) => setNewItem((prev) => ({ ...prev, tags: n }))}
           tags={newItem.tags ?? []}
-        />
+        /> */}
       </Flex>
       <Flex justify="flex-end">
         <Flex direction="column">

@@ -93,13 +93,18 @@ type Profile = {
   name: string;
 };
 
-type Room = {
+type RoomData = {
   createdat?: string;
   deletedat?: {};
   updatedat?: string;
   id?: number;
   institution_id?: number;
-  tags?: string[];
   capacity: number;
   name: string;
+};
+
+type Room = {
+  room: RoomData;
+  roomtaints: string[];
+  roomlabels: string[];
 };

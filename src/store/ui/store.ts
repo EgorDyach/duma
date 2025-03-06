@@ -5,7 +5,7 @@ import {
   ModalTypes,
   UIState,
   ModalContent,
-  DisplayedTabs,
+  DisplayedTab,
 } from './types';
 import { uiInitialState } from './constants';
 import { User } from '@type/user';
@@ -14,8 +14,8 @@ const uiSlice = createSlice({
   name: uiStateName,
   initialState: uiInitialState,
   reducers: {
-    setActiveTabs(state, { payload }: PayloadAction<keyof DisplayedTabs>) {
-      state.activeTabs[payload] = !state.activeTabs[payload];
+    setActiveTab(state, { payload }: PayloadAction<DisplayedTab>) {
+      state.activeTab = payload as DisplayedTab;
     },
     setUser(state, { payload }: PayloadAction<User | null>) {
       state.user = payload;

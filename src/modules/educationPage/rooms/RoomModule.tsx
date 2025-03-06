@@ -11,6 +11,7 @@ import { AddingRoomModal } from './AddingRoomModal';
 import { useEffectOnce } from '@hooks/useEffectOnce';
 import { fetchAllRooms } from '@store/institution/thunks';
 import { Text } from '@components/Typography';
+import { useEffect } from 'react';
 
 export const MODAL_NAME = 'addRoom';
 
@@ -18,9 +19,15 @@ const RoomModule = () => {
   const rooms = useSelector(institutionSelectors.getRooms);
   const requests = useSelector(uiSelectors.getRequests);
   const dispatch = useAppDispatch();
+
   useEffectOnce(() => {
     dispatch(fetchAllRooms());
   });
+
+  useEffect(() => {
+    console.log('room0: ', rooms[0]);
+  }, [rooms]);
+
   return (
     <Flex flex="2" direction="column" gap="8px" align="start">
       <Modal modalName={MODAL_NAME}>
@@ -43,11 +50,11 @@ const RoomModule = () => {
       {requests['rooms'] !== 'pending' && (
         <Flex wrap="wrap" gap="11px">
           {[...rooms]
-            .sort((a, b) => a.name.localeCompare(b.name))
-            .map((item) => {
+            // .sort((a, b) => a.room.name.localeCompare(b.room.name))
+            .map((item, index) => {
               return (
                 <Button
-                  key={item.id}
+                  key={index}
                   size="large"
                   onClick={() =>
                     dispatch(
@@ -59,7 +66,10 @@ const RoomModule = () => {
                     )
                   }
                 >
-                  <Text>{item.name}</Text>
+                  <Text>
+                    {/* {item.room.name} */}
+                    {String(item.room.name)}
+                  </Text>
                 </Button>
               );
             })}

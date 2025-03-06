@@ -11,7 +11,7 @@ import {
 
 const getState = (store: StoreWithUIState): UIState => store[uiStateName];
 
-export const getActiveTabs = (s: StoreWithUIState) => getState(s).activeTabs;
+export const getActiveTabs = (s: StoreWithUIState) => getState(s).activeTab;
 
 export const getUser = (s: StoreWithUIState): User | null => getState(s).user;
 
