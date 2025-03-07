@@ -8,6 +8,7 @@ type TreeNavProps = {
   label?: string;
   children?: ReactNode;
   onSelect?: VoidFunction;
+  selected?: boolean;
 };
 
 const ChevronSign = styled(ChevronIcon)<{ $isOpen: boolean }>`
@@ -19,8 +20,9 @@ const TreeNav: React.FC<TreeNavProps> = ({
   label,
   children,
   onSelect,
+  selected
 }) => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(selected);
 
   return (
     <div
@@ -28,7 +30,6 @@ const TreeNav: React.FC<TreeNavProps> = ({
         padding: 5,
         borderRadius: 10,
         cursor: 'pointer',
-        backgroundColor: '#f5eefe',
       }}
     >
       <Flex
@@ -38,9 +39,9 @@ const TreeNav: React.FC<TreeNavProps> = ({
           onSelect && onSelect();
         }}
         style={{
-          backgroundColor: isOpen && !children ? '#fff' : 'transparent',
+          backgroundColor: isOpen && !children ? '#f5eefe' : 'transparent',
           padding: 10,
-        borderRadius: 10
+          borderRadius: 10,
         }}
       >
         {children && (
@@ -48,12 +49,12 @@ const TreeNav: React.FC<TreeNavProps> = ({
             stroke="#641aee"
             width="16px"
             height="16px"
-            $isOpen={isOpen}
+            $isOpen={(children ? isOpen : selected) as boolean}
           />
         )}
         <Text>{label}</Text>
       </Flex>
-      {isOpen && <div style={{ marginLeft: 15 }}>{children}</div>}
+      {isOpen && <div style={{ marginLeft: 25 }}>{children}</div>}
     </div>
   );
 };

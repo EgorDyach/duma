@@ -17,7 +17,7 @@ import {
   StyledRow,
   StyledTable,
 } from '@components/Table/TableStyles';
-import BoxElement from '@components/TreeNavigator/TreeNavigator';
+import TreeNav from '@components/TreeNavigator/TreeNavigator';
 import { useState } from 'react';
 import PenIcon from '@components/icons/PenIcon';
 import Button from '@components/Button';
@@ -54,14 +54,22 @@ const TeacherModule = () => {
       </Title>
       {requests['teachers'] === 'pending' && <ContentLoader size={32} />}
       {requests['teachers'] !== 'pending' && (
-        <Flex wrap="nowrap" gap="10px" style={{ width: '100%' }}>
-          <BoxElement label="Организация">
-            <BoxElement
+        <Flex wrap="nowrap" gap="10px" style={{ width: '100%' }} flex="1">
+          <TreeNav label="Организация">
+            <TreeNav
               label="Кафедра"
-              onSelect={() => setDisplauyedTeachers(true)}
+              onSelect={() => setDisplauyedTeachers(!displayedTeachers)}
+              selected={displayedTeachers}
             />
-          </BoxElement>
-          <div style={{ width: '100%' }}>
+          </TreeNav>
+          <div
+            style={{
+              height: 100,
+              width: '100%',
+              backgroundColor: '#f5eefe',
+              borderRadius: 10,
+            }}
+          >
             <StyledTable>
               <thead>
                 <tr>
@@ -80,23 +88,23 @@ const TeacherModule = () => {
                         <StyledRow style={{ maxHeight: 60 }} key={item.id}>
                           <StyledCell>
                             <Flex gap="10px" align="center">
-                            <Button
-                              onClick={() =>
-                                dispatch(
-                                  uiActions.openModal({
-                                    modalName: MODAL_NAME,
-                                    isEditing: true,
-                                    value: item,
-                                  }),
-                                )
-                              }
-                            >
-                              <PenIcon
-                                width="16px"
-                                height="16px"
-                                fill="#641aee"
-                              />
-                            </Button>
+                              <Button
+                                onClick={() =>
+                                  dispatch(
+                                    uiActions.openModal({
+                                      modalName: MODAL_NAME,
+                                      isEditing: true,
+                                      value: item,
+                                    }),
+                                  )
+                                }
+                              >
+                                <PenIcon
+                                  width="16px"
+                                  height="16px"
+                                  fill="#641aee"
+                                />
+                              </Button>
                               <Text>{item.fullname}</Text>
                             </Flex>
                           </StyledCell>
@@ -116,6 +124,18 @@ const TeacherModule = () => {
                 </tbody>
               )}
             </StyledTable>
+            {!displayedTeachers && (
+              <Flex
+                flex="1"
+                align="center"
+                justify="center"
+                style={{ paddingTop: 10 }}
+              >
+                <Text $size="subheader" $color="#eadafe">
+                  Выберите кафедру
+                </Text>
+              </Flex>
+            )}
           </div>
         </Flex>
       )}

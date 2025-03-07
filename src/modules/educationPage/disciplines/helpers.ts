@@ -31,7 +31,7 @@ export const displayFilteredDisciplines = (
   }
 
   if (filters.group.length) {
-    newDisciplines = disciplines.filter((el) => {
+    newDisciplines = newDisciplines.filter((el) => {
       return filters.group.some((group) =>
         el.groups.map((gr) => gr.id).includes(group),
       );
