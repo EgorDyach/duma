@@ -31,7 +31,7 @@ const ExitButton = styled.button`
   height: 45px;
   border: none;
   border-radius: 10px;
-  background-color: red;
+  background-color: #e85d5d;
   color: white; /* Цвет текста, если вы добавите текст */
   cursor: pointer;
   font-size: 12px; /* Размер шрифта, если вы добавите текст */
@@ -43,7 +43,7 @@ const ExitButton = styled.button`
     transform 0.2s;
 
   &:hover {
-    background-color: #9b0c0c;
+    background-color: #ff5d5d;
     transform: scale(1.05);
   }
 
