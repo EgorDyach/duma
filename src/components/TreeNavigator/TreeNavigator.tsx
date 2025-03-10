@@ -11,7 +11,7 @@ type TreeNavProps = {
   selected?: boolean;
 };
 
-const ChevronSign = styled(ChevronIcon)<{ $isOpen: boolean }>`
+export const ChevronSign = styled(ChevronIcon)<{ $isOpen: boolean }>`
   transform: rotate(${(props) => (+props.$isOpen ? 0 : -90)}deg);
   transition: all 0.1s;
 `;

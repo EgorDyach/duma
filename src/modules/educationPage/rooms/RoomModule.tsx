@@ -10,8 +10,10 @@ import { useSelector } from 'react-redux';
 import { AddingRoomModal } from './AddingRoomModal';
 import { useEffectOnce } from '@hooks/useEffectOnce';
 import { fetchAllRooms } from '@store/institution/thunks';
-import { Text } from '@components/Typography';
 import { useEffect } from 'react';
+import { StyledTable, StyledHeaderCell, StyledRow, StyledCell } from '@components/Table/TableStyles';
+import PenIcon from '@components/icons/PenIcon';
+import { roomLabels, roomTaints } from './constants';
 
 export const MODAL_NAME = 'addRoom';
 
@@ -48,31 +50,78 @@ const RoomModule = () => {
       </Title>
       {requests['rooms'] === 'pending' && <ContentLoader size={32} />}
       {requests['rooms'] !== 'pending' && (
-        <Flex wrap="wrap" gap="11px">
+        <Flex wrap="wrap" gap="11px" style={{ width: '100%' }}>
+          <StyledTable>
+            <thead>
+              <StyledHeaderCell />
+              <StyledHeaderCell>Название</StyledHeaderCell>
+              <StyledHeaderCell>Вместимость</StyledHeaderCell>
+              <StyledHeaderCell>Метки</StyledHeaderCell>
+              <StyledHeaderCell>Ограничения</StyledHeaderCell>
+            </thead>
+            <tbody>
           {[...rooms]
-            // .sort((a, b) => a.room.name.localeCompare(b.room.name))
+            .sort((a, b) => a.room.name.localeCompare(b.room.name))
             .map((item, index) => {
               return (
-                <Button
-                  key={index}
-                  size="large"
-                  onClick={() =>
-                    dispatch(
-                      uiActions.openModal({
-                        modalName: MODAL_NAME,
-                        isEditing: true,
-                        value: item,
-                      }),
-                    )
-                  }
-                >
-                  <Text>
-                    {/* {item.room.name} */}
-                    {String(item.room.name)}
-                  </Text>
-                </Button>
+                // <Button
+                //   key={index}
+                //   size="large"
+                //   onClick={() =>
+                //     dispatch(
+                //       uiActions.openModal({
+                //         modalName: MODAL_NAME,
+                //         isEditing: true,
+                //         value: item,
+                //       }),
+                //     )
+                //   }
+                // >
+                //   <Text>
+                //     {item.room.name}
+                //   </Text>
+                // </Button>
+                <StyledRow>
+                  <StyledCell>
+                    <Button
+                      key={index}
+                      size="large"
+                      onClick={() =>
+                        dispatch(
+                          uiActions.openModal({
+                            modalName: MODAL_NAME,
+                            isEditing: true,
+                            value: item,
+                          }),
+                        )
+                      }
+                    >
+                      <PenIcon width="16px" height="16px" fill="#641aee" />
+                    </Button>
+                  </StyledCell>
+                  <StyledCell>{item.room.name}</StyledCell>
+                  <StyledCell>{item.room.capacity}</StyledCell>
+                  <StyledCell>
+                    {item.roomlabels
+                      .map((label) =>
+                        roomLabels.find((val) => val.id === label.label_value),
+                      )
+                      .map((val) => val?.name)
+                      .join(', ')}
+                  </StyledCell>
+                  <StyledCell>
+                    {item.roomtaints
+                      .map((taint) =>
+                        roomTaints.find((val) => val.id === taint.taint_value),
+                      )
+                      .map((val) => val?.name)
+                      .join(', ')}
+                  </StyledCell>
+                </StyledRow>
               );
             })}
+            </tbody>
+            </StyledTable>
         </Flex>
       )}
     </Flex>

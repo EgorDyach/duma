@@ -103,8 +103,27 @@ type RoomData = {
   name: string;
 };
 
+type RoomLabel = {
+  createdat?: string;
+  deletedAt?: {};
+  id?: number;
+  label_value: string;
+  room_id?: number;
+  updatedat?: string;
+};
+
+type RoomTaint = {
+  createat?: string;
+  deletedat?: {};
+  id?: number;
+  room_id?: number;
+  should_exist?: boolean;
+  taint_value: string;
+  updatedat?: string;
+};
+
 type Room = {
   room: RoomData;
-  roomtaints: string[];
-  roomlabels: string[];
+  roomtaints: RoomTaint[];
+  roomlabels: RoomLabel[];
 };

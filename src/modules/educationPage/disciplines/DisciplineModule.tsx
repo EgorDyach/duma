@@ -74,14 +74,15 @@ const DisciplineModule = () => {
     dispatch(fetchAllGroups());
   });
 
-  const setFilterField = (field: keyof Filters, value: number) => {
-    const newFilters = { ...filters };
-    if (filters[field]?.includes(value)) {
-      newFilters[field] = filters[field]?.filter((el) => el !== value) || null;
-    } else {
-      newFilters[field]?.push(value);
-    }
-    setFilters(newFilters);
+  const setFilterField = (field: keyof Filters, value: (string | number)[]) => {
+    // const newFilters = { ...filters };
+    // if (filters[field]?.includes(value)) {
+    //   newFilters[field] = filters[field]?.filter((el) => el !== value) || null;
+    // } else {
+    //   newFilters[field]?.push(value);
+    // }
+    // setFilters(newFilters);
+    setFilters((prev) => ({...prev, [field]: value}))
   };
 
   useEffect(() => {
@@ -129,7 +130,7 @@ const DisciplineModule = () => {
           }))}
           selectedOptions={filters.subject}
           setSelectedOptions={(index) => {
-            setFilterField('subject' as keyof Filters, +index);
+            setFilterField('subject' as keyof Filters, index);
           }}
           label="Предметы"
         />
@@ -140,7 +141,7 @@ const DisciplineModule = () => {
           }))}
           selectedOptions={filters.group}
           setSelectedOptions={(index) => {
-            setFilterField('group' as keyof Filters, +index);
+            setFilterField('group' as keyof Filters, index);
           }}
           label="Группы"
         />
