@@ -21,7 +21,7 @@ import TreeNav from '@components/TreeNavigator/TreeNavigator';
 import { useState } from 'react';
 import PenIcon from '@components/icons/PenIcon';
 import Button from '@components/Button';
-// import Calendar from 'react-calendar';
+import PopupCalendar from '@components/PopupCalendar';
 
 export const MODAL_NAME = 'addTeacher';
 
@@ -116,6 +116,11 @@ const TeacherModule = () => {
                                 <Text>{holiday.date.slice(0, 10)}, </Text>
                               ))} */}
                               {/* <Calendar /> */}
+                              <PopupCalendar
+                                value={item.holidays?.map((el) => 
+                                  new Date(String(el.date))
+                                )}
+                              />
                             </Flex>
                           </StyledCell>
                         </StyledRow>

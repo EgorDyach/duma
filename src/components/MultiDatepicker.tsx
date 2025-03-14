@@ -4,36 +4,59 @@ import styled from 'styled-components';
 import 'react-calendar/dist/Calendar.css';
 import CloseIcon from '@components/icons/CloseIcon';
 import Flex from '@components/Flex';
-import { Text } from './Typography';
+import Checkbox from './Checkbox';
 
 // --------------------
 // Styled Components
 // --------------------
 
-const StyledCalendar = styled(Calendar)`
-  border: none;
-  width: 100% !important;
+export const StyledCalendar = styled(Calendar)`
+  border: 1.2px solid #641aee !important;
+  border-radius: 10px;
+
+  .react-calendar__tile {
+    aspect-ratio: 1;
+    padding-inline: 0;
+    position: relative;
+    abbr {
+      z-index: 2;
+      position: relative;
+    }
+  }
+
   .react-calendar__tile--now {
-    background: #eec01a !important;
-    color: white;
-    border-radius: 8px;
+    background: #eadafe !important;
+    color: #641aee;
   }
 
   .react-calendar__tile--active {
     background: transparent !important;
     color: #000;
-    border-radius: 8px;
   }
   .react-calendar__tile.selected {
-    background: #641aee !important;
+    background: transparent !important;
     color: white;
-    border-radius: 8px;
   }
 
-  .react-calendar__month-view__days__day--neighboringMonth.selected {
-    background: #9663f4 !important;
-    color: white;
-    border-radius: 8px;
+  .react-calendar__tile:enabled:hover {
+    background-color: #f5eefe;
+  }
+
+  .react-calendar__navigation button:enabled:hover,
+  .react-calendar__navigation button:enabled:focus {
+    background-color: #f5eefe !important;
+  }
+
+  .react-calendar__navigation button:disabled {
+    background-color: #eadafe !important;
+  }
+
+  .react-calendar__navigation button:first-of-type {
+    border-top-left-radius: 10px;
+  }
+
+  .react-calendar__navigation button:last-of-type {
+    border-top-right-radius: 10px;
   }
 `;
 
@@ -121,6 +144,7 @@ export interface MultiDatePickerProps {
    * Callback, вызываемый при изменении выбранных дат
    */
   onChange?: (dates: Date[]) => void;
+  isEditable?: boolean;
 }
 
 // --------------------
@@ -130,6 +154,7 @@ export interface MultiDatePickerProps {
 export const MultiDatePicker: React.FC<MultiDatePickerProps> = ({
   value = [],
   onChange = () => {},
+  isEditable = true
 }) => {
   // Локальное состояние выбранных дат, текущего месяца и "ожидаемой" даты
   const [selectedDates, setSelectedDates] = useState<Date[]>(value);
@@ -305,9 +330,11 @@ export const MultiDatePicker: React.FC<MultiDatePickerProps> = ({
   const ranges = groupDatesToRanges(selectedDates);
 
   return (
-    <div>
+    <div style={{ maxWidth: 530 }}>
       <Flex gap="10px" direction="column">
         {/* Список сгруппированных диапазонов (для всех выбранных дат) */}
+        {isEditable &&
+        <>
         <DateList>
           {ranges.map((range, index) => (
             <li key={index}>
@@ -324,30 +351,61 @@ export const MultiDatePicker: React.FC<MultiDatePickerProps> = ({
         <Flex wrap="wrap" gap="8px">
           {daysOfWeek.map((day) => (
             <DayCheckbox key={day.value}>
-              <input
-                type="checkbox"
+              <Checkbox
                 checked={isWeekdayFullySelected(day.value, currentMonth)}
-                onChange={() => handleWeekdayToggle(day.value)}
+                setChecked={() => handleWeekdayToggle(day.value)}
               />
               {day.name}
             </DayCheckbox>
           ))}
         </Flex>
+        </>}
         {/* Календарь – теперь передаём activeStartDate для управления отображаемым месяцем */}
-        <StyledCalendar
-          activeStartDate={currentMonth}
-          minDate={new Date(new Date().getFullYear(), 0, 1)}
-          maxDate={new Date(new Date().getFullYear(), 11, 31)}
-          locale="ru-RU"
-          onClickWeekNumber={(weekNumber, date) =>
-            alert('Clicked week: ' + weekNumber + 'that starts on: ' + date)
-          }
-          // @ts-ignore
-          onActiveStartDateChange={handleMonthChange}
-          onClickDay={handleDayClick}
-          tileClassName={tileClassName}
-        />
-        <Flex gap="12px">
+        <Flex justify='center'>
+          <StyledCalendar
+            tileContent={(el) => (
+              <div
+                style={{
+                  position: 'absolute',
+                  top: 5,
+                  left: 0,
+                  width: 50,
+                  height: 40,
+                  backgroundColor: selectedDates.some((date) =>
+                    isSameDate(date, el.date),
+                  )
+                    ? '#641aee'
+                    : 'transparent',
+                  borderRadius: '0',
+                  borderTopLeftRadius:
+                    ranges.find((range) => isSameDate(range.start, el.date)) &&
+                    25,
+                  borderBottomLeftRadius:
+                    ranges.find((range) => isSameDate(range.start, el.date)) &&
+                    25,
+                  borderTopRightRadius:
+                    ranges.find((range) => isSameDate(range.end, el.date)) &&
+                    25,
+                  borderBottomRightRadius:
+                    ranges.find((range) => isSameDate(range.end, el.date)) &&
+                    25,
+                }}
+              />
+            )}
+            activeStartDate={currentMonth}
+            minDate={new Date(new Date().getFullYear(), 0, 1)}
+            maxDate={new Date(new Date().getFullYear(), 11, 31)}
+            locale="ru-RU"
+            onClickWeekNumber={(weekNumber, date) =>
+              alert('Clicked week: ' + weekNumber + 'that starts on: ' + date)
+            }
+            // @ts-ignore
+            onActiveStartDateChange={handleMonthChange}
+            onClickDay={(date) => isEditable && handleDayClick(date)}
+            tileClassName={tileClassName}
+          />
+        </Flex>
+        {/* <Flex gap="12px">
           <Text>
             <div
               style={{
@@ -381,7 +439,7 @@ export const MultiDatePicker: React.FC<MultiDatePickerProps> = ({
             />{' '}
             – выбрано (др. месяц)
           </Text>
-        </Flex>
+        </Flex> */}
       </Flex>
     </div>
   );

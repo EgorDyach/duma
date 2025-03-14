@@ -20,6 +20,7 @@ import {
 import { Text } from '@components/Typography';
 import PenIcon from '@components/icons/PenIcon';
 import Button from '@components/Button';
+import PopupCalendar from '@components/PopupCalendar';
 
 export const MODAL_NAME = 'addGroup';
 
@@ -117,7 +118,9 @@ const GroupModule = () => {
                           (profile) => profile.id === item.profile_id,
                         )?.name || 'Не указано'}
                       </StyledCell>
-                      <StyledCell></StyledCell>
+                      <StyledCell>
+                        <PopupCalendar value={item.holidays?.map((holiday) => new Date(holiday.date))}/>
+                      </StyledCell>
                     </StyledRow>
                   );
                 })}

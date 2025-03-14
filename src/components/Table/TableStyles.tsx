@@ -18,7 +18,6 @@ export const StyledHeaderCell = styled.th`
 
 export const StyledCell = styled.td`
   padding: 10px;
-  cursor: pointer;
   text-align: center;
 `;
 
