@@ -1,30 +1,38 @@
-# React + TypeScript + Vite
+# Duma
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Описание
+Duma – это интернет-платформа для образовательных организаций. На данный момент реализованы:
+- Страница входа в приложение
+- Страница управления заведениями (для админа)
+- Модуль управления учебными сменами (1-ая, 2-ая и т. д.)
+- Модуль управления профилями (Физический, гуманитарный и т. д.)
+- Модуль управления учителями
+- Модуль управления аудиториями
+- Модуль управления группами
+- Модуль управления предметами и дисциплинами
 
-Currently, two official plugins are available:
+## Готовый проект
+Проект уже выложен на ресурсе `https://dumadevs.netlify.app/`. 
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Установка и запуск
+Для установки и запуска выполните следующие команды:
 
-## Expanding the ESLint configuration
+```sh
+# Клонируем репозиторий
+git clone https://github.com/EgorDyach/duma.git
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+# Переходим в папку проекта
+cd duma
 
-- Configure the top-level `parserOptions` property like this:
+# Устанавливаем зависимости
+npm install
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-};
+# Запускаем сервер разработки
+npm run dev
 ```
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+## Использование
+После запуска сервер разработки будет доступен по адресу `http://localhost:5173`. В панель можно войти, если у вас есть соответствующие права доступа.
+
+## Лицензия
+Этот проект распространяется под лицензией **Creative Commons Legal Code**.
