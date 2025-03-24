@@ -10,6 +10,9 @@ interface TagGeneratorProps {
   tags: string[];
   setTags: (n: string[]) => void;
   className?: string;
+  label?: string;
+  placeholder?: string;
+  tagDuplicationText?: string;
 }
 
 const Container = styled.div`
@@ -69,6 +72,9 @@ const TagGenerator: React.FC<TagGeneratorProps> = ({
   tags,
   setTags,
   className = '',
+  label = 'Добавить тег',
+  placeholder = 'Название тега...',
+  tagDuplicationText = 'Данный тег существует!',
 }) => {
   const [inputValue, setInputValue] = React.useState('');
 
@@ -76,7 +82,7 @@ const TagGenerator: React.FC<TagGeneratorProps> = ({
     if (inputValue.trim() && !tags.includes(inputValue.trim())) {
       setTags([...tags, inputValue.trim()]);
       setInputValue('');
-    } else showErrorNotification('Данный тег существует!');
+    } else showErrorNotification(tagDuplicationText);
   };
 
   const removeTag = (index: number) => {
@@ -88,11 +94,11 @@ const TagGenerator: React.FC<TagGeneratorProps> = ({
     <Container className={className}>
       <InputContainer>
         <Input
-          label="Название тега"
+          label={label}
           value={inputValue}
           onChange={(e) => setInputValue(e)}
           onKeyDown={(e) => e.key === 'Enter' && addTag()}
-          placeholder="Название тега..."
+          placeholder={placeholder}
           name={''}
         />
         <SubmitButton onClick={addTag} isLoading={false}>

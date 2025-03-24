@@ -13,7 +13,6 @@ import { fetchAllRooms } from '@store/institution/thunks';
 import { useEffect } from 'react';
 import { StyledTable, StyledHeaderCell, StyledRow, StyledCell } from '@components/Table/TableStyles';
 import PenIcon from '@components/icons/PenIcon';
-import { roomLabels, roomTaints } from './constants';
 
 export const MODAL_NAME = 'addRoom';
 
@@ -57,30 +56,12 @@ const RoomModule = () => {
               <StyledHeaderCell>Название</StyledHeaderCell>
               <StyledHeaderCell>Вместимость</StyledHeaderCell>
               <StyledHeaderCell>Метки</StyledHeaderCell>
-              <StyledHeaderCell>Ограничения</StyledHeaderCell>
             </thead>
             <tbody>
           {[...rooms]
             .sort((a, b) => a.room.name.localeCompare(b.room.name))
             .map((item, index) => {
               return (
-                // <Button
-                //   key={index}
-                //   size="large"
-                //   onClick={() =>
-                //     dispatch(
-                //       uiActions.openModal({
-                //         modalName: MODAL_NAME,
-                //         isEditing: true,
-                //         value: item,
-                //       }),
-                //     )
-                //   }
-                // >
-                //   <Text>
-                //     {item.room.name}
-                //   </Text>
-                // </Button>
                 <StyledRow>
                   <StyledCell>
                     <Button
@@ -103,18 +84,7 @@ const RoomModule = () => {
                   <StyledCell>{item.room.capacity}</StyledCell>
                   <StyledCell>
                     {item.roomlabels
-                      .map((label) =>
-                        roomLabels.find((val) => val.id === label.label_value),
-                      )
-                      .map((val) => val?.name)
-                      .join(', ')}
-                  </StyledCell>
-                  <StyledCell>
-                    {item.roomtaints
-                      .map((taint) =>
-                        roomTaints.find((val) => val.id === taint.taint_value),
-                      )
-                      .map((val) => val?.name)
+                      .map((val) => val.label_value)
                       .join(', ')}
                   </StyledCell>
                 </StyledRow>

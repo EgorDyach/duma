@@ -22,8 +22,8 @@ export const StyledInput = withIndentStyles(styled.input`
 `);
 
 export const StyledLabel = styled(Text)`
-  color: rgba(0, 0, 0, 0.31);
-  font-size: 16px;
+  color: balck;
+  font-size: 18px;
 `;
 
 export const ErrorText = styled(Text)`

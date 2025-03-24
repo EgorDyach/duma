@@ -18,10 +18,8 @@ import { validateRoom } from './helpers';
 import { institutionSelectors } from '@store/institution';
 import { showErrorNotification } from '@lib/utils/notification';
 import Input from '@components/input/Input';
-// import Tags from '@components/Tags';
 import { Text } from '@components/Typography';
-import MultiDropdown from '@components/MultiDropdown';
-import { roomLabels, roomTaints } from './constants';
+import Tags from '@components/Tags';
 
 const ITEM_INIT_DATA: Room = {
   room: {
@@ -96,12 +94,20 @@ export const AddingRoomModal = () => {
           value={String(newItem.room.capacity)}
         />
       </Flex>
-      <Flex $top="medium" direction="column" gap='10px'>
-        {/* <Tags
-          setTags={(n) => setNewItem((prev) => ({ ...prev, roomtaints: n }))}
-          tags={newItem.roomlabels ?? []}
-        /> */}
-        <MultiDropdown
+      <Flex $top="medium" direction="column" gap="10px">
+        <Tags
+          label="Добавить метку"
+          placeholder="Название метки..."
+          tagDuplicationText="Такая метка уже существует!"
+          setTags={(n) =>
+            setNewItem((prev) => ({
+              ...prev,
+              roomlabels: n.map((el) => ({ label_value: el })),
+            }))
+          }
+          tags={newItem.roomlabels.map((label) => label.label_value) || []}
+        />
+        {/* <MultiDropdown
           label="Метки аудитории"
           options={roomLabels}
           selectedOptions={newItem.roomlabels.map((label) => label.label_value)}
@@ -126,7 +132,7 @@ export const AddingRoomModal = () => {
                 .map((taint) => ({ taint_value: taint.id })),
             }))
           }
-        />
+        /> */}
       </Flex>
       <Flex justify="flex-end">
         <Flex direction="column">

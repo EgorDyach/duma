@@ -12,7 +12,7 @@ import {
   fetchAllDisciplines,
   fetchAllGroups,
   fetchAllSubjects,
-  fetchRemoveCourse,
+  fetchAllTeachers,
 } from '@store/institution/thunks';
 import { SubHeader, Text } from '@components/Typography';
 import styled from 'styled-components';
@@ -21,10 +21,10 @@ import {
   MODAL_NAME as MODAL_COURSE_NAME,
 } from './AddingCourseModal';
 import Button from '@components/Button';
-import CloseIcon from '@components/icons/CloseIcon';
 import MultiDropdown from '@components/MultiDropdown';
 import { useEffect, useState } from 'react';
 import { displayFilteredDisciplines } from './helpers';
+import PenIcon from '@components/icons/PenIcon';
 
 const StyledFlex = styled(Flex)`
   padding: 11px;
@@ -37,7 +37,7 @@ const StyledFlex = styled(Flex)`
     color 0.2s ease-in-out;
 `;
 
-const StyledIcon = styled(CloseIcon)`
+const StyledIcon = styled(PenIcon)`
   cursor: pointer;
 `;
 
@@ -72,7 +72,15 @@ const DisciplineModule = () => {
     dispatch(fetchAllSubjects());
     dispatch(fetchAllDisciplines());
     dispatch(fetchAllGroups());
+    dispatch(fetchAllTeachers());
   });
+
+  useEffect(() => {
+    console.log(
+      'disc',
+      disciplines.find((el) => el.id === 0),
+    );
+  }, [courses]);
 
   const setFilterField = (field: keyof Filters, value: (string | number)[]) => {
     // const newFilters = { ...filters };
@@ -82,12 +90,11 @@ const DisciplineModule = () => {
     //   newFilters[field]?.push(value);
     // }
     // setFilters(newFilters);
-    setFilters((prev) => ({...prev, [field]: value}))
+    setFilters((prev) => ({ ...prev, [field]: value }));
   };
 
   useEffect(() => {
     setDisplayedDisciplines(displayFilteredDisciplines(filters, disciplines));
-    console.log('filters updated');
   }, [filters, disciplines]);
 
   return (
@@ -213,35 +220,55 @@ const DisciplineModule = () => {
                     action={() => {
                       dispatch(
                         uiActions.openModal({
-                          isEditing: true,
+                          isEditing: false,
                           value: {
-                            discipline_id: item.id as number,
-                            teacher_id: -1,
+                            courseaffinity: [],
+                            coursetoleration: [],
+                            course: {
+                              discipline_id: item.id as number,
+                              teacher_id: -1,
+                            },
                           },
                           modalName: 'addCourse',
                         }),
                       );
                     }}
                   >
-                    Учителя
+                    Курсы
                   </Title>
                   <Flex wrap="wrap" gap="11px">
                     {courses
-                      .filter((el) => el.discipline_id === item.id)
+                      .filter((el) => el.course.discipline_id === item.id)
                       .map((el) => {
                         const teacher = teachers.find(
-                          (t) => t.id === el.teacher_id,
+                          (t) => t.id === el.course.teacher_id,
                         );
+                        console.log('teacher', courses);
                         return teacher ? (
                           <Button>
                             <Flex gap="12px">
                               <Text>{teacher.fullname}</Text>
-                              <StyledIcon
+                              {/* <StyledIcon
                                 color="red"
                                 width="20px"
                                 height="20px"
                                 onClick={() =>
-                                  dispatch(fetchRemoveCourse(el.id as number))
+                                  dispatch(
+                                    fetchRemoveCourse(el.course.id as number),
+                                  )
+                                }
+                              /> */}
+                              <StyledIcon
+                                width="16px"
+                                height="16px"
+                                onClick={() =>
+                                  dispatch(
+                                    uiActions.openModal({
+                                      isEditing: true,
+                                      value: el,
+                                      modalName: 'addCourse',
+                                    }),
+                                  )
                                 }
                               />
                             </Flex>

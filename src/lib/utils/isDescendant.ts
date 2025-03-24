@@ -4,7 +4,6 @@ export function isDescendant(
 ) {
   var node = child.parentNode;
   while (node != null) {
-    console.log(node, parent, child);
     if (node == parent) {
       return true;
     }

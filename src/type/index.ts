@@ -62,7 +62,7 @@ type Discipline = {
   subject_id: number;
 };
 
-type Course = {
+type CourseData = {
   createdat?: string;
   deletedat?: {};
   updatedat?: string;
@@ -71,6 +71,23 @@ type Course = {
   discipline_id: number;
   teacher_id: number;
 };
+
+type CourseAffinity = {
+  course_id?: number;
+  createdAt?: string;
+  deletedAt?: {};
+  entity: string;
+  id?: 0;
+  label?: string;
+  should_exist: boolean;
+  updatedAt?: string;
+};
+
+type Course = {
+  course: CourseData;
+  courseaffinity: CourseAffinity[];
+  coursetoleration: [];
+}
 
 type LessonTime = {
   createdat?: string;
