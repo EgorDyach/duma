@@ -1,10 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
 import Input from '@components/input/Input';
-import Button from '@modules/authPage/Button';
 import CloseIcon from './icons/CloseIcon';
 import { Text } from './Typography';
 import { showErrorNotification } from '@lib/utils/notification';
+import PlusIcon from './icons/PlusIcon';
+import Flex from './Flex';
 
 interface TagGeneratorProps {
   tags: string[];
@@ -29,29 +30,23 @@ const InputContainer = styled.div`
 
 const TagList = styled.div`
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
   gap: 8px;
   margin-top: 8px;
+  max-height: 155px;
+  overflow-y: scroll;
 `;
 
 const TagItem = styled.div`
+  width: 100%;
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 8px;
-  background-color: #e5e7eb;
-  border-radius: 16px;
-  padding: 8px 12px;
-`;
-
-const SubmitButton = styled(Button)`
-  width: auto;
-  height: auto;
-  padding: 4px 12px;
-  height: 42px !important;
-  &:focus {
-    box-shadow: none;
-    outline: none;
-  }
+  border: 1.2px solid #641aee;
+  border-radius: 22px;
+  padding: 8px;
+  padding-left: 12px;
 `;
 
 const IconButton = styled.button`
@@ -65,6 +60,10 @@ const IconButton = styled.button`
   }
 `;
 const StyledIcon = styled(CloseIcon)`
+  cursor: pointer;
+`;
+
+const StyledPlusIcon = styled(PlusIcon)`
   cursor: pointer;
 `;
 
@@ -101,16 +100,16 @@ const TagGenerator: React.FC<TagGeneratorProps> = ({
           placeholder={placeholder}
           name={''}
         />
-        <SubmitButton onClick={addTag} isLoading={false}>
-          Добавить
-        </SubmitButton>
+        <Flex align="center" justify="center" style={{ paddingBottom:  12 }} onClick={addTag}>
+          <StyledPlusIcon color="#641AEE" size={24} />
+        </Flex>
       </InputContainer>
       <TagList>
         {tags.map((tag, index) => (
           <TagItem key={index}>
             <Text>{tag}</Text>
             <IconButton onClick={() => removeTag(index)}>
-              <StyledIcon width="16px" height="16px" color="#ef4444" />
+              <StyledIcon size={24} color="#ef4444" />
             </IconButton>
           </TagItem>
         ))}

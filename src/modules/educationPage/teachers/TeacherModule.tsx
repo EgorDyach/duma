@@ -108,17 +108,11 @@ const TeacherModule = () => {
                               <Text>{item.fullname}</Text>
                             </Flex>
                           </StyledCell>
-                          <StyledCell
-                            style={{ overflow: 'scroll', padding: 0 }}
-                          >
+                          <StyledCell style={{ padding: 0 }}>
                             <Flex direction="column" style={{ padding: 0 }}>
-                              {/* {item.holidays?.map((holiday) => (
-                                <Text>{holiday.date.slice(0, 10)}, </Text>
-                              ))} */}
-                              {/* <Calendar /> */}
                               <PopupCalendar
-                                value={item.holidays?.map((el) => 
-                                  new Date(String(el.date))
+                                value={item.holidays?.map(
+                                  (el) => new Date(String(el.date)),
                                 )}
                               />
                             </Flex>

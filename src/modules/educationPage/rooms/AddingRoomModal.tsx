@@ -59,7 +59,7 @@ export const AddingRoomModal = () => {
           </StyledModalTitle>
         </Flex>
       </Flex>
-      <Flex gap="16px" direction="column" $top="medium">
+      <Flex gap="16px" direction="row" $top="medium">
         <Input
           name=""
           label="Название"
@@ -94,11 +94,23 @@ export const AddingRoomModal = () => {
           value={String(newItem.room.capacity)}
         />
       </Flex>
-      <Flex $top="medium" direction="column" gap="10px">
+      <Flex $top="medium" direction="row" gap="10px">
         <Tags
-          label="Добавить метку"
-          placeholder="Название метки..."
-          tagDuplicationText="Такая метка уже существует!"
+          label="Особенность комнаты"
+          placeholder="Особенность..."
+          tagDuplicationText="Такая особенность уже существует!"
+          setTags={(n) =>
+            setNewItem((prev) => ({
+              ...prev,
+              roomtaints: n.map((el) => ({ taint_value: el })),
+            }))
+          }
+          tags={newItem.roomtaints.map((taint) => taint.taint_value) || []}
+        />
+        <Tags
+          label="Назначение комнаты"
+          placeholder="Назначение..."
+          tagDuplicationText="Такое назначение уже существует!"
           setTags={(n) =>
             setNewItem((prev) => ({
               ...prev,
@@ -107,32 +119,6 @@ export const AddingRoomModal = () => {
           }
           tags={newItem.roomlabels.map((label) => label.label_value) || []}
         />
-        {/* <MultiDropdown
-          label="Метки аудитории"
-          options={roomLabels}
-          selectedOptions={newItem.roomlabels.map((label) => label.label_value)}
-          setSelectedOptions={(n) =>
-            setNewItem((prev) => ({
-              ...prev,
-              roomlabels: roomLabels
-                .filter((label) => n.includes(label.id))
-                .map((label) => ({ label_value: label.id })),
-            }))
-          }
-        />
-        <MultiDropdown
-          label="Ограничения аудитории"
-          options={roomTaints}
-          selectedOptions={newItem.roomtaints.map((taint) => taint.taint_value)}
-          setSelectedOptions={(n) =>
-            setNewItem((prev) => ({
-              ...prev,
-              roomtaints: roomTaints
-                .filter((taint) => n.includes(taint.id))
-                .map((taint) => ({ taint_value: taint.id })),
-            }))
-          }
-        /> */}
       </Flex>
       <Flex justify="flex-end">
         <Flex direction="column">

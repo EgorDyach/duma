@@ -14,7 +14,6 @@ import {
   fetchRemoveSubject,
   fetchUpdateSubject,
 } from '@store/institution/thunks';
-import Tags from '@components/Tags';
 import Input from '@components/input/Input';
 import { validateSubject } from './helpers';
 import { showErrorNotification } from '@lib/utils/notification';
@@ -23,7 +22,6 @@ import { Text } from '@components/Typography';
 
 const ITEM_INIT_DATA: Subject = {
   name: '',
-  tags: [],
 };
 
 export const AddingSubjectModal = () => {
@@ -68,10 +66,6 @@ export const AddingSubjectModal = () => {
       </Flex>
 
       <Flex $top="medium" direction="column">
-        <Tags
-          setTags={(n) => setNewItem((prev) => ({ ...prev, tags: n }))}
-          tags={newItem.tags ?? []}
-        />
       </Flex>
       <Flex justify="flex-end">
         <Flex direction="column">

@@ -87,7 +87,7 @@ type Course = {
   course: CourseData;
   courseaffinity: CourseAffinity[];
   coursetoleration: [];
-}
+};
 
 type LessonTime = {
   createdat?: string;

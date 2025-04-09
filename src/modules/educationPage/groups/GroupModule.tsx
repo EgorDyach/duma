@@ -1,7 +1,6 @@
 import ContentLoader from '@components/ContentLoader';
 import Flex from '@components/Flex';
 import { Modal } from '@components/Modal/Modal';
-// import Button from '@components/Button';
 import { Title } from '@components/Title';
 import { useAppDispatch } from '@hooks/useAppDispatch';
 import { institutionSelectors } from '@store/institution';
@@ -10,7 +9,6 @@ import { useSelector } from 'react-redux';
 import { AddingGroupModal } from './AddingGroupModal';
 import { useEffectOnce } from '@hooks/useEffectOnce';
 import { fetchAllGroups, fetchAllProfiles, fetchAllShifts } from '@store/institution/thunks';
-// import { Text } from '@components/Typography';
 import {
   StyledCell,
   StyledHeaderCell,
@@ -70,20 +68,6 @@ const GroupModule = () => {
                 .sort((a, b) => a.name.localeCompare(b.name))
                 .map((item) => {
                   return (
-                    // <Button
-                    //   key={item.id}
-                    //   onClick={() =>
-                    //     dispatch(
-                    //       uiActions.openModal({
-                    //         modalName: MODAL_NAME,
-                    //         isEditing: true,
-                    //         value: item,
-                    //       }),
-                    //     )
-                    //   }
-                    // >
-                    //   <Text>{item.name}</Text>
-                    // </Button>
                     <StyledRow>
                       <StyledCell>
                         <Button
