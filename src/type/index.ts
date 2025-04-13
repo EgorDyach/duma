@@ -83,10 +83,19 @@ type CourseAffinity = {
   updatedAt?: string;
 };
 
+type CourseToleration = {
+  course_id?: number;
+  createdAt?: string;
+  deletedAt?: {};
+  id?: number;
+  toleration_value: string;
+  updatedAt?: string;
+};
+
 type Course = {
   course: CourseData;
-  courseaffinity: CourseAffinity[];
-  coursetoleration: [];
+  course_affinity: CourseAffinity[];
+  course_toleration: CourseToleration[];
 };
 
 type LessonTime = {
@@ -111,8 +120,8 @@ type Profile = {
 };
 
 type RoomData = {
-  createdat?: string;
-  deletedat?: {};
+  createdAt?: string;
+  deletedAt?: {};
   updatedat?: string;
   id?: number;
   institution_id?: number;
@@ -121,7 +130,7 @@ type RoomData = {
 };
 
 type RoomLabel = {
-  createdat?: string;
+  createdAt?: string;
   deletedAt?: {};
   id?: number;
   label_value: string;
@@ -130,8 +139,8 @@ type RoomLabel = {
 };
 
 type RoomTaint = {
-  createat?: string;
-  deletedat?: {};
+  createAt?: string;
+  deletedAt?: {};
   id?: number;
   room_id?: number;
   should_exist?: boolean;
@@ -141,6 +150,6 @@ type RoomTaint = {
 
 type Room = {
   room: RoomData;
-  roomtaints: RoomTaint[];
-  roomlabels: RoomLabel[];
+  room_taints: RoomTaint[];
+  room_labels: RoomLabel[];
 };

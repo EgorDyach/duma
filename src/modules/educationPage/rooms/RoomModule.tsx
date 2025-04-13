@@ -11,7 +11,12 @@ import { AddingRoomModal } from './AddingRoomModal';
 import { useEffectOnce } from '@hooks/useEffectOnce';
 import { fetchAllRooms } from '@store/institution/thunks';
 import { useEffect } from 'react';
-import { StyledTable, StyledHeaderCell, StyledRow, StyledCell } from '@components/Table/TableStyles';
+import {
+  StyledTable,
+  StyledHeaderCell,
+  StyledRow,
+  StyledCell,
+} from '@components/Table/TableStyles';
 import PenIcon from '@components/icons/PenIcon';
 
 export const MODAL_NAME = 'addRoom';
@@ -55,43 +60,49 @@ const RoomModule = () => {
               <StyledHeaderCell />
               <StyledHeaderCell>Название</StyledHeaderCell>
               <StyledHeaderCell>Вместимость</StyledHeaderCell>
-              <StyledHeaderCell>Метки</StyledHeaderCell>
+              <StyledHeaderCell>Назначение</StyledHeaderCell>
+              <StyledHeaderCell>Особенности</StyledHeaderCell>
             </thead>
             <tbody>
-          {[...rooms]
-            .sort((a, b) => a.room.name.localeCompare(b.room.name))
-            .map((item, index) => {
-              return (
-                <StyledRow>
-                  <StyledCell>
-                    <Button
-                      key={index}
-                      size="large"
-                      onClick={() =>
-                        dispatch(
-                          uiActions.openModal({
-                            modalName: MODAL_NAME,
-                            isEditing: true,
-                            value: item,
-                          }),
-                        )
-                      }
-                    >
-                      <PenIcon width="16px" height="16px" fill="#641aee" />
-                    </Button>
-                  </StyledCell>
-                  <StyledCell>{item.room.name}</StyledCell>
-                  <StyledCell>{item.room.capacity}</StyledCell>
-                  <StyledCell>
-                    {item.roomlabels
-                      .map((val) => val.label_value)
-                      .join(', ')}
-                  </StyledCell>
-                </StyledRow>
-              );
-            })}
+              {[...rooms]
+                .sort((a, b) => a.room.name.localeCompare(b.room.name))
+                .map((item, index) => {
+                  return (
+                    <StyledRow>
+                      <StyledCell>
+                        <Button
+                          key={index}
+                          size="large"
+                          onClick={() =>
+                            dispatch(
+                              uiActions.openModal({
+                                modalName: MODAL_NAME,
+                                isEditing: true,
+                                value: item,
+                              }),
+                            )
+                          }
+                        >
+                          <PenIcon width="16px" height="16px" fill="#641aee" />
+                        </Button>
+                      </StyledCell>
+                      <StyledCell>{item.room.name}</StyledCell>
+                      <StyledCell>{item.room.capacity}</StyledCell>
+                      <StyledCell>
+                        {item.room_labels
+                          .map((val) => val.label_value)
+                          .join(', ')}
+                      </StyledCell>
+                      <StyledCell>
+                        {item.room_taints
+                          .map((val) => val.taint_value)
+                          .join(', ')}
+                      </StyledCell>
+                    </StyledRow>
+                  );
+                })}
             </tbody>
-            </StyledTable>
+          </StyledTable>
         </Flex>
       )}
     </Flex>

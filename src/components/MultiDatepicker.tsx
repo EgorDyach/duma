@@ -154,7 +154,7 @@ export interface MultiDatePickerProps {
 export const MultiDatePicker: React.FC<MultiDatePickerProps> = ({
   value = [],
   onChange = () => {},
-  isEditable = true
+  isEditable = true,
 }) => {
   // Локальное состояние выбранных дат, текущего месяца и "ожидаемой" даты
   const [selectedDates, setSelectedDates] = useState<Date[]>(value);
@@ -333,35 +333,36 @@ export const MultiDatePicker: React.FC<MultiDatePickerProps> = ({
     <div style={{ maxWidth: 530 }}>
       <Flex gap="10px" direction="column">
         {/* Список сгруппированных диапазонов (для всех выбранных дат) */}
-        {isEditable &&
-        <>
-        <DateList>
-          {ranges.map((range, index) => (
-            <li key={index}>
-              {isSameDate(range.start, range.end)
-                ? range.start.toLocaleDateString('ru-RU')
-                : `${range.start.toLocaleDateString('ru-RU')} - ${range.end.toLocaleDateString('ru-RU')}`}
-              <button onClick={() => removeRange(range)}>
-                <CloseIcon color="black" width="24px" height="24px" />
-              </button>
-            </li>
-          ))}
-        </DateList>
-        {/* Чекбоксы для дней недели (только для текущего месяца) */}
-        <Flex wrap="wrap" gap="8px">
-          {daysOfWeek.map((day) => (
-            <DayCheckbox key={day.value}>
-              <Checkbox
-                checked={isWeekdayFullySelected(day.value, currentMonth)}
-                setChecked={() => handleWeekdayToggle(day.value)}
-              />
-              {day.name}
-            </DayCheckbox>
-          ))}
-        </Flex>
-        </>}
+        {isEditable && (
+          <>
+            <DateList>
+              {ranges.map((range, index) => (
+                <li key={index}>
+                  {isSameDate(range.start, range.end)
+                    ? range.start.toLocaleDateString('ru-RU')
+                    : `${range.start.toLocaleDateString('ru-RU')} - ${range.end.toLocaleDateString('ru-RU')}`}
+                  <button onClick={() => removeRange(range)}>
+                    <CloseIcon color="black" width="24px" height="24px" />
+                  </button>
+                </li>
+              ))}
+            </DateList>
+            {/* Чекбоксы для дней недели (только для текущего месяца) */}
+            <Flex wrap="wrap" gap="8px">
+              {daysOfWeek.map((day) => (
+                <DayCheckbox key={day.value}>
+                  <Checkbox
+                    checked={isWeekdayFullySelected(day.value, currentMonth)}
+                    setChecked={() => handleWeekdayToggle(day.value)}
+                  />
+                  {day.name}
+                </DayCheckbox>
+              ))}
+            </Flex>
+          </>
+        )}
         {/* Календарь – теперь передаём activeStartDate для управления отображаемым месяцем */}
-        <Flex justify='center'>
+        <Flex justify="center">
           <StyledCalendar
             tileContent={(el) => (
               <div

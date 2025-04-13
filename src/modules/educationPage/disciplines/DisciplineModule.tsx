@@ -11,6 +11,7 @@ import { useEffectOnce } from '@hooks/useEffectOnce';
 import {
   fetchAllDisciplines,
   fetchAllGroups,
+  fetchAllRooms,
   fetchAllSubjects,
   fetchAllTeachers,
 } from '@store/institution/thunks';
@@ -73,6 +74,7 @@ const DisciplineModule = () => {
     dispatch(fetchAllDisciplines());
     dispatch(fetchAllGroups());
     dispatch(fetchAllTeachers());
+    dispatch(fetchAllRooms());
   });
 
   useEffect(() => {
@@ -83,13 +85,6 @@ const DisciplineModule = () => {
   }, [courses]);
 
   const setFilterField = (field: keyof Filters, value: (string | number)[]) => {
-    // const newFilters = { ...filters };
-    // if (filters[field]?.includes(value)) {
-    //   newFilters[field] = filters[field]?.filter((el) => el !== value) || null;
-    // } else {
-    //   newFilters[field]?.push(value);
-    // }
-    // setFilters(newFilters);
     setFilters((prev) => ({ ...prev, [field]: value }));
   };
 
@@ -222,8 +217,8 @@ const DisciplineModule = () => {
                         uiActions.openModal({
                           isEditing: false,
                           value: {
-                            courseaffinity: [],
-                            coursetoleration: [],
+                            course_affinity: [],
+                            course_toleration: [],
                             course: {
                               discipline_id: item.id as number,
                               teacher_id: -1,
@@ -245,7 +240,7 @@ const DisciplineModule = () => {
                         );
                         console.log('teacher', courses);
                         return teacher ? (
-                          <Button>
+                          <Button key={el.course.id}>
                             <Flex gap="12px">
                               <Text>{teacher.fullname}</Text>
                               {/* <StyledIcon

@@ -26,8 +26,8 @@ const ITEM_INIT_DATA: Room = {
     name: '',
     capacity: 0,
   },
-  roomlabels: [],
-  roomtaints: [],
+  room_labels: [],
+  room_taints: [],
 };
 
 export const AddingRoomModal = () => {
@@ -102,10 +102,10 @@ export const AddingRoomModal = () => {
           setTags={(n) =>
             setNewItem((prev) => ({
               ...prev,
-              roomtaints: n.map((el) => ({ taint_value: el })),
+              room_taints: n.map((el) => ({ taint_value: el })),
             }))
           }
-          tags={newItem.roomtaints.map((taint) => taint.taint_value) || []}
+          tags={newItem.room_taints.map((taint) => taint.taint_value) || []}
         />
         <Tags
           label="Назначение комнаты"
@@ -114,10 +114,10 @@ export const AddingRoomModal = () => {
           setTags={(n) =>
             setNewItem((prev) => ({
               ...prev,
-              roomlabels: n.map((el) => ({ label_value: el })),
+              room_labels: n.map((el) => ({ label_value: el })),
             }))
           }
-          tags={newItem.roomlabels.map((label) => label.label_value) || []}
+          tags={newItem.room_labels.map((label) => label.label_value) || []}
         />
       </Flex>
       <Flex justify="flex-end">

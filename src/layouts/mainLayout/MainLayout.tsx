@@ -52,18 +52,6 @@ const ExitButton = styled.button`
   }
 `;
 
-// Наверное надо перенести
-// const tabs = [
-//   { id: 'shifts', name: 'Смены' },
-//   { id: 'profiles', name: 'Профили' },
-//   { id: 'teachers', name: 'Учителя' },
-//   { id: 'groups', name: 'Группы' },
-//   { id: 'subjects', name: 'Предметы' },
-//   { id: 'rooms', name: 'Аудитории' },
-//   { id: 'lessonTime', name: 'Время урока' },
-//   { id: 'disciplines', name: 'Дисциплины' },
-// ];
-
 export const MainLayout: FC<PropsWithChildren> = ({ children }) => {
   const navigate = useNavigate();
   const user = useSelector(uiSelectors.getUser);
@@ -87,16 +75,6 @@ export const MainLayout: FC<PropsWithChildren> = ({ children }) => {
               {user && isAdmin(user) ? 'Администратор Думы' : 'администратор'}
             </Text>
           </Flex>
-          {/* <MultiDropdown
-            options={tabs}
-            selectedOptions={Object.keys(activeTabs).filter(
-              (tab) => activeTabs[tab as keyof DisplayedTabs] === true,
-            )}
-            setSelectedOptions={(item) =>
-              handleToggle(item as keyof DisplayedTabs)
-            }
-            label="Вид:"
-          /> */}
         </Flex>
         <ExitButton
           onClick={() => {

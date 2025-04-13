@@ -56,14 +56,6 @@ const Dropdown: React.FC<DropdownProps<string | number>> = ({
 
   const dropdownRef = useRef<HTMLUListElement>(null);
   const handleClickOutside = (e: MouseEvent) => {
-    console.log(
-      !isDescendant(
-        dropdownRef.current?.parentElement,
-        e.target as HTMLElement,
-      ),
-      dropdownRef.current?.parentElement,
-      e.target,
-    );
     if (
       !isDescendant(dropdownRef.current?.parentElement, e.target as HTMLElement)
     )
