@@ -9,7 +9,11 @@ import { uiActions, uiSelectors } from '@store/ui';
 import { useSelector } from 'react-redux';
 import { AddingTeacherModal } from './AddingTeacherModal';
 import { useEffectOnce } from '@hooks/useEffectOnce';
-import { fetchAllTeachers } from '@store/institution/thunks';
+import {
+  fetchAllDepartment,
+  fetchAllFaculty,
+  fetchAllTeachers,
+} from '@store/institution/thunks';
 import { Text } from '@components/Typography';
 import {
   StyledCell,
@@ -17,22 +21,57 @@ import {
   StyledRow,
   StyledTable,
 } from '@components/Table/TableStyles';
-import TreeNav from '@components/TreeNavigator/TreeNavigator';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import PenIcon from '@components/icons/PenIcon';
 import Button from '@components/Button';
 import PopupCalendar from '@components/PopupCalendar';
+import { RichTreeView, TreeViewBaseItem } from '@mui/x-tree-view';
+import { calcTeachers, makeTree } from './helpers';
+import styled from 'styled-components';
+
+const StyledTree = styled(RichTreeView)`
+  .MuiTreeItem-content.css-1kk8xoz-MuiTreeItem-content.Mui-selected {
+    background-color: #eadafe;
+  }
+
+  .MuiTreeItem-content.css-1kk8xoz-MuiTreeItem-content:hover {
+    background-color: #f5eefe;
+  }
+
+  .MuiTreeItem-label {
+    font-size: 18px !important;
+  }
+`;
 
 export const MODAL_NAME = 'addTeacher';
 
 const TeacherModule = () => {
   const teachers = useSelector(institutionSelectors.getTeachers);
   const requests = useSelector(uiSelectors.getRequests);
+  const faculties = useSelector(institutionSelectors.getFaculties);
+  const departments = useSelector(institutionSelectors.getDepartments);
   const dispatch = useAppDispatch();
-  const [displayedTeachers, setDisplauyedTeachers] = useState(false);
+  const [displayedTeachers, setDisplayedTeachers] = useState<string | null>(
+    null,
+  );
+  const [treeData, setTreeData] = useState<TreeViewBaseItem[] | null>([
+    { id: 'a', label: 'a' },
+  ]); // dodelat
+
+  useEffect(() => {
+    setTreeData(makeTree(faculties, departments));
+    console.log('tree', treeData);
+  }, [faculties, departments]);
+
+  useEffect(
+    () => console.log('teachers', displayedTeachers),
+    [displayedTeachers],
+  );
 
   useEffectOnce(() => {
     dispatch(fetchAllTeachers());
+    dispatch(fetchAllDepartment());
+    dispatch(fetchAllFaculty());
   });
   return (
     <Flex flex="2" direction="column" gap="8px" align="start">
@@ -55,13 +94,35 @@ const TeacherModule = () => {
       {requests['teachers'] === 'pending' && <ContentLoader size={32} />}
       {requests['teachers'] !== 'pending' && (
         <Flex wrap="nowrap" gap="10px" style={{ width: '100%' }} flex="1">
-          <TreeNav label="Организация">
+          {/* <TreeNav label="Организация">
             <TreeNav
               label="Кафедра"
               onSelect={() => setDisplauyedTeachers(!displayedTeachers)}
               selected={displayedTeachers}
             />
-          </TreeNav>
+            {faculties.map((el) => (
+              <TreeNav key={el.id} label={el.name}>
+                {departments
+                  .filter((dep) => dep.faculty_id === el.id)
+                  .map((dep) => (
+                    <TreeNav key={dep.id} label={dep.name} />
+                  ))}
+              </TreeNav>
+            ))}
+          </TreeNav> */}
+          {/* <TreeFolder nodes={treeData} label="Организация" /> */}
+          <StyledTree
+            onItemClick={(_event, itemId) =>
+              setDisplayedTeachers((prev) => calcTeachers(itemId, prev))
+            }
+            items={[
+              {
+                id: 'Organization',
+                label: 'Организация',
+                children: treeData,
+              },
+            ]}
+          />
           <div
             style={{
               height: 100,
@@ -82,6 +143,9 @@ const TeacherModule = () => {
               {displayedTeachers && (
                 <tbody>
                   {[...teachers]
+                    .filter(
+                      (el) => String(el.department_id) === displayedTeachers,
+                    )
                     .sort((a, b) => a.fullname.localeCompare(b.fullname))
                     .map((item) => {
                       return (

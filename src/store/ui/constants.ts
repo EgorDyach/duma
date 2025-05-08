@@ -70,5 +70,15 @@ export const uiInitialState: UIState = {
       isEditing: false,
       value: null,
     },
+    addFaculty: {
+      isOpened: false,
+      isEditing: false,
+      value: null,
+    },
+    addDepartment: {
+      isOpened: false,
+      isEditing: false,
+      value: null,
+    },
   },
 };

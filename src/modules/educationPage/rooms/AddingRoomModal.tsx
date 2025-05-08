@@ -40,6 +40,7 @@ export const AddingRoomModal = () => {
   );
 
   const handleAdd = () => {
+    console.log(newItem);
     const validateError = validateRoom(newItem, rooms);
     if (validateError) return showErrorNotification(validateError);
 
@@ -68,6 +69,7 @@ export const AddingRoomModal = () => {
             setNewItem((prev) => ({
               ...prev,
               room: {
+                id: prev.room.id,
                 capacity: newItem.room.capacity,
                 name: e,
               },
@@ -86,7 +88,8 @@ export const AddingRoomModal = () => {
             setNewItem((prev) => ({
               ...prev,
               room: {
-                name: newItem.room.name,
+                id: prev.room.id,
+                name: prev.room.name,
                 capacity: Number(e),
               },
             }))

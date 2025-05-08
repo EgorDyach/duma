@@ -19,15 +19,19 @@ import { showErrorNotification } from '@lib/utils/notification';
 import Input from '@components/input/Input';
 import MultiDatePicker from '@components/MultiDatepicker';
 import { Text } from '@components/Typography';
+import Dropdown from '@components/Dropdown';
+import { institutionSelectors } from '@store/institution';
 
 const ITEM_INIT_DATA: Teacher = {
   fullname: '',
   holidays: [],
+  department_id: -1,
 };
 
 export const AddingTeacherModal: React.FC = () => {
   const dispatch = useAppDispatch();
   const modals = useSelector(uiSelectors.getModals);
+  const departments = useSelector(institutionSelectors.getDepartments);
   const currentModal = modals[MODAL_NAME];
 
   const [newItem, setNewItem] = useState<Teacher>(
@@ -82,6 +86,14 @@ export const AddingTeacherModal: React.FC = () => {
 
         <MultiDatePicker value={holidays} onChange={setHolidays} />
       </Flex>
+
+      <Dropdown
+        options={departments.map((el) => ({ id: el.id!, name: el.name }))}
+        selectedOption={newItem.department_id}
+        setSelectedOption={(option) =>
+          setNewItem((prev) => ({ ...prev, department_id: +option }))
+        }
+      />
 
       <Flex gap="16px" $top="medium" justify="flex-end">
         <StyledModalAdd onClick={handleAdd}>

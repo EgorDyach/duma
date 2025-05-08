@@ -10,4 +10,6 @@ export const institutionInitialState: InstitutionState = {
   groups: [],
   profiles: [],
   courses: [],
+  faculties: [],
+  departments: [],
 };

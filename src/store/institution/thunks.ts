@@ -39,6 +39,14 @@ import {
   requestCreateCourse,
   requestDeleteCourse,
   requestUpdateCourse,
+  requestAllFaculty,
+  requestCreateFaculty,
+  requestDeleteFaculty,
+  requestUpdateFaculty,
+  requestAllDepartment,
+  requestCreateDepartment,
+  requestDeleteDepartment,
+  requestUpdateDepartment,
 } from '@lib/api';
 import { uiActions } from '@store/ui';
 import toLowerCaseKeys from '@lib/toLowerCaseKeys';
@@ -382,7 +390,7 @@ export const fetchAllRooms = () => async (dispatch: AppDispatch) => {
       institutionActions.setRooms(
         message
           .map((el) => toLowerCaseKeys(el))
-          .map((el) => ({...el, room: toLowerCaseKeys(el.room)})),
+          .map((el) => ({ ...el, room: toLowerCaseKeys(el.room) })),
       ),
     );
   } catch (e) {
@@ -536,6 +544,116 @@ export const fetchUpdateCourse =
     try {
       await requestUpdateCourse(data);
       dispatch(institutionActions.updateCourse({ data, id }));
+      dispatch(uiActions.closeModals());
+    } catch (e) {
+      if (e instanceof AxiosError) return showErrorNotification(e.message);
+      if (typeof e === 'string') return showErrorNotification(e);
+      showErrorNotification('Что-то пошло не так...');
+    }
+  };
+
+export const fetchAllFaculty = () => async (dispatch: AppDispatch) => {
+  try {
+    const { message } = await requestAllFaculty();
+    dispatch(
+      institutionActions.setFaculty(message.map((el) => toLowerCaseKeys(el))),
+    );
+  } catch (e) {
+    if (e instanceof AxiosError) return showErrorNotification(e.message);
+    if (typeof e === 'string') return showErrorNotification(e);
+    showErrorNotification('Что-то пошло не так...');
+  }
+};
+
+export const fetchAddFaculty =
+  (item: Faculty) => async (dispatch: AppDispatch) => {
+    try {
+      const { message } = await requestCreateFaculty(item);
+      dispatch(
+        institutionActions.setFaculty(
+          message.Faculties.map((el) => toLowerCaseKeys(el)),
+        ),
+      );
+      dispatch(uiActions.closeModals());
+    } catch (e) {
+      if (e instanceof AxiosError) return showErrorNotification(e.message);
+      if (typeof e === 'string') return showErrorNotification(e);
+      showErrorNotification('Что-то пошло не так...');
+    }
+  };
+export const fetchRemoveFaculty =
+  (id: string | number) => async (dispatch: AppDispatch) => {
+    try {
+      await requestDeleteFaculty({ id });
+      dispatch(institutionActions.removeFaculty(id));
+      dispatch(uiActions.closeModals());
+    } catch (e) {
+      if (e instanceof AxiosError) return showErrorNotification(e.message);
+      if (typeof e === 'string') return showErrorNotification(e);
+      showErrorNotification('Что-то пошло не так...');
+    }
+  };
+export const fetchUpdateFaculty =
+  (data: Faculty, id: string | number) => async (dispatch: AppDispatch) => {
+    try {
+      await requestUpdateFaculty(data);
+      dispatch(institutionActions.updateFaculty({ data, id }));
+      dispatch(uiActions.closeModals());
+    } catch (e) {
+      if (e instanceof AxiosError) return showErrorNotification(e.message);
+      if (typeof e === 'string') return showErrorNotification(e);
+      showErrorNotification('Что-то пошло не так...');
+    }
+  };
+
+export const fetchAllDepartment = () => async (dispatch: AppDispatch) => {
+  try {
+    const { message } = await requestAllDepartment();
+    dispatch(
+      institutionActions.setDepartment(
+        message.map((el) => toLowerCaseKeys(el)),
+      ),
+    );
+  } catch (e) {
+    if (e instanceof AxiosError) return showErrorNotification(e.message);
+    if (typeof e === 'string') return showErrorNotification(e);
+    showErrorNotification('Что-то пошло не так...');
+  }
+};
+
+export const fetchAddDepartment =
+  (item: Department) => async (dispatch: AppDispatch) => {
+    try {
+      const { message } = await requestCreateDepartment(item);
+      dispatch(
+        institutionActions.setFaculty(
+          message.Departments.map((el) => toLowerCaseKeys(el)),
+        ),
+      );
+      dispatch(uiActions.closeModals());
+    } catch (e) {
+      if (e instanceof AxiosError) return showErrorNotification(e.message);
+      if (typeof e === 'string') return showErrorNotification(e);
+      showErrorNotification('Что-то пошло не так...');
+    }
+  };
+export const fetchRemoveDepartment =
+  (id: string | number) => async (dispatch: AppDispatch) => {
+    try {
+      await requestDeleteDepartment({ id });
+      dispatch(institutionActions.removeDepartmnent(id));
+      dispatch(uiActions.closeModals());
+    } catch (e) {
+      if (e instanceof AxiosError) return showErrorNotification(e.message);
+      if (typeof e === 'string') return showErrorNotification(e);
+      showErrorNotification('Что-то пошло не так...');
+    }
+  };
+export const fetchUpdateDepartment =
+  (data: Department, id: string | number) => async (dispatch: AppDispatch) => {
+    try {
+      await requestUpdateDepartment(data);
+      dispatch(institutionActions.updateDepartment({ data, id }));
       dispatch(uiActions.closeModals());
     } catch (e) {
       if (e instanceof AxiosError) return showErrorNotification(e.message);

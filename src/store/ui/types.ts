@@ -11,6 +11,8 @@ export type ModalContent<T> = {
 };
 
 export type ModalTypes =
+  | 'addFaculty'
+  | 'addDepartment'
   | 'addGroup'
   | 'addRoom'
   | 'addLessonTime'
@@ -26,6 +28,8 @@ export type ModalTypes =
   | 'GenerateModal';
 
 export type Modals = {
+  addFaculty: Faculty;
+  addDepartment: Department;
   addGroup: Group;
   addRoom: Room;
   addLessonTime: LessonTime;
@@ -40,17 +44,6 @@ export type Modals = {
   addSchool: InstitutionsAdmin;
   GenerateModal: string;
 };
-
-// export type DisplayedTabs = {
-//     shifts: boolean;
-//     disciplines: boolean;
-//     groups: boolean;
-//     lessonTime: boolean;
-//     profiles: boolean;
-//     rooms: boolean;
-//     subjects: boolean;
-//     teachers: boolean;
-//   };
 
 export type DisplayedTab =
   | 'shifts'

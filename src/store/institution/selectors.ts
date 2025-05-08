@@ -33,3 +33,9 @@ export const getProfiles = (s: StoreWithInstitutionState): Profile[] =>
 
 export const getCourses = (s: StoreWithInstitutionState): Course[] =>
   getState(s).courses;
+
+export const getFaculties = (s: StoreWithInstitutionState): Faculty[] =>
+  getState(s).faculties;
+
+export const getDepartments = (s: StoreWithInstitutionState): Department[] =>
+  getState(s).departments;

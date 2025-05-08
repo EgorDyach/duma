@@ -10,6 +10,8 @@ export type InstitutionState = {
   groups: Group[];
   profiles: Profile[];
   courses: Course[];
+  faculties: Faculty[];
+  departments: Department[];
 };
 
 export type StoreWithInstitutionState = {

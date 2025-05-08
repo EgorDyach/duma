@@ -73,10 +73,10 @@ export const AddingCourseModal = () => {
     if (validateError) return showErrorNotification(validateError);
 
     if (currentModal.isEditing) {
-      console.log('updated course');
-      fetchUpdateCourse(newItem, getId(currentModal.value) as number);
+      return dispatch(
+        fetchUpdateCourse(newItem, getId(currentModal.value) as number),
+      );
     }
-
     dispatch(fetchAddCourse(newItem));
   };
 

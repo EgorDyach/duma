@@ -6,6 +6,7 @@ type Teacher = {
   institution_id?: number;
   fullname: string;
   holidays?: Holiday[];
+  department_id: number;
 };
 
 type Holiday = {
@@ -152,4 +153,17 @@ type Room = {
   room: RoomData;
   room_taints: RoomTaint[];
   room_labels: RoomLabel[];
+};
+
+type Faculty = {
+  id?: number;
+  institution_id?: number;
+  name: string;
+};
+
+type Department = {
+  faculty_id: number;
+  id?: number;
+  institution_id?: number;
+  name: string;
 };

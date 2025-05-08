@@ -46,6 +46,8 @@ const shiftsReducers = createListReducers<Shift>('shifts');
 const groupsReducers = createListReducers<Group>('groups');
 const profilesReducers = createListReducers<Profile>('profiles');
 const coursesReducers = createListReducers<Course>('courses');
+const facultyReducers = createListReducers<Faculty>('faculties');
+const departmentReducers = createListReducers<Department>('departments');
 
 const institutionSlice = createSlice({
   name: institutionStateName,
@@ -88,6 +90,14 @@ const institutionSlice = createSlice({
     setCourses: coursesReducers.set,
     removeCourse: coursesReducers.remove,
     updateCourse: coursesReducers.update,
+    addFaculty: facultyReducers.add,
+    setFaculty: facultyReducers.set,
+    removeFaculty: facultyReducers.remove,
+    updateFaculty: facultyReducers.update,
+    addDepartment: departmentReducers.add,
+    setDepartment: departmentReducers.set,
+    removeDepartmnent: departmentReducers.remove,
+    updateDepartment: departmentReducers.update,
   },
 });
 
