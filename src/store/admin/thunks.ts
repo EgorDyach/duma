@@ -10,6 +10,7 @@ import {
 import { adminActions } from '.';
 import { InstitutionsAdmin } from '@type/user';
 import toLowerCaseKeys from '@lib/toLowerCaseKeys';
+// import { requestCreateFaculty } from '@lib/api';
 
 export const fetchInstitutions =
   () =>
@@ -82,7 +83,11 @@ export const fetchAddInstitution =
   async (dispatch: AppDispatch): Promise<void> => {
     dispatch(uiActions.setRequestStarted('educations'));
     try {
+      // const { institution_id } =
       await requestAddInstitution$(newItem);
+      // if (newItem.institution.institution_type === 'school') {
+      //   await requestCreateFaculty({ name: 'Младшая школа', institution_id });
+      // }
       dispatch(adminActions.addItem(newItem));
       dispatch(uiActions.closeModals());
     } catch (error) {

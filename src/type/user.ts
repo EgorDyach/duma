@@ -9,6 +9,7 @@ export type UserDuma = {
   email: string;
   password: '<nil>' | string;
   token: string;
+  Institution: Institution;
 };
 
 export type InstitutionsAdmin = {

@@ -1,5 +1,4 @@
 import { Text } from '@components/Typography';
-import { ReactNode, useState } from 'react';
 import Flex from '@components/Flex';
 
 type TreeNodeProps = {

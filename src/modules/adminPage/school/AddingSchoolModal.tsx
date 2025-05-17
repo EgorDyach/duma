@@ -41,6 +41,10 @@ export const AddingSchoolModal = () => {
   const handleAdd = () => {
     if (currentModal.isEditing) return dispatch(fetchEditInstitution(newItem));
     dispatch(fetchAddInstitution(newItem));
+    // dispatch(fetchAddFaculty({ name: 'Младшая школа' }));
+    // dispatch(fetchAddFaculty({ name: 'Средняя школа' }));
+    // dispatch(fetchAddFaculty({ name: 'Старшая школа' }));
+    // requestCreateFaculty({ name: 'Младшая школа' });
   };
 
   return (
