@@ -92,7 +92,7 @@ const ScheduleCard: React.FC<Schedule> = ({
                       textOverflow: 'ellipsis',
                       overflow: 'hidden',
                       whiteSpace: 'nowrap',
-                      maxWidth: 219,
+                      maxWidth: 193,
                       display: 'inline-block',
                     }}
                     $size="small"
@@ -100,7 +100,7 @@ const ScheduleCard: React.FC<Schedule> = ({
                     {el.homework}
                   </Text>
                 </ScheduleCardCell>
-                <ScheduleCardCell style={{ minWidth: 60 }}>
+                <ScheduleCardCell style={{ minWidth: 60, width: 60 }}>
                   <Flex align="center" justify="center">
                     <Text $size="subheader" $color="#747474">
                       {el.mark}

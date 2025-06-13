@@ -7,6 +7,7 @@ import AuthLayout from '@layouts/AuthLayout/AuthLayout';
 import { AuthPage } from '@modules/authPage/AuthPage';
 import AppRoutes from './routes';
 import SchedulePage from '@modules/schedulePage/ShedulePage';
+import { ScheduleLayout } from '@layouts/scheduleLayout/ScheduleLayout';
 
 export const appRoutersConfig = createBrowserRouter([
   {
@@ -60,7 +61,7 @@ export const appRoutersConfig = createBrowserRouter([
     ),
     element: (
       <ProtectedRoute>
-        <MainLayout />
+        <ScheduleLayout />
       </ProtectedRoute>
     ),
     children: [
