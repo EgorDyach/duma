@@ -6,6 +6,7 @@ import { ProtectedRoute } from '@components/ProtectedRoute';
 import AuthLayout from '@layouts/AuthLayout/AuthLayout';
 import { AuthPage } from '@modules/authPage/AuthPage';
 import AppRoutes from './routes';
+import SchedulePage from '@modules/schedulePage/ShedulePage';
 
 export const appRoutersConfig = createBrowserRouter([
   {
@@ -45,6 +46,27 @@ export const appRoutersConfig = createBrowserRouter([
       {
         path: '',
         element: <RootPage />,
+      },
+    ],
+  },
+  {
+    path: '/schedule',
+    errorElement: (
+      <ProtectedRoute>
+        <MainLayout>
+          <PageNotFound />
+        </MainLayout>
+      </ProtectedRoute>
+    ),
+    element: (
+      <ProtectedRoute>
+        <MainLayout />
+      </ProtectedRoute>
+    ),
+    children: [
+      {
+        path: '',
+        element: <SchedulePage />,
       },
     ],
   },
