@@ -6,7 +6,7 @@ import { InstitutionsAdmin } from '@type/user';
 const requestInstitutions$ = async (): Promise<
   ApiResponse<InstitutionsAdmin[]>
 > => {
-  return request.get('/s9rk988utk/admin/manage/accounts');
+  return request.get('/v1/s9rk988utk/accounts/manage/institution/admin/list');
 };
 
 export const requestInstitutions = handledRequest(
@@ -18,7 +18,7 @@ export const requestInstitutions = handledRequest(
 export const requestRemoveInstitution$ = async (
   email: string,
 ): Promise<ApiResponse<void>> => {
-  return request.delete('/s9rk988utk/admin/manage/delete', {
+  return request.delete('/v1/s9rk988utk/accounts/manage/institution/admin', {
     data: { email },
   });
 };
@@ -26,11 +26,18 @@ export const requestRemoveInstitution$ = async (
 export const requestEditInstitution$ = async (
   newItem: InstitutionsAdmin,
 ): Promise<ApiResponse<void>> => {
-  return request.put('/s9rk988utk/admin/manage/change', newItem);
+  return request.put(
+    '/v1/s9rk988utk/accounts/manage/institution/admin',
+    newItem,
+  );
 };
 
 export const requestAddInstitution$ = async (
   newItem: InstitutionsAdmin,
 ): Promise<ApiResponse<void>> => {
-  return request.post('/s9rk988utk/admin/manage/create', newItem);
+  console.log(newItem);
+  return request.post(
+    '/v1/s9rk988utk/accounts/manage/institution/admin/',
+    newItem,
+  );
 };

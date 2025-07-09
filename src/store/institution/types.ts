@@ -1,6 +1,7 @@
 export const institutionStateName = 'institution';
 
 export type InstitutionState = {
+  lessons: Lesson[];
   teachers: Teacher[];
   rooms: Room[];
   subjects: Subject[];

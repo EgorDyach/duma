@@ -1,137 +1,28 @@
-import ScheduleCard, { Schedule } from './scheduleCard/ScheduleCard';
+import ScheduleCard from './scheduleCard/ScheduleCard';
 import styled from 'styled-components';
 import { Text } from '@components/Typography';
 import Flex from '@components/Flex';
 import NotificationModule from './notificationModule/NotificationModule';
+import { useAppDispatch } from '@hooks/useAppDispatch';
+import { institutionSelectors } from '@store/institution';
+import { uiSelectors } from '@store/ui';
+import { useSelector } from 'react-redux';
+import ContentLoader from '@components/ContentLoader';
+import { fetchAllLessons } from '@store/institution/thunks';
+import { useEffectOnce } from '@hooks/useEffectOnce';
 
-const schedule: Schedule[] = [
-  {
-    day: 'Понедельник',
-    date: new Date('2025-12-12'),
-    lessons: [
-      {
-        timeStart: '9:00',
-        timeEnd: '10:30',
-        location: 'K 52',
-        name: 'Математика',
-        homework: 'Параграф 5, вопросы 1-3',
-        mark: Math.floor(Math.random() * 6), // случайная оценка от 0 до 5
-      },
-      {
-        timeStart: '11:00',
-        timeEnd: '12:30',
-        location: 'K 53',
-        name: 'Физика',
-        homework: 'Лабораторная работа',
-      },
-    ],
-  },
-  {
-    day: 'Вторник',
-    date: new Date('2025-12-13'),
-    lessons: [
-      {
-        timeStart: '9:00',
-        timeEnd: '10:30',
-        location: 'K 54',
-        name: 'Химия',
-        homework: 'Сделать презентацию',
-        mark: Math.floor(Math.random() * 6),
-      },
-      {
-        timeStart: '11:00',
-        timeEnd: '12:30',
-        location: 'K 55',
-        name: 'История',
-        homework: 'Читать главы 3 и 4',
-      },
-    ],
-  },
-  {
-    day: 'Среда',
-    date: new Date('2025-12-14'),
-    lessons: [
-      {
-        timeStart: '9:00',
-        timeEnd: '10:30',
-        location: 'K 56',
-        name: 'Литература',
-        homework: 'Написать эссе',
-        mark: Math.floor(Math.random() * 6),
-      },
-      {
-        timeStart: '11:00',
-        timeEnd: '12:30',
-        location: 'K 57',
-        name: 'География',
-        homework: 'Подготовить доклад',
-      },
-    ],
-  },
-  {
-    day: 'Четверг',
-    date: new Date('2025-12-15'),
-    lessons: [
-      {
-        timeStart: '9:00',
-        timeEnd: '10:30',
-        location: 'K 58',
-        name: 'Информатика',
-        homework: 'Создать проект',
-        mark: Math.floor(Math.random() * 6),
-      },
-      {
-        timeStart: '11:00',
-        timeEnd: '12:30',
-        location: 'K 59',
-        name: 'Музыка',
-        homework: 'Выучить песню',
-      },
-    ],
-  },
-  {
-    day: 'Пятница',
-    date: new Date('2025-12-16'),
-    lessons: [
-      {
-        timeStart: '9:00',
-        timeEnd: '10:30',
-        location: 'K 60',
-        name: 'Физкультура',
-        homework: 'Подготовиться к соревнованиям',
-      },
-      {
-        timeStart: '11:00',
-        timeEnd: '12:30',
-        location: 'K 61',
-        name: 'Иностранный язык',
-        homework: 'Прочитать текст',
-        mark: Math.floor(Math.random() * 6),
-      },
-    ],
-  },
-  {
-    day: 'Суббота',
-    date: new Date('2025-12-17'),
-    lessons: [
-      {
-        timeStart: '9:00',
-        timeEnd: '10:30',
-        location: 'K 62',
-        name: 'Экономика',
-        homework: 'Подготовить отчет',
-        mark: Math.floor(Math.random() * 6),
-      },
-      {
-        timeStart: '11:00',
-        timeEnd: '12:30',
-        location: 'K 63',
-        name: 'Технология',
-        homework: 'Сделать проект',
-      },
-    ],
-  },
-];
+function getDayOfWeekInRussian(date: Date) {
+  const daysOfWeek = [
+    'Воскресенье', // 0
+    'Понедельник', // 1
+    'Вторник', // 2
+    'Среда', // 3
+    'Четверг', // 4
+    'Пятница', // 5
+    'Суббота', // 6
+  ];
+  return daysOfWeek[date.getDay()];
+}
 
 const ScheduleHead = styled.div`
   background-color: #3c3f4c;
@@ -151,33 +42,67 @@ const ScheduleContainer = styled.div`
   grid-row-gap: 20px;
   grid-auto-flow: column;
 
-  @media (max-width: 1000px) {
+  @media (max-width: 900px) {
     grid-auto-flow: row;
     grid-template-columns: repeat(1, 1fr);
   }
 `;
 
+const currentWeekLessons = (lessons: Lesson[]): Lesson[][] => {
+  const today = new Date();
+  const firstDay = new Date(today);
+  const lastDay = new Date(today);
+
+  firstDay.setDate(today.getDate() - today.getDay() + 1);
+  lastDay.setDate(firstDay.getDate() + 6);
+
+  const weekLessons = [...lessons].filter(
+    (el) => new Date(el.date) >= firstDay ?? new Date(el.date) <= lastDay,
+  );
+
+  const daysLessons: Lesson[][] = [[], [], [], [], [], []];
+
+  weekLessons.forEach((el) => daysLessons[new Date(el.date).getDay()].push(el));
+
+  return daysLessons;
+};
+
 const SchedulePage = () => {
+  const lessons = useSelector(institutionSelectors.getLessons);
+  // const user = useSelector(uiSelectors.getUser);
+  const requests = useSelector(uiSelectors.getRequests);
+  const dispatch = useAppDispatch();
+
+  useEffectOnce(() => {
+    dispatch(fetchAllLessons());
+  });
+
   return (
     <>
       <Flex gap="20px">
-        <div>
+        <div style={{ width: '100%' }}>
           <ScheduleHead>
             <Text $color="#8a8c94" $size="subheader">
               Текущая неделя
             </Text>
           </ScheduleHead>
-          <ScheduleContainer>
-            {schedule.map((el, index) => (
-              <ScheduleCard
-                lessonsOnDay={6}
-                key={index}
-                day={el.day}
-                date={el.date}
-                lessons={el.lessons}
-              />
-            ))}
-          </ScheduleContainer>
+          {requests['lessons'] === 'pending' && <ContentLoader size={32} />}
+          {requests['lessons'] !== 'pending' && (
+            <ScheduleContainer>
+              {currentWeekLessons(lessons).map((el, index) => {
+                const date = new Date(el[0].date);
+                return (
+                  <ScheduleCard
+                    lessonsOnDay={6}
+                    key={index}
+                    day={getDayOfWeekInRussian(date)}
+                    date={date}
+                    lessons={el}
+                  />
+                );
+              })}
+            </ScheduleContainer>
+          )}
         </div>
         <NotificationModule />
       </Flex>

@@ -48,6 +48,7 @@ const profilesReducers = createListReducers<Profile>('profiles');
 const coursesReducers = createListReducers<Course>('courses');
 const facultyReducers = createListReducers<Faculty>('faculties');
 const departmentReducers = createListReducers<Department>('departments');
+const lessonsReducers = createListReducers<Lesson>('lessons');
 
 const institutionSlice = createSlice({
   name: institutionStateName,
@@ -98,6 +99,10 @@ const institutionSlice = createSlice({
     setDepartment: departmentReducers.set,
     removeDepartmnent: departmentReducers.remove,
     updateDepartment: departmentReducers.update,
+    addLessons: lessonsReducers.add,
+    setLessons: lessonsReducers.set,
+    removeLessons: lessonsReducers.remove,
+    updateLessons: lessonsReducers.update,
   },
 });
 

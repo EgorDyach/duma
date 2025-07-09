@@ -24,6 +24,7 @@ const ITEM_INIT_DATA: InstitutionsAdmin = {
   id: new Date().getTime(),
   email: '',
   fullname: '',
+  level: 1,
   institution: {
     institution_type: 'school',
     name: '',

@@ -9,11 +9,13 @@ export type UserDuma = {
   email: string;
   password: '<nil>' | string;
   token: string;
+  level?: number;
   Institution: Institution;
 };
 
 export type InstitutionsAdmin = {
   id?: number;
+  level?: number;
   createdat?: string;
   updatedat?: string;
   deletedat?: null | string;

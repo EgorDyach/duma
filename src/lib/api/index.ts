@@ -53,20 +53,17 @@ export const noAuthRequest = createRequestInstance(false);
 export const requestCreateRoom = async (
   data: Room,
 ): Promise<Response<{ Info: string; Rooms: Room[] }>> => {
-  return await request.post(
-    'https://puzzlesignlanguage.online/api/v1/create/Room',
-    [data],
-  );
-};
-export const requestUpdateRoom = async (data: Room): Promise<void> => {
-  await request.put('https://puzzlesignlanguage.online/api/v1/update/Room', [
+  return await request.post('https://puzzlesignlanguage.ru/api/back/v1/room', [
     data,
   ]);
+};
+export const requestUpdateRoom = async (data: Room): Promise<void> => {
+  await request.put('https://puzzlesignlanguage.ru/api/back/v1/room', [data]);
 };
 export const requestDeleteRoom = async (data: {
   id: string | number;
 }): Promise<void> => {
-  await request.delete('https://puzzlesignlanguage.online/api/v1/delete/room', {
+  await request.delete('https://puzzlesignlanguage.ru/api/back/v1/room', {
     headers: {
       'Content-Type': 'application/json',
     },
@@ -76,7 +73,7 @@ export const requestDeleteRoom = async (data: {
 };
 export const requestAllRoom = async (): Promise<Response<Room[]>> => {
   return await request.get(
-    'https://puzzlesignlanguage.online/api/v1/Get/Room',
+    'https://puzzlesignlanguage.ru/api/back/v1/room',
     {},
   );
 };
@@ -85,57 +82,48 @@ export const requestCreateTeacher = async (
   data: Teacher,
 ): Promise<Response<{ Info: string; Teachers: Teacher[] }>> => {
   return await request.post(
-    'https://puzzlesignlanguage.online/api/v1/create/teacher',
+    'https://puzzlesignlanguage.ru/api/back/v1/teacher',
     [data],
   );
 };
 export const requestUpdateTeacher = async (data: Teacher): Promise<void> => {
-  await request.put('https://puzzlesignlanguage.online/api/v1/update/teacher', [
+  await request.put('https://puzzlesignlanguage.ru/api/back/v1/teacher', [
     data,
   ]);
 };
 export const requestDeleteTeacher = async (data: {
   id: string | number;
 }): Promise<void> => {
-  await request.delete(
-    'https://puzzlesignlanguage.online/api/v1/delete/teacher',
-    {
-      data: [data],
-    },
-  );
+  await request.delete('https://puzzlesignlanguage.ru/api/back/v1/teacher', {
+    data: [data],
+  });
 };
 export const requestAllTeacher = async (): Promise<Response<Teacher[]>> => {
   return await request.get(
-    'https://puzzlesignlanguage.online/api/v1/Get/teacher',
+    'https://puzzlesignlanguage.ru/api/back/v1/teacher',
     {},
   );
 };
 export const requestCreateGroup = async (
   data: Group,
 ): Promise<Response<{ Info: string; Groups: Group[] }>> => {
-  return await request.post(
-    'https://puzzlesignlanguage.online/api/v1/create/group',
-    [data],
-  );
-};
-export const requestUpdateGroup = async (data: Group): Promise<void> => {
-  await request.put('https://puzzlesignlanguage.online/api/v1/update/group', [
+  return await request.post('https://puzzlesignlanguage.ru/api/back/v1/group', [
     data,
   ]);
+};
+export const requestUpdateGroup = async (data: Group): Promise<void> => {
+  await request.put('https://puzzlesignlanguage.ru/api/back/v1/group', [data]);
 };
 export const requestDeleteGroup = async (data: {
   id: string | number;
 }): Promise<void> => {
-  await request.delete(
-    'https://puzzlesignlanguage.online/api/v1/delete/group',
-    {
-      data: [data],
-    },
-  );
+  await request.delete('https://puzzlesignlanguage.ru/api/back/v1/group', {
+    data: [data],
+  });
 };
 export const requestAllGroup = async (): Promise<Response<Group[]>> => {
   return await request.get(
-    'https://puzzlesignlanguage.online/api/v1/get/group',
+    'https://puzzlesignlanguage.ru/api/back/v1/group',
     {},
   );
 };
@@ -143,28 +131,25 @@ export const requestCreateSubject = async (
   data: Subject,
 ): Promise<Response<{ Info: string; Subjects: Subject[] }>> => {
   return await request.post(
-    'https://puzzlesignlanguage.online/api/v1/create/subject',
+    'https://puzzlesignlanguage.ru/api/back/v1/subject',
     [data],
   );
 };
 export const requestUpdateSubject = async (data: Subject): Promise<void> => {
-  await request.put('https://puzzlesignlanguage.online/api/v1/update/subject', [
+  await request.put('https://puzzlesignlanguage.ru/api/back/v1/subject', [
     data,
   ]);
 };
 export const requestDeleteSubject = async (data: {
   id: string | number;
 }): Promise<void> => {
-  await request.delete(
-    'https://puzzlesignlanguage.online/api/v1/delete/subject',
-    {
-      data: [data],
-    },
-  );
+  await request.delete('https://puzzlesignlanguage.ru/api/back/v1/subject', {
+    data: [data],
+  });
 };
 export const requestAllSubject = async (): Promise<Response<Subject[]>> => {
   return await request.get(
-    'https://puzzlesignlanguage.online/api/v1/Get/subject',
+    'https://puzzlesignlanguage.ru/api/back/v1/subject',
     {},
   );
 };
@@ -173,28 +158,25 @@ export const requestCreateProfile = async (
   data: Profile,
 ): Promise<Response<{ Info: string; Profiles: Profile[] }>> => {
   return await request.post(
-    'https://puzzlesignlanguage.online/api/v1/create/profile',
+    'https://puzzlesignlanguage.ru/api/back/v1/profile',
     [data],
   );
 };
 export const requestDeleteProfile = async (data: {
   id: string | number;
 }): Promise<void> => {
-  await request.delete(
-    'https://puzzlesignlanguage.online/api/v1/delete/profile',
-    {
-      data: [data],
-    },
-  );
+  await request.delete('https://puzzlesignlanguage.ru/api/back/v1/profile', {
+    data: [data],
+  });
 };
 export const requestUpdateProfile = async (data: Profile): Promise<void> => {
-  await request.put('https://puzzlesignlanguage.online/api/v1/update/profile', [
+  await request.put('https://puzzlesignlanguage.ru/api/back/v1/profile', [
     data,
   ]);
 };
 export const requestAllProfile = async (): Promise<Response<Profile[]>> => {
   return await request.get(
-    'https://puzzlesignlanguage.online/api/v1/get/profile',
+    'https://puzzlesignlanguage.ru/api/back/v1/profile',
     {},
   );
 };
@@ -202,33 +184,29 @@ export const requestCreateLessonTime = async (
   data: LessonTime,
 ): Promise<Response<{ Info: string; 'Lesson Times': LessonTime[] }>> => {
   return await request.post(
-    'https://puzzlesignlanguage.online/api/v1/create/lessontime',
+    'https://puzzlesignlanguage.ru/api/back/v1/lessontime',
     [data],
   );
 };
 export const requestDeleteLessonTime = async (data: {
   id: string | number;
 }): Promise<void> => {
-  await request.delete(
-    'https://puzzlesignlanguage.online/api/v1/delete/lessontime',
-    {
-      data: [data],
-    },
-  );
+  await request.delete('https://puzzlesignlanguage.ru/api/back/v1/lessontime', {
+    data: [data],
+  });
 };
 export const requestUpdateLessonTime = async (
   data: LessonTime,
 ): Promise<void> => {
-  await request.put(
-    'https://puzzlesignlanguage.online/api/v1/update/lessontime',
-    [data],
-  );
+  await request.put('https://puzzlesignlanguage.ru/api/back/v1/lessontime', [
+    data,
+  ]);
 };
 export const requestAllLessonTime = async (): Promise<
   Response<LessonTime[]>
 > => {
   return await request.get(
-    'https://puzzlesignlanguage.online/api/v1/get/lessontime',
+    'https://puzzlesignlanguage.ru/api/back/v1/lessontime',
     {},
   );
 };
@@ -236,63 +214,51 @@ export const requestAllLessonTime = async (): Promise<
 export const requestCreateShift = async (
   data: Shift,
 ): Promise<Response<{ Info: string; Shifts: Shift[] }>> => {
-  return await request.post(
-    'https://puzzlesignlanguage.online/api/v1/create/shift',
-    [data],
-  );
+  return await request.post('https://puzzlesignlanguage.ru/api/back/v1/shift', [
+    data,
+  ]);
 };
 export const requestDeleteShift = async (data: {
   id: string | number;
 }): Promise<void> => {
-  await request.delete(
-    'https://puzzlesignlanguage.online/api/v1/delete/shift',
-    {
-      data: [data],
-    },
-  );
+  await request.delete('https://puzzlesignlanguage.ru/api/back/v1/shift', {
+    data: [data],
+  });
 };
 export const requestUpdateShift = async (data: Shift): Promise<void> => {
-  await request.put('https://puzzlesignlanguage.online/api/v1/update/shift', [
-    data,
-  ]);
+  await request.put('https://puzzlesignlanguage.ru/api/back/v1/shift', [data]);
 };
 export const requestAllShift = async (): Promise<Response<Shift[]>> => {
-  return await request.get(
-    'https://puzzlesignlanguage.online/api/v1/get/shift',
-  );
+  return await request.get('https://puzzlesignlanguage.ru/api/back/v1/shift');
 };
 
 export const requestCreateDiscipline = async (
   data: Discipline,
 ): Promise<Response<{ Info: string; Disciplines: Discipline[] }>> => {
   return await request.post(
-    'https://puzzlesignlanguage.online/api/v1/create/discipline',
+    'https://puzzlesignlanguage.ru/api/back/v1/discipline',
     [data],
   );
 };
 export const requestDeleteDiscipline = async (data: {
   id: string | number;
 }): Promise<void> => {
-  await request.delete(
-    'https://puzzlesignlanguage.online/api/v1/delete/discipline',
-    {
-      data: [data],
-    },
-  );
+  await request.delete('https://puzzlesignlanguage.ru/api/back/v1/discipline', {
+    data: [data],
+  });
 };
 export const requestUpdateDiscipline = async (
   data: Discipline,
 ): Promise<void> => {
-  await request.put(
-    'https://puzzlesignlanguage.online/api/v1/update/discipline',
-    [data],
-  );
+  await request.put('https://puzzlesignlanguage.ru/api/back/v1/discipline', [
+    data,
+  ]);
 };
 export const requestAllDiscipline = async (): Promise<
   Response<Discipline[]>
 > => {
   return await request.get(
-    'https://puzzlesignlanguage.online/api/v1/get/discipline',
+    'https://puzzlesignlanguage.ru/api/back/v1/discipline',
   );
 };
 
@@ -300,90 +266,78 @@ export const requestCreateCourse = async (
   data: Course,
 ): Promise<Response<{ Info: string; Courses: Course[] }>> => {
   return await request.post(
-    'https://puzzlesignlanguage.online/api/v1/create/course',
+    'https://puzzlesignlanguage.ru/api/back/v1/course',
     [data],
   );
 };
 export const requestDeleteCourse = async (data: {
   id: string | number;
 }): Promise<void> => {
-  await request.delete(
-    'https://puzzlesignlanguage.online/api/v1/delete/course',
-    {
-      data: [data],
-    },
-  );
+  await request.delete('https://puzzlesignlanguage.ru/api/back/v1/course', {
+    data: [data],
+  });
 };
 export const requestUpdateCourse = async (data: Course): Promise<void> => {
-  await request.put('https://puzzlesignlanguage.online/api/v1/update/course', [
-    data,
-  ]);
+  await request.put('https://puzzlesignlanguage.ru/api/back/v1/course', [data]);
 };
 export const requestAllCourse = async (): Promise<Response<Course[]>> => {
-  return await request.get(
-    'https://puzzlesignlanguage.online/api/v1/get/course',
-  );
+  return await request.get('https://puzzlesignlanguage.ru/api/back/v1/course');
 };
 
 export const requestCreateFaculty = async (
   data: Faculty,
 ): Promise<Response<{ Info: string; Faculties: Faculty[] }>> => {
   return await request.post(
-    'https://puzzlesignlanguage.online/api/v1/create/faculty',
+    'https://puzzlesignlanguage.ru/api/back/v1/faculty',
     [data],
   );
 };
 export const requestDeleteFaculty = async (data: {
   id: string | number;
 }): Promise<void> => {
-  await request.delete(
-    'https://puzzlesignlanguage.online/api/v1/delete/faculty',
-    {
-      data: [data],
-    },
-  );
+  await request.delete('https://puzzlesignlanguage.ru/api/back/v1/faculty', {
+    data: [data],
+  });
 };
 export const requestUpdateFaculty = async (data: Faculty): Promise<void> => {
-  await request.put('https://puzzlesignlanguage.online/api/v1/update/faculty', [
+  await request.put('https://puzzlesignlanguage.ru/api/back/v1/faculty', [
     data,
   ]);
 };
 export const requestAllFaculty = async (): Promise<Response<Faculty[]>> => {
-  return await request.get(
-    'https://puzzlesignlanguage.online/api/v1/get/faculty',
-  );
+  return await request.get('https://puzzlesignlanguage.ru/api/back/v1/faculty');
 };
 
 export const requestCreateDepartment = async (
   data: Department,
 ): Promise<Response<{ Info: string; Departments: Department[] }>> => {
   return await request.post(
-    'https://puzzlesignlanguage.online/api/v1/create/department',
+    'https://puzzlesignlanguage.ru/api/back/v1/department',
     [data],
   );
 };
 export const requestDeleteDepartment = async (data: {
   id: string | number;
 }): Promise<void> => {
-  await request.delete(
-    'https://puzzlesignlanguage.online/api/v1/delete/department',
-    {
-      data: [data],
-    },
-  );
+  await request.delete('https://puzzlesignlanguage.ru/api/back/v1/department', {
+    data: [data],
+  });
 };
 export const requestUpdateDepartment = async (
   data: Department,
 ): Promise<void> => {
-  await request.put(
-    'https://puzzlesignlanguage.online/api/v1/update/department',
-    [data],
-  );
+  await request.put('https://puzzlesignlanguage.ru/api/back/v1/department', [
+    data,
+  ]);
 };
 export const requestAllDepartment = async (): Promise<
   Response<Department[]>
 > => {
   return await request.get(
-    'https://puzzlesignlanguage.online/api/v1/get/department',
+    'https://puzzlesignlanguage.ru/api/back/v1/department',
   );
+};
+
+export const requestAllLessons = async (): Promise<Response<Lesson[]>> => {
+  return await request.get('https://puzzlesignlanguage.ru/api/back/v1/lesson');
 };

@@ -12,6 +12,7 @@ export const requestAuthenticate = (
   password?: string,
 ): Promise<AuthLoginRes> => {
   const token = SessionService.accessToken;
-  if (token && !email && !password) return request.post<AuthLoginRes>('/login');
-  return noAuthRequest.post<AuthLoginRes>('/login', { email, password });
+  if (token && !email && !password)
+    return request.post<AuthLoginRes>('/v1/login');
+  return noAuthRequest.post<AuthLoginRes>('/v1/login', { email, password });
 };

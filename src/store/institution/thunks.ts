@@ -47,6 +47,7 @@ import {
   requestCreateDepartment,
   requestDeleteDepartment,
   requestUpdateDepartment,
+  requestAllLessons,
 } from '@lib/api';
 import { uiActions } from '@store/ui';
 import toLowerCaseKeys from '@lib/toLowerCaseKeys';
@@ -661,3 +662,16 @@ export const fetchUpdateDepartment =
       showErrorNotification('Что-то пошло не так...');
     }
   };
+
+export const fetchAllLessons = () => async (dispatch: AppDispatch) => {
+  try {
+    const { message } = await requestAllLessons();
+    dispatch(
+      institutionActions.setLessons(message.map((el) => toLowerCaseKeys(el))),
+    );
+  } catch (e) {
+    if (e instanceof AxiosError) return showErrorNotification(e.message);
+    if (typeof e === 'string') return showErrorNotification(e);
+    showErrorNotification('Что-то пошло не так...');
+  }
+};

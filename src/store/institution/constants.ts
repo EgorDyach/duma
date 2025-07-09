@@ -12,4 +12,5 @@ export const institutionInitialState: InstitutionState = {
   courses: [],
   faculties: [],
   departments: [],
+  lessons: [],
 };

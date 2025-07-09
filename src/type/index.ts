@@ -167,3 +167,15 @@ type Department = {
   institution_id?: number;
   name: string;
 };
+
+type Lesson = {
+  course_id?: number;
+  createdAt?: string;
+  date: string;
+  deletedAt?: {};
+  id?: number;
+  institution_id: number;
+  lesson_time_id?: number;
+  room_id?: number;
+  updatedAt?: string;
+};
