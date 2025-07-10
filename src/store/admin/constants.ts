@@ -2,18 +2,18 @@ import { InstitutionType } from '@type/user';
 import { AdminState } from './types';
 
 export const adminInitialState: AdminState = {
-  schools: [],
-  universities: [],
-  secondaries: [],
+  Schools: [],
+  Universities: [],
+  Secondaries: [],
   otherInstitutions: [],
 };
 
 export const educationTypeMap: Record<
   InstitutionType | 'default',
-  'schools' | 'secondaries' | 'universities' | 'otherInstitutions'
+  'Schools' | 'Secondaries' | 'Universities' | 'otherInstitutions'
 > = {
-  school: 'schools',
-  secondary: 'secondaries',
-  university: 'universities',
+  School: 'Schools',
+  Secondary: 'Secondaries',
+  University: 'Universities',
   default: 'otherInstitutions',
 };

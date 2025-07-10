@@ -25,7 +25,7 @@ const ITEM_INIT_DATA: InstitutionsAdmin = {
   email: '',
   fullname: '',
   institution: {
-    institution_type: 'secondary',
+    institution_type: 'Secondary',
     name: '',
   },
 };
@@ -58,6 +58,7 @@ export const AddingSecondaryModal = () => {
           <StyledModalInput
             placeholder="Введите название..."
             onChange={(e) =>
+              // @ts-ignore
               setNewItem((prev) => ({
                 ...prev,
                 institution: {
@@ -66,7 +67,7 @@ export const AddingSecondaryModal = () => {
                 },
               }))
             }
-            value={newItem.institution.name}
+            value={newItem.institution?.name}
           />
         </Flex>
       </Flex>

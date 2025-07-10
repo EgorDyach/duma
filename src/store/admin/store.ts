@@ -8,13 +8,13 @@ const adminSlice = createSlice({
   initialState: adminInitialState,
   reducers: {
     setSchools(state, { payload }: PayloadAction<InstitutionsAdmin[]>) {
-      state.schools = payload;
+      state.Schools = payload;
     },
     setSecondaries(state, { payload }: PayloadAction<InstitutionsAdmin[]>) {
-      state.secondaries = payload;
+      state.Secondaries = payload;
     },
     setUniversities(state, { payload }: PayloadAction<InstitutionsAdmin[]>) {
-      state.universities = payload;
+      state.Universities = payload;
     },
     setOtherInstitutions(
       state,
@@ -23,11 +23,11 @@ const adminSlice = createSlice({
       state.otherInstitutions = payload;
     },
     removeItem(state, { payload }: PayloadAction<string>) {
-      state.schools = state.schools.filter((el) => payload !== el.email);
-      state.universities = state.universities.filter(
+      state.Schools = state.Schools.filter((el) => payload !== el.email);
+      state.Universities = state.Universities.filter(
         (el) => payload !== el.email,
       );
-      state.secondaries = state.secondaries.filter(
+      state.Secondaries = state.Secondaries.filter(
         (el) => payload !== el.email,
       );
       state.otherInstitutions = state.otherInstitutions.filter(
@@ -36,22 +36,20 @@ const adminSlice = createSlice({
     },
     addItem(state, { payload }: PayloadAction<InstitutionsAdmin>) {
       const educationKey =
-        educationTypeMap[payload.institution.institution_type] ||
+        educationTypeMap[payload.institution?.institution_type || 'School'] ||
         educationTypeMap.default;
 
-      state[educationKey] = [...state[educationKey], payload].sort((a, b) =>
-        a.institution.name.localeCompare(b.institution.name),
-      );
+      state[educationKey] = [...state[educationKey], payload];
     },
     editItem(state, { payload }: PayloadAction<InstitutionsAdmin>) {
       const educationKey =
-        educationTypeMap[payload.institution.institution_type] ||
+        educationTypeMap[payload.institution?.institution_type || 'School'] ||
         educationTypeMap.default;
 
       state[educationKey] = [
         ...state[educationKey].filter((el) => el.id !== payload.id),
         payload,
-      ].sort((a, b) => a.institution.name.localeCompare(b.institution.name));
+      ];
     },
   },
 });

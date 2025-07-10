@@ -25,7 +25,7 @@ const ITEM_INIT_DATA: InstitutionsAdmin = {
   email: '',
   fullname: '',
   institution: {
-    institution_type: 'university',
+    institution_type: 'University',
     name: '',
   },
 };
@@ -60,6 +60,7 @@ export const AddingUniversityModal = () => {
           <StyledModalInput
             placeholder="Введите название..."
             onChange={(e) =>
+              // @ts-ignore
               setNewItem((prev) => ({
                 ...prev,
                 institution: {
@@ -68,7 +69,7 @@ export const AddingUniversityModal = () => {
                 },
               }))
             }
-            value={newItem.institution.name}
+            value={newItem.institution?.name}
           />
         </Flex>
       </Flex>

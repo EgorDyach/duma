@@ -5,13 +5,13 @@ const getState = (store: StoreWithAdminState): AdminState =>
   store[adminStateName];
 
 export const getSchools = (s: StoreWithAdminState): InstitutionsAdmin[] =>
-  getState(s).schools;
+  getState(s).Schools;
 
 export const getUniversities = (s: StoreWithAdminState): InstitutionsAdmin[] =>
-  getState(s).universities;
+  getState(s).Universities;
 
 export const getSecondaries = (s: StoreWithAdminState): InstitutionsAdmin[] =>
-  getState(s).secondaries;
+  getState(s).Secondaries;
 
 export const getOtherEducations = (
   s: StoreWithAdminState,
