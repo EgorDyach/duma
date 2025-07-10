@@ -37,6 +37,15 @@ type Shift = {
   institution_id?: number;
 };
 
+type RawShift = {
+  ID?: number;
+  CreatedAt?: string;
+  UpdatedAt?: string;
+  DeletedAt?: {};
+  number: number;
+  institution_id?: number;
+};
+
 type Group = {
   createdat?: string;
   deletedat?: {};

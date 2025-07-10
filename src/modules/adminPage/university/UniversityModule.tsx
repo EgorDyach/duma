@@ -51,7 +51,7 @@ const UniversityModule = () => {
               gap="11px"
             >
               {[...universities]
-                .sort((a, b) => a.fullname.localeCompare(b.fullname))
+                // .sort((a, b) => a.fullname.localeCompare(b.fullname))
                 .map((item) => (
                   <Flex gap="16px" align="center">
                     <button
@@ -78,15 +78,15 @@ const UniversityModule = () => {
                       <PenIcon width="24px" height="24px" />
                     </button>
                     <Button
-                      key={item.institution.ID}
+                      key={item.institution?.ID}
                       // @ts-ignore
                       size="full"
                       style={{ width: '100%' }}
                     >
-                      <Text>{item.institution.name}</Text>
+                      <Text>{item.institution?.name}</Text>
                     </Button>
                     <Button
-                      key={item.institution.ID}
+                      key={item.institution?.ID}
                       // @ts-ignore
                       size="full"
                       style={{ width: '100%' }}

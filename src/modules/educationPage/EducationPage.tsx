@@ -57,17 +57,17 @@ const EducationPage: React.FC = () => {
   useEffect(() => {
     (async () => {
       try {
-        await axios.get('https://puzzlesignlanguage.ru/status');
+        await axios.get('https://puzzlesignlanguage.ru/api/auth/v1/status');
         setIsServerLive(true);
-      } catch {
+      } catch (e) {
         if (isServerLive) setIsServerLive(true);
       }
     })();
     const interval = setInterval(async () => {
       try {
-        await axios.get('https://puzzlesignlanguage.ru/status');
+        await axios.get('https://puzzlesignlanguage.ru/api/auth/v1/status');
         setIsServerLive(true);
-      } catch {
+      } catch (e) {
         if (isServerLive) setIsServerLive(true);
       }
     }, 10000);

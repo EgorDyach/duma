@@ -8,9 +8,19 @@ import {
   requestRemoveInstitution$,
 } from '@lib/api/admin';
 import { adminActions } from '.';
-import { InstitutionsAdmin } from '@type/user';
+import { Institution, InstitutionsAdmin } from '@type/user';
 import toLowerCaseKeys from '@lib/toLowerCaseKeys';
+import { ApiResponse } from '@type/api';
+import { request } from '@lib/api';
 // import { requestCreateFaculty } from '@lib/api';
+
+const requestInstitution = async (
+  institution_id?: number,
+): Promise<ApiResponse<Institution>> => {
+  return await request.get(
+    `https://puzzlesignlanguage.ru/api/auth/v1/s9rk988utk/accounts/manage/institution/${institution_id}`,
+  );
+};
 
 export const fetchInstitutions =
   () =>
@@ -20,23 +30,31 @@ export const fetchInstitutions =
       const educations = await requestInstitutions();
       console.log(educations);
       const data: Record<string, InstitutionsAdmin[]> = {
-        school: [],
-        university: [],
-        secondary: [],
+        School: [],
+        University: [],
+        Secondary: [],
         otherInstitutions: [],
       };
-      educations.message
-        .map((el) => toLowerCaseKeys(el))
-        .forEach((el) => {
-          console.log(el.institution);
-          if (el.institution.institution_type in data)
-            data[el.institution.institution_type].push(el);
-          else data['otherInstitutions'].push(el);
-        });
+
+      for (const el of educations.message.map((el) => toLowerCaseKeys(el))) {
+        const institution = (await requestInstitution(el.institution_id))
+          .message;
+
+        const newEl = JSON.parse(JSON.stringify(el));
+        newEl['institution'] = institution;
+
+        if (institution.institution_type in data) {
+          console.log('huy', institution.institution_type);
+          data[institution.institution_type].push(newEl);
+        } else {
+          data['otherInstitutions'].push(newEl);
+        }
+      }
+
       console.log(data);
-      dispatch(adminActions.setSchools(data.school));
-      dispatch(adminActions.setSecondaries(data.secondary));
-      dispatch(adminActions.setUniversities(data.university));
+      dispatch(adminActions.setSchools(data.School));
+      dispatch(adminActions.setSecondaries(data.Secondary));
+      dispatch(adminActions.setUniversities(data.University));
       dispatch(adminActions.setOtherInstitutions(data.otherInstitutions));
     } catch (error) {
       showErrorNotification(

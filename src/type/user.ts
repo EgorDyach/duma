@@ -10,7 +10,6 @@ export type UserDuma = {
   password: '<nil>' | string;
   token: string;
   level?: number;
-  Institution: Institution;
 };
 
 export type InstitutionsAdmin = {
@@ -25,7 +24,7 @@ export type InstitutionsAdmin = {
   token?: string;
   fullname: string;
   institution_id?: number;
-  institution: Institution;
+  institution?: Institution;
 };
 
 export type Institution = {
@@ -37,4 +36,4 @@ export type Institution = {
   institution_type: InstitutionType;
 };
 
-export type InstitutionType = 'school' | 'university' | 'secondary';
+export type InstitutionType = 'School' | 'University' | 'Secondary';
