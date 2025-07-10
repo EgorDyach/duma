@@ -92,7 +92,6 @@ export const AuthPage: FC<AuthProps> = ({ isAdmin = false }) => {
         dispatch(institutionActions.setSubjects([]));
         dispatch(institutionActions.setTeachers([]));
         SessionService.login(res.message.token, saving);
-        alert(JSON.stringify(res.message));
         navigate('/');
       }
     } catch (e) {
