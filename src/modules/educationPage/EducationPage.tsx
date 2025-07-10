@@ -57,7 +57,7 @@ const EducationPage: React.FC = () => {
   useEffect(() => {
     (async () => {
       try {
-        await axios.get('https://puzzlesignlanguage.online/status');
+        await axios.get('https://puzzlesignlanguage.ru/status');
         setIsServerLive(true);
       } catch {
         if (isServerLive) setIsServerLive(true);
@@ -65,7 +65,7 @@ const EducationPage: React.FC = () => {
     })();
     const interval = setInterval(async () => {
       try {
-        await axios.get('https://puzzlesignlanguage.online/status');
+        await axios.get('https://puzzlesignlanguage.ru/status');
         setIsServerLive(true);
       } catch {
         if (isServerLive) setIsServerLive(true);

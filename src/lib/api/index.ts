@@ -1,5 +1,4 @@
 import axios, { AxiosError } from 'axios';
-import { ENV } from '@lib/configs/enviorement';
 import { ApiError, AppApi } from '@type/api';
 import AppRoutes from '@lib/configs/routes';
 import SessionService from '@lib/utils/sessionService';
@@ -13,7 +12,7 @@ const defaultHeaders = {
 
 const createRequestInstance = (addAuthHeader: boolean): AppApi => {
   const instance = axios.create({
-    baseURL: ENV.apiBaseUrl,
+    baseURL: 'https://puzzlesignlanguage.ru/api/auth/',
     headers: defaultHeaders,
   });
 
