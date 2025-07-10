@@ -51,6 +51,7 @@ const SecondaryModule = () => {
               gap="11px"
             >
               {[...secondaries]
+                .filter((el) => el.level === 1)
                 .sort((a, b) => a.fullname.localeCompare(b.fullname))
                 .map((item) => (
                   <Flex gap="16px" align="center">

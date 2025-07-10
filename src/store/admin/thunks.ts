@@ -36,7 +36,9 @@ export const fetchInstitutions =
         otherInstitutions: [],
       };
 
-      for (const el of educations.message.map((el) => toLowerCaseKeys(el))) {
+      for (const el of educations.message
+        .map((el) => toLowerCaseKeys(el))
+        .filter((el) => el.level === 1)) {
         const institution = (await requestInstitution(el.institution_id))
           .message;
 
