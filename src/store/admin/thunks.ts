@@ -44,7 +44,6 @@ export const fetchInstitutions =
         newEl['institution'] = institution;
 
         if (institution.institution_type in data) {
-          console.log('huy', institution.institution_type);
           data[institution.institution_type].push(newEl);
         } else {
           data['otherInstitutions'].push(newEl);
