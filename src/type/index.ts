@@ -57,7 +57,7 @@ type Group = {
   profile_id?: number;
   disciplines?: string[];
   holidays?: Holiday[];
-  institution_id?: number;
+  tutor_id?: number;
 };
 
 type Discipline = {
@@ -125,8 +125,8 @@ type Profile = {
   deletedat?: {};
   updatedat?: string;
   id?: number;
-  institution_id?: number;
   name: string;
+  department_id?: number;
 };
 
 type RoomData = {
@@ -168,13 +168,18 @@ type Faculty = {
   id?: number;
   institution_id?: number;
   name: string;
+  createdAt?: string;
+  deletedAt?: {};
+  updatedAt?: string;
 };
 
 type Department = {
   faculty_id: number;
   id?: number;
-  institution_id?: number;
   name: string;
+  createdAt?: string;
+  deletedAt?: {};
+  updatedAt?: string;
 };
 
 type Lesson = {
@@ -187,4 +192,16 @@ type Lesson = {
   lesson_time_id?: number;
   room_id?: number;
   updatedAt?: string;
+};
+
+type ResponseFaculty = Faculty & {
+  departments: ResponseDepartment[];
+};
+
+type ResponseDepartment = Department & {
+  profiles: ResponseProfile[];
+};
+
+type ResponseProfile = Profile & {
+  groups: Group[];
 };

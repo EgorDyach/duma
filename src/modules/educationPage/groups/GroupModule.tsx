@@ -8,7 +8,7 @@ import { uiActions, uiSelectors } from '@store/ui';
 import { useSelector } from 'react-redux';
 import { AddingGroupModal } from './AddingGroupModal';
 import { useEffectOnce } from '@hooks/useEffectOnce';
-import { fetchAllGroups, fetchAllProfiles, fetchAllShifts } from '@store/institution/thunks';
+import { fetchAllFaculty } from '@store/institution/thunks';
 import {
   StyledCell,
   StyledHeaderCell,
@@ -29,9 +29,7 @@ const GroupModule = () => {
   const requests = useSelector(uiSelectors.getRequests);
   const dispatch = useAppDispatch();
   useEffectOnce(() => {
-    dispatch(fetchAllGroups());
-    dispatch(fetchAllProfiles());
-    dispatch(fetchAllShifts());
+    dispatch(fetchAllFaculty());
   });
   return (
     <Flex flex="2" direction="column" gap="8px" align="start">
@@ -103,7 +101,11 @@ const GroupModule = () => {
                         )?.name || 'Не указано'}
                       </StyledCell>
                       <StyledCell>
-                        <PopupCalendar value={item.holidays?.map((holiday) => new Date(holiday.date))}/>
+                        <PopupCalendar
+                          value={item.holidays?.map(
+                            (holiday) => new Date(holiday.date),
+                          )}
+                        />
                       </StyledCell>
                     </StyledRow>
                   );

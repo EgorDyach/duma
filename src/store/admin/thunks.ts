@@ -38,6 +38,7 @@ export const fetchInstitutions =
 
       for (const el of educations.message
         .map((el) => toLowerCaseKeys(el))
+        // TODO: чтобы отображались админы с уровнем ниже
         .filter((el) => el.level === 1)) {
         const institution = (await requestInstitution(el.institution_id))
           .message;

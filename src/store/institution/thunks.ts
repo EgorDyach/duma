@@ -556,9 +556,28 @@ export const fetchUpdateCourse =
 export const fetchAllFaculty = () => async (dispatch: AppDispatch) => {
   try {
     const { message } = await requestAllFaculty();
-    dispatch(
-      institutionActions.setFaculty(message.map((el) => toLowerCaseKeys(el))),
-    );
+    const faculties: Faculty[] = [];
+    const departments: Department[] = [];
+    const profiles: Profile[] = [];
+    const groups: Group[] = [];
+
+    message.forEach((faculty) => {
+      faculties.push(toLowerCaseKeys(faculty));
+      faculty.departments.forEach((department) => {
+        departments.push(toLowerCaseKeys(department));
+        department.profiles.forEach((profile) => {
+          profiles.push(toLowerCaseKeys(profile));
+          profile.groups.forEach((group) => {
+            groups.push(toLowerCaseKeys(group));
+          });
+        });
+      });
+    });
+
+    dispatch(institutionActions.setFaculty(faculties));
+    dispatch(institutionActions.setDepartment(departments));
+    dispatch(institutionActions.setProfiles(profiles));
+    dispatch(institutionActions.setGroups(groups));
   } catch (e) {
     if (e instanceof AxiosError) return showErrorNotification(e.message);
     if (typeof e === 'string') return showErrorNotification(e);

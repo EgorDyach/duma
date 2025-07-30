@@ -9,11 +9,7 @@ import { uiActions, uiSelectors } from '@store/ui';
 import { useSelector } from 'react-redux';
 import { AddingProfileModal } from './AddingProfileModal';
 import { useEffectOnce } from '@hooks/useEffectOnce';
-import {
-  fetchAllDepartment,
-  fetchAllFaculty,
-  fetchAllProfiles,
-} from '@store/institution/thunks';
+import { fetchAllFaculty } from '@store/institution/thunks';
 import { Text } from '@components/Typography';
 import {
   AddingFacultyModal,
@@ -34,9 +30,7 @@ const ProfileModule = () => {
   const requests = useSelector(uiSelectors.getRequests);
   const dispatch = useAppDispatch();
   useEffectOnce(() => {
-    dispatch(fetchAllProfiles());
     dispatch(fetchAllFaculty());
-    dispatch(fetchAllDepartment());
   });
   return (
     <Flex flex="2" direction="column" gap="8px" align="start">

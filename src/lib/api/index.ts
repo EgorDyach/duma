@@ -303,7 +303,9 @@ export const requestUpdateFaculty = async (data: Faculty): Promise<void> => {
     data,
   ]);
 };
-export const requestAllFaculty = async (): Promise<Response<Faculty[]>> => {
+export const requestAllFaculty = async (): Promise<
+  Response<ResponseFaculty[]>
+> => {
   return await request.get('https://puzzlesignlanguage.ru/api/back/v1/faculty');
 };
 
