@@ -8,6 +8,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import styled from 'styled-components';
 import { StyledButton } from '../EducationPage';
 import axios from 'axios';
+import CloseIcon from '@components/icons/CloseIcon';
+import BurgerIcon from '@components/icons/BurgerIcon';
 
 const tabs = [
   { id: 'shifts', name: 'Смены' },
@@ -26,7 +28,25 @@ type NavigationElementProps = {
   onSelect: VoidFunction;
 };
 
-const Navigation = styled.nav`
+const CloseButton = styled.button`
+  background-color: #641aee;
+  width: 60px;
+  height: 60px;
+  position: absolute;
+  right: -50px;
+  top: 0;
+  border: none;
+  border-top-right-radius: 50%;
+  border-bottom-right-radius: 50%;
+  padding: 13px;
+
+  @media (min-width: 950px) {
+    display: none;
+  }
+`;
+
+const Navigation = styled.nav<{ $isOpened: boolean }>`
+  position: relative;
   border-radius: 10px;
   min-height: calc(100vh - 110px);
   background-color: #641aee;
@@ -36,6 +56,13 @@ const Navigation = styled.nav`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+
+  @media (max-width: 950px) {
+    position: fixed;
+    z-index: 100;
+    transform: translateX(${(props) => (!props.$isOpened ? '-100%' : 0)});
+    transition: all 0.3s ease-in-out;
+  }
 `;
 
 const NavigationElement: React.FC<NavigationElementProps> = ({
@@ -69,12 +96,17 @@ const Pointer = styled.div<{ $index: number }>`
   top: ${(props) => props.$index * 43}px;
   z-index: -1;
   transition: top 0.1s;
+
+  @media (max-width: 950px) {
+    width: 237px;
+  }
 `;
 
 const InstitutionNavigation = () => {
   const activeTab = useSelector(uiSelectors.getActiveTabs);
   const dispatch = useDispatch();
   const [isServerLive, setIsServerLive] = useState(true);
+  const [isMenuOpened, setIsMenuOpened] = useState(true);
 
   const handleToggle = (item: DisplayedTab) => {
     dispatch(uiActions.setActiveTab(item));
@@ -101,7 +133,10 @@ const InstitutionNavigation = () => {
   }, []);
 
   return (
-    <Navigation>
+    <Navigation $isOpened={isMenuOpened}>
+      <CloseButton onClick={() => setIsMenuOpened(!isMenuOpened)}>
+        {isMenuOpened ? <CloseIcon color="#641aee" /> : <BurgerIcon />}
+      </CloseButton>
       <Pointer $index={tabs.findIndex((tab) => tab.id === activeTab)} />
       <ul style={{ listStyle: 'none', margin: 0, padding: 0 }}>
         {tabs.map((tab) => (

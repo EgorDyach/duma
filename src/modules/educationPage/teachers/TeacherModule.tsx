@@ -9,11 +9,7 @@ import { uiActions, uiSelectors } from '@store/ui';
 import { useSelector } from 'react-redux';
 import { AddingTeacherModal } from './AddingTeacherModal';
 import { useEffectOnce } from '@hooks/useEffectOnce';
-import {
-  fetchAllDepartment,
-  fetchAllFaculty,
-  fetchAllTeachers,
-} from '@store/institution/thunks';
+import { fetchAllFaculty, fetchAllTeachers } from '@store/institution/thunks';
 import { Text } from '@components/Typography';
 import {
   StyledCell,
@@ -70,7 +66,6 @@ const TeacherModule = () => {
 
   useEffectOnce(() => {
     dispatch(fetchAllTeachers());
-    dispatch(fetchAllDepartment());
     dispatch(fetchAllFaculty());
   });
   return (
