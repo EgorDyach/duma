@@ -81,12 +81,12 @@ export const GenerateModal = () => {
               setIsLoading(true);
               try {
                 await axios.post(
-                  `https://puzzlesignlanguage.online/schedule/generate?institution_id=${user.institution_id}&start_date=${startDate?.toISOString()}&end_date=${endDate?.toISOString()}`,
+                  `https://puzzlesignlanguage.ru/api/algo/v1/schedule/generate?institution_id=${user.institution_id}&start_date=${startDate?.toISOString()}&end_date=${endDate?.toISOString()}`,
                 );
                 try {
                   await fetch(
                     // @ts-ignore
-                    `https://puzzlesignlanguage.online/schedule/get/excel?institution_id=${user.institution_id}`,
+                    `https://puzzlesignlanguage.ru/api/algo/v1/schedule/excel?institution_id=${user.institution_id}`,
                     {},
                   )
                     .then((resp) =>
