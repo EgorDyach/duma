@@ -58,6 +58,7 @@ const ScheduleCard: React.FC<Schedule> = ({
       const currentLessonTime = lessonTimes.find(
         (time) => time.id === lesson?.lesson_time_id,
       );
+
       const room = rooms.find((room) => room.room.id === lesson?.room_id);
       const course = courses.find(
         (course) => course.course.id === lesson?.course_id,
@@ -66,7 +67,7 @@ const ScheduleCard: React.FC<Schedule> = ({
       const subject = subjects.find((el) => el.id === discipline?.subject_id);
 
       return {
-        time: `${currentLessonTime?.start_time} - ${currentLessonTime?.end_time}`,
+        time: `${currentLessonTime?.start_time.slice(0, 5)} - ${currentLessonTime?.end_time.slice(0, 5)}`,
         location: room?.room.name,
         name: subject?.name,
       };
@@ -98,7 +99,7 @@ const ScheduleCard: React.FC<Schedule> = ({
                 <ScheduleCardCell style={{ width: 217 }}>
                   <Flex justify="space-between" style={{ marginBottom: 3 }}>
                     <Text $color="#AAA" $size="small">
-                      {}
+                      {el?.time}
                     </Text>
                     <Flex gap="6px">
                       {el?.location && <PointIcon width="10px" height="12px" />}

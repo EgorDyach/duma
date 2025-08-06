@@ -8,7 +8,13 @@ import { institutionSelectors } from '@store/institution';
 import { uiSelectors } from '@store/ui';
 import { useSelector } from 'react-redux';
 import ContentLoader from '@components/ContentLoader';
-import { fetchAllLessons } from '@store/institution/thunks';
+import {
+  fetchAllCourses,
+  fetchAllLessonTimes,
+  fetchAllLessons,
+  fetchAllRooms,
+  fetchAllSubjects,
+} from '@store/institution/thunks';
 import { useEffectOnce } from '@hooks/useEffectOnce';
 
 function getDayOfWeekInRussian(date: Date) {
@@ -62,20 +68,31 @@ const currentWeekLessons = (lessons: Lesson[]): Lesson[][] => {
 
   const daysLessons: Lesson[][] = [[], [], [], [], [], []];
 
-  weekLessons.forEach((el) => daysLessons[new Date(el.date).getDay()].push(el));
+  weekLessons.forEach((el) => {
+    const day = new Date(el.date).getDay() - 1;
+    if (day < 0) return;
+    daysLessons[day].push(el);
+  });
+
+  console.log(daysLessons);
 
   return daysLessons;
 };
 
 const SchedulePage = () => {
   const lessons = useSelector(institutionSelectors.getLessons);
-  // const user = useSelector(uiSelectors.getUser);
   const requests = useSelector(uiSelectors.getRequests);
   const dispatch = useAppDispatch();
 
   useEffectOnce(() => {
     dispatch(fetchAllLessons());
+    dispatch(fetchAllRooms());
+    dispatch(fetchAllSubjects());
+    dispatch(fetchAllCourses());
+    dispatch(fetchAllLessonTimes());
   });
+
+  const currentLessons = currentWeekLessons(lessons);
 
   return (
     <>
@@ -89,17 +106,22 @@ const SchedulePage = () => {
           {requests['lessons'] === 'pending' && <ContentLoader size={32} />}
           {requests['lessons'] !== 'pending' && (
             <ScheduleContainer>
-              {currentWeekLessons(lessons).map((el, index) => {
-                const date = new Date(el[0].date);
-                return (
-                  <ScheduleCard
-                    lessonsOnDay={6}
-                    key={index}
-                    day={getDayOfWeekInRussian(date)}
-                    date={date}
-                    lessons={el}
-                  />
-                );
+              {currentLessons.map((el, index) => {
+                if (el.length > 0) {
+                  const date = new Date(el[0].date);
+                  return (
+                    <ScheduleCard
+                      lessonsOnDay={Math.max(
+                        ...currentLessons.map((el) => el.length),
+                      )}
+                      key={index}
+                      day={getDayOfWeekInRussian(date)}
+                      date={date}
+                      lessons={el}
+                    />
+                  );
+                }
+                return null;
               })}
             </ScheduleContainer>
           )}

@@ -703,6 +703,7 @@ export const fetchUpdateDepartment =
 export const fetchAllLessons = () => async (dispatch: AppDispatch) => {
   try {
     const { message } = await requestAllLessons();
+
     dispatch(
       institutionActions.setLessons(message.map((el) => toLowerCaseKeys(el))),
     );
