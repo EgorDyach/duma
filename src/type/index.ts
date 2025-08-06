@@ -200,8 +200,13 @@ type ResponseFaculty = Faculty & {
 
 type ResponseDepartment = Department & {
   profiles: ResponseProfile[];
+  teachers?: Teacher[];
 };
 
 type ResponseProfile = Profile & {
   groups: Group[];
+};
+
+type ResponseSubject = Subject & {
+  disciplines: Discipline[];
 };

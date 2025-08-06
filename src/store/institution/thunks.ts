@@ -403,9 +403,19 @@ export const fetchAllRooms = () => async (dispatch: AppDispatch) => {
 export const fetchAllSubjects = () => async (dispatch: AppDispatch) => {
   try {
     const { message } = await requestAllSubject();
+
+    const disciplines: Discipline[] = [];
+
+    message.forEach((el) =>
+      el.disciplines?.forEach((discipline) =>
+        disciplines.push(toLowerCaseKeys(discipline)),
+      ),
+    );
+
     dispatch(
       institutionActions.setSubjects(message.map((el) => toLowerCaseKeys(el))),
     );
+    dispatch(institutionActions.setDisciplines(disciplines));
   } catch (e) {
     if (e instanceof AxiosError) return showErrorNotification(e.message);
     if (typeof e === 'string') return showErrorNotification(e);
@@ -560,13 +570,20 @@ export const fetchAllFaculty = () => async (dispatch: AppDispatch) => {
     const departments: Department[] = [];
     const profiles: Profile[] = [];
     const groups: Group[] = [];
+    const teachers: Teacher[] = [];
 
     message.forEach((faculty) => {
       faculties.push(toLowerCaseKeys(faculty));
+
       faculty.departments.forEach((department) => {
         departments.push(toLowerCaseKeys(department));
-        department.profiles.forEach((profile) => {
+        department.teachers?.forEach((teacher) => {
+          teachers.push(toLowerCaseKeys(teacher));
+        });
+
+        department.profiles?.forEach((profile) => {
           profiles.push(toLowerCaseKeys(profile));
+
           profile.groups.forEach((group) => {
             groups.push(toLowerCaseKeys(group));
           });
@@ -578,6 +595,7 @@ export const fetchAllFaculty = () => async (dispatch: AppDispatch) => {
     dispatch(institutionActions.setDepartment(departments));
     dispatch(institutionActions.setProfiles(profiles));
     dispatch(institutionActions.setGroups(groups));
+    dispatch(institutionActions.setTeachers(teachers));
   } catch (e) {
     if (e instanceof AxiosError) return showErrorNotification(e.message);
     if (typeof e === 'string') return showErrorNotification(e);

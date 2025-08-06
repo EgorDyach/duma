@@ -146,7 +146,9 @@ export const requestDeleteSubject = async (data: {
     data: [data],
   });
 };
-export const requestAllSubject = async (): Promise<Response<Subject[]>> => {
+export const requestAllSubject = async (): Promise<
+  Response<ResponseSubject[]>
+> => {
   return await request.get(
     'https://puzzlesignlanguage.ru/api/back/v1/subject',
     {},

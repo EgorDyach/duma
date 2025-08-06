@@ -32,9 +32,10 @@ export const displayFilteredDisciplines = (
 
   if (filters.group.length) {
     newDisciplines = newDisciplines.filter((el) => {
-      return filters.group.some((group) =>
-        el.groups.map((gr) => gr.id).includes(group),
-      );
+      return filters.group.some((group) => {
+        if (!el.groups) return;
+        el.groups.map((gr) => gr.id).includes(group);
+      });
     });
   }
 

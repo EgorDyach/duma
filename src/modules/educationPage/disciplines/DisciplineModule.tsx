@@ -8,13 +8,7 @@ import { uiActions, uiSelectors } from '@store/ui';
 import { useSelector } from 'react-redux';
 import { AddingDisciplineModal } from './AddingDisciplineModal';
 import { useEffectOnce } from '@hooks/useEffectOnce';
-import {
-  fetchAllDisciplines,
-  fetchAllGroups,
-  fetchAllRooms,
-  fetchAllSubjects,
-  fetchAllTeachers,
-} from '@store/institution/thunks';
+import { fetchAllFaculty, fetchAllSubjects } from '@store/institution/thunks';
 import { SubHeader, Text } from '@components/Typography';
 import styled from 'styled-components';
 import {
@@ -71,10 +65,7 @@ const DisciplineModule = () => {
 
   useEffectOnce(() => {
     dispatch(fetchAllSubjects());
-    dispatch(fetchAllDisciplines());
-    dispatch(fetchAllGroups());
-    dispatch(fetchAllTeachers());
-    dispatch(fetchAllRooms());
+    dispatch(fetchAllFaculty());
   });
 
   useEffect(() => {

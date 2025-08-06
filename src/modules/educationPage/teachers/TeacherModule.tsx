@@ -9,7 +9,7 @@ import { uiActions, uiSelectors } from '@store/ui';
 import { useSelector } from 'react-redux';
 import { AddingTeacherModal } from './AddingTeacherModal';
 import { useEffectOnce } from '@hooks/useEffectOnce';
-import { fetchAllFaculty, fetchAllTeachers } from '@store/institution/thunks';
+import { fetchAllFaculty } from '@store/institution/thunks';
 import { Text } from '@components/Typography';
 import {
   StyledCell,
@@ -59,13 +59,7 @@ const TeacherModule = () => {
     console.log('tree', treeData);
   }, [faculties, departments]);
 
-  useEffect(
-    () => console.log('teachers', displayedTeachers),
-    [displayedTeachers],
-  );
-
   useEffectOnce(() => {
-    dispatch(fetchAllTeachers());
     dispatch(fetchAllFaculty());
   });
   return (
