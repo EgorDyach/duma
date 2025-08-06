@@ -16,6 +16,7 @@ import {
   fetchAllSubjects,
 } from '@store/institution/thunks';
 import { useEffectOnce } from '@hooks/useEffectOnce';
+import { useState } from 'react';
 
 function getDayOfWeekInRussian(date: Date) {
   const daysOfWeek = [
@@ -34,7 +35,7 @@ const ScheduleHead = styled.div`
   background-color: #3c3f4c;
   padding: 15px;
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   width: 100%;
   border-radius: 10px;
   margin-bottom: 20px;
@@ -54,16 +55,38 @@ const ScheduleContainer = styled.div`
   }
 `;
 
-const currentWeekLessons = (lessons: Lesson[]): Lesson[][] => {
+const WeekButton = styled.button`
+  background-color: transparent;
+  border: none;
+  font-size: 24px;
+  color: #8a8c94;
+`;
+
+const currentWeekLessons = (
+  lessons: Lesson[],
+  weekOffset: number = 0, // Параметр для изменения недели
+): { daysLessons: Lesson[][]; firstDay: Date; lastDay: Date } => {
   const today = new Date();
   const firstDay = new Date(today);
   const lastDay = new Date(today);
 
-  firstDay.setDate(today.getDate() - today.getDay() + 1);
+  const currentDayOfWeek = today.getDay();
+  const daysToAdd = weekOffset * 7;
+
+  firstDay.setDate(today.getDate() - currentDayOfWeek + 1 + daysToAdd);
+
+  lastDay.setMonth(firstDay.getMonth());
   lastDay.setDate(firstDay.getDate() + 6);
 
-  const weekLessons = [...lessons].filter(
-    (el) => new Date(el.date) >= firstDay ?? new Date(el.date) <= lastDay,
+  console.log('week', firstDay, lastDay);
+
+  const weekLessons = [...lessons].filter((el) => {
+    return new Date(el.date) >= firstDay && new Date(el.date) <= lastDay;
+  });
+
+  console.log(
+    'weeklessons',
+    weekLessons.map((el) => el.date),
   );
 
   const daysLessons: Lesson[][] = [[], [], [], [], [], []];
@@ -74,15 +97,16 @@ const currentWeekLessons = (lessons: Lesson[]): Lesson[][] => {
     daysLessons[day].push(el);
   });
 
-  console.log(daysLessons);
+  console.log('daylessons', daysLessons);
 
-  return daysLessons;
+  return { daysLessons, firstDay, lastDay };
 };
 
 const SchedulePage = () => {
   const lessons = useSelector(institutionSelectors.getLessons);
   const requests = useSelector(uiSelectors.getRequests);
   const dispatch = useAppDispatch();
+  const [weekOffset, setWeekOffset] = useState(0);
 
   useEffectOnce(() => {
     dispatch(fetchAllLessons());
@@ -92,36 +116,43 @@ const SchedulePage = () => {
     dispatch(fetchAllLessonTimes());
   });
 
-  const currentLessons = currentWeekLessons(lessons);
+  const currentLessons = currentWeekLessons(lessons, weekOffset);
 
   return (
     <>
       <Flex gap="20px">
         <div style={{ width: '100%' }}>
           <ScheduleHead>
+            <WeekButton onClick={() => setWeekOffset(weekOffset - 1)}>
+              {'<'}
+            </WeekButton>
             <Text $color="#8a8c94" $size="subheader">
               Текущая неделя
             </Text>
+            <WeekButton onClick={() => setWeekOffset(weekOffset + 1)}>
+              {'>'}
+            </WeekButton>
           </ScheduleHead>
           {requests['lessons'] === 'pending' && <ContentLoader size={32} />}
           {requests['lessons'] !== 'pending' && (
             <ScheduleContainer>
-              {currentLessons.map((el, index) => {
-                if (el.length > 0) {
-                  const date = new Date(el[0].date);
-                  return (
-                    <ScheduleCard
-                      lessonsOnDay={Math.max(
-                        ...currentLessons.map((el) => el.length),
-                      )}
-                      key={index}
-                      day={getDayOfWeekInRussian(date)}
-                      date={date}
-                      lessons={el}
-                    />
-                  );
-                }
-                return null;
+              {currentLessons.daysLessons.map((el, index) => {
+                const date = new Date(currentLessons.firstDay);
+                date.setDate(currentLessons.firstDay.getDate() + index);
+                console.log(currentLessons.firstDay.getDate());
+                return (
+                  <ScheduleCard
+                    lessonsOnDay={
+                      Math.max(
+                        ...currentLessons.daysLessons.map((el) => el.length),
+                      ) || 6
+                    }
+                    key={index}
+                    day={getDayOfWeekInRussian(date)}
+                    date={date}
+                    lessons={el}
+                  />
+                );
               })}
             </ScheduleContainer>
           )}
