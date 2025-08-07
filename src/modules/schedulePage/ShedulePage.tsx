@@ -17,6 +17,7 @@ import {
 } from '@store/institution/thunks';
 import { useEffectOnce } from '@hooks/useEffectOnce';
 import { useState } from 'react';
+import DropDownMenu from '@components/DropDownMenu';
 
 function getDayOfWeekInRussian(date: Date) {
   const daysOfWeek = [
@@ -116,6 +117,10 @@ const SchedulePage = () => {
     dispatch(fetchAllLessonTimes());
   });
 
+    const subjects = useSelector(institutionSelectors.getSubjects);
+
+    console.log(subjects, "subjects")
+
   const currentLessons = currentWeekLessons(lessons, weekOffset);
 
   return (
@@ -132,6 +137,7 @@ const SchedulePage = () => {
             <WeekButton onClick={() => setWeekOffset(weekOffset + 1)}>
               {'>'}
             </WeekButton>
+            <DropDownMenu/>
           </ScheduleHead>
           {requests['lessons'] === 'pending' && <ContentLoader size={32} />}
           {requests['lessons'] !== 'pending' && (
