@@ -7,7 +7,7 @@ import {
 } from '@components/Modal/ModalStyles';
 import { useSelector } from 'react-redux';
 import { uiSelectors } from '@store/ui';
-import { MODAL_NAME } from './LessonTimeModule';
+import { LESSON_TIME_MODAL_NAME as MODAL_NAME } from './ShiftModule';
 import { useAppDispatch } from '@hooks/useAppDispatch';
 import {
   fetchAddLessonTime,

@@ -52,7 +52,6 @@ export type DisplayedTab =
   | 'groups'
   | 'subjects'
   | 'rooms'
-  | 'lessonTime'
   | 'disciplines';
 
 export type UIState = {

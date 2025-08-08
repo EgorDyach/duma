@@ -6,7 +6,6 @@ import TeacherModule from './teachers/TeacherModule';
 import GroupModule from './groups/GroupModule';
 import SubjectModule from './subjects/SubjectModule';
 import RoomModule from './rooms/RoomModule';
-import LessonTimeModule from './lessonTime/LessonTimeModule';
 import DisciplineModule from './disciplines/DisciplineModule';
 import { uiSelectors } from '@store/ui';
 import { Modal } from '@components/Modal/Modal';
@@ -40,7 +39,6 @@ const modules = {
   groups: <GroupModule key="groups" />,
   subjects: <SubjectModule key="subjects" />,
   rooms: <RoomModule key="rooms" />,
-  lessonTime: <LessonTimeModule key="lessonTime" />,
   disciplines: <DisciplineModule key="disciplines" />,
 };
 

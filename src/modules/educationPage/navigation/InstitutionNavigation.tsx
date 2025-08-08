@@ -18,7 +18,6 @@ const tabs = [
   { id: 'groups', name: 'Группы' },
   { id: 'subjects', name: 'Предметы' },
   { id: 'rooms', name: 'Аудитории' },
-  { id: 'lessonTime', name: 'Время урока' },
   { id: 'disciplines', name: 'Дисциплины' },
 ];
 

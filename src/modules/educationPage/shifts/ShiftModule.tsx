@@ -9,18 +9,22 @@ import { uiActions, uiSelectors } from '@store/ui';
 import { useSelector } from 'react-redux';
 import { AddingShiftModal } from './AddingShiftModal';
 import { useEffectOnce } from '@hooks/useEffectOnce';
-import { fetchAllShifts } from '@store/institution/thunks';
+import { fetchAllLessonTimes, fetchAllShifts } from '@store/institution/thunks';
 import { Text } from '@components/Typography';
+import { AddingLessonTimeModal } from './AddingLessonTimeModal';
 
 export const MODAL_NAME = 'addShift';
+export const LESSON_TIME_MODAL_NAME = 'addLessonTime';
 
 const ShiftModule = () => {
   const shifts = useSelector(institutionSelectors.getShifts);
+  const lessonTimes = useSelector(institutionSelectors.getLessonTimes);
   const requests = useSelector(uiSelectors.getRequests);
   const dispatch = useAppDispatch();
 
   useEffectOnce(() => {
     dispatch(fetchAllShifts());
+    dispatch(fetchAllLessonTimes());
   });
 
   const handleEdit = (item: Shift) =>
@@ -36,6 +40,9 @@ const ShiftModule = () => {
     <Flex flex="2" direction="column" gap="8px" align="start">
       <Modal modalName={MODAL_NAME}>
         <AddingShiftModal />
+      </Modal>
+      <Modal modalName={LESSON_TIME_MODAL_NAME}>
+        <AddingLessonTimeModal />
       </Modal>
       <Title
         action={() =>
@@ -64,6 +71,51 @@ const ShiftModule = () => {
                 <Text>{item.number}</Text>
               </Button>
             ))}
+        </Flex>
+      )}
+      <Title
+        action={() =>
+          dispatch(
+            uiActions.openModal({
+              modalName: LESSON_TIME_MODAL_NAME,
+              isEditing: false,
+              value: null,
+            }),
+          )
+        }
+      >
+        Время урока
+      </Title>
+      {requests['lessonTime'] === 'pending' && <ContentLoader size={32} />}
+      {requests['lessonTime'] !== 'pending' && (
+        <Flex wrap="wrap" gap="11px">
+          {[...lessonTimes]
+            .sort((a, b) =>
+              `${a.start_time}-${a.end_time}`.localeCompare(
+                `${b.start_time}-${b.end_time}`,
+              ),
+            )
+            .map((item) => {
+              return (
+                <Button
+                  key={item.id}
+                  size="large"
+                  onClick={() =>
+                    dispatch(
+                      uiActions.openModal({
+                        modalName: LESSON_TIME_MODAL_NAME,
+                        isEditing: true,
+                        value: item,
+                      }),
+                    )
+                  }
+                >
+                  <Text>
+                    {item.start_time.slice(0, 5)} - {item.end_time.slice(0, 5)}
+                  </Text>
+                </Button>
+              );
+            })}
         </Flex>
       )}
     </Flex>
