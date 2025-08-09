@@ -9,7 +9,9 @@ import { uiSelectors } from '@store/ui';
 import { useSelector } from 'react-redux';
 import ContentLoader from '@components/ContentLoader';
 import {
+  fetchAllFaculty,
   fetchAllCourses,
+  fetchAllGroups,
   fetchAllLessonTimes,
   fetchAllLessons,
   fetchAllRooms,
@@ -108,6 +110,8 @@ const SchedulePage = () => {
   const requests = useSelector(uiSelectors.getRequests);
   const dispatch = useAppDispatch();
   const [weekOffset, setWeekOffset] = useState(0);
+    const groups = useSelector(institutionSelectors.getGroups);
+    console.log(groups, "groups");
 
   useEffectOnce(() => {
     dispatch(fetchAllLessons());
@@ -115,7 +119,14 @@ const SchedulePage = () => {
     dispatch(fetchAllSubjects());
     dispatch(fetchAllCourses());
     dispatch(fetchAllLessonTimes());
+    dispatch(fetchAllGroups());
+    dispatch(fetchAllFaculty());
   });
+
+    const faculties = useSelector(institutionSelectors.getFaculties);
+    console.log(faculties, "faculties");
+    
+
 
     const subjects = useSelector(institutionSelectors.getSubjects);
 
@@ -137,7 +148,7 @@ const SchedulePage = () => {
             <WeekButton onClick={() => setWeekOffset(weekOffset + 1)}>
               {'>'}
             </WeekButton>
-            <DropDownMenu/>
+            <DropDownMenu groups={groups}/>
           </ScheduleHead>
           {requests['lessons'] === 'pending' && <ContentLoader size={32} />}
           {requests['lessons'] !== 'pending' && (

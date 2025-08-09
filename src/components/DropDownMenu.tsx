@@ -3,14 +3,43 @@ import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 
-export default function DropDownMenu() {
+interface Group {
+  id: string;
+  createdAt: string;  // or Date if you parse it
+  updatedAt: string;  // or Date
+  deletedAt: string | null;
+  name: string;
+  shift_id?: string;
+  studentsCount?: number;
+  profile_id?: string;
+  holidays?: any[];   // Replace 'any' with proper type if needed
+  disciplines?: any[];
+  lessons?: any[];
+  tutor_id?: string;
+}
+
+interface Props {
+  groups: Group[];
+}
+
+export default function DropDownMenu({ groups }: Props) {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [selectedGroup, setSelectedGroup] = React.useState<string | null>(null);
   const open = Boolean(anchorEl);
+
+  console.log(selectedGroup, "selectedGroup");
+  
+  
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
-  const handleClose = () => {
+
+  const handleClose = (event: React.MouseEvent<HTMLElement>) => {
+    console.log('Selected group:', event.currentTarget.textContent);
+
     setAnchorEl(null);
+    const selectedGroupName = event.currentTarget.textContent;
+    setSelectedGroup(selectedGroupName )
   };
 
   return (
@@ -22,7 +51,7 @@ export default function DropDownMenu() {
         aria-expanded={open ? 'true' : undefined}
         onClick={handleClick}
       >
-        Dashboard
+        {selectedGroup ? selectedGroup : 'Выберите группу'}
       </Button>
       <Menu
         id="basic-menu"
@@ -35,9 +64,11 @@ export default function DropDownMenu() {
           },
         }}
       >
-        <MenuItem onClick={handleClose}>Profile</MenuItem>
-        <MenuItem onClick={handleClose}>My account</MenuItem>
-        <MenuItem onClick={handleClose}>Logout</MenuItem>
+        {groups.map((group) => (
+          <MenuItem key={group.id} onClick={handleClose} >
+            {group.name}  {/* Render only the name */}
+          </MenuItem>
+        ))}
       </Menu>
     </div>
   );
