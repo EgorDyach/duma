@@ -43,45 +43,6 @@ const ProfileModule = () => {
       <Modal modalName={MODAL_DEPARTMENT_NAME}>
         <AddingDepartmentModal />
       </Modal>
-      <Title
-        action={() =>
-          dispatch(
-            uiActions.openModal({
-              modalName: MODAL_NAME,
-              isEditing: false,
-              value: null,
-            }),
-          )
-        }
-      >
-        Профили
-      </Title>
-      {requests['profiles'] === 'pending' && <ContentLoader size={32} />}
-      {requests['profiles'] !== 'pending' && (
-        <Flex wrap="wrap" gap="11px">
-          {[...profiles]
-            .sort((a, b) => a.name.localeCompare(b.name))
-            .map((item) => {
-              return (
-                <Button
-                  key={item.id}
-                  size="large"
-                  onClick={() =>
-                    dispatch(
-                      uiActions.openModal({
-                        modalName: MODAL_NAME,
-                        isEditing: true,
-                        value: item,
-                      }),
-                    )
-                  }
-                >
-                  <Text>{item.name}</Text>
-                </Button>
-              );
-            })}
-        </Flex>
-      )}
       {
         // @ts-ignore
         user['Institution']?.institution_type !== 'school' ? (
@@ -140,31 +101,94 @@ const ProfileModule = () => {
               <ContentLoader size={32} />
             )}
             {requests['departments'] !== 'pending' && (
-              <Flex wrap="wrap" gap="11px">
-                {[...departments]
+              <Flex direction="column" gap="16px">
+                {[...faculties]
                   .sort((a, b) => a.name.localeCompare(b.name))
-                  .map((el) => (
-                    <Button
-                      key={el.id}
-                      size="large"
-                      onClick={() =>
-                        dispatch(
-                          uiActions.openModal({
-                            modalName: MODAL_DEPARTMENT_NAME,
-                            isEditing: true,
-                            value: el,
-                          }),
-                        )
-                      }
-                    >
-                      <Text>{el.name}</Text>
-                    </Button>
-                  ))}
+                  .map((fac) => {
+                    const facDepartments = departments
+                      .filter((d) => d.faculty_id === fac.id)
+                      .sort((a, b) => a.name.localeCompare(b.name));
+                    if (facDepartments.length === 0) return null;
+                    return (
+                      <Flex key={fac.id} direction="column" gap="8px">
+                        <Text $size="medium">{fac.name}</Text>
+                        <Flex wrap="wrap" gap="11px">
+                          {facDepartments.map((el) => (
+                            <Button
+                              key={el.id}
+                              size="large"
+                              onClick={() =>
+                                dispatch(
+                                  uiActions.openModal({
+                                    modalName: MODAL_DEPARTMENT_NAME,
+                                    isEditing: true,
+                                    value: el,
+                                  }),
+                                )
+                              }
+                            >
+                              <Text>{el.name}</Text>
+                            </Button>
+                          ))}
+                        </Flex>
+                      </Flex>
+                    );
+                  })}
               </Flex>
             )}
           </>
         ) : null
       }
+      <Title
+        action={() =>
+          dispatch(
+            uiActions.openModal({
+              modalName: MODAL_NAME,
+              isEditing: false,
+              value: null,
+            }),
+          )
+        }
+      >
+        Профили
+      </Title>
+      {requests['profiles'] === 'pending' && <ContentLoader size={32} />}
+      {requests['profiles'] !== 'pending' && (
+        <Flex direction="column" gap="16px">
+          {[...departments]
+            .sort((a, b) => a.name.localeCompare(b.name))
+            .map((dep) => {
+              const depProfiles = profiles
+                .filter((p) => p.department_id === dep.id)
+                .sort((a, b) => a.name.localeCompare(b.name));
+              if (depProfiles.length === 0) return null;
+              return (
+                <Flex key={dep.id} direction="column" gap="8px">
+                  <Text $size="medium">{dep.name}</Text>
+                  <Flex wrap="wrap" gap="11px">
+                    {depProfiles.map((item) => (
+                      <Button
+                        key={item.id}
+                        size="large"
+                        onClick={() =>
+                          dispatch(
+                            uiActions.openModal({
+                              modalName: MODAL_NAME,
+                              isEditing: true,
+                              value: item,
+                            }),
+                          )
+                        }
+                      >
+                        <Text>{item.name}</Text>
+                      </Button>
+                    ))}
+                  </Flex>
+                </Flex>
+              );
+            })}
+        </Flex>
+      )}
     </Flex>
   );
 };
