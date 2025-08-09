@@ -19,18 +19,15 @@ import { institutionSelectors } from '@store/institution';
 import { showErrorNotification } from '@lib/utils/notification';
 import Input from '@components/input/Input';
 import { Text } from '@components/Typography';
-import Dropdown from '@components/Dropdown';
 
 const ITEM_INIT_DATA: Profile = {
   name: '',
-  department_id: -1,
 };
 
 export const AddingProfileModal = () => {
   const dispatch = useAppDispatch();
   const modals = useSelector(uiSelectors.getModals);
   const profiles = useSelector(institutionSelectors.getProfiles);
-  const departments = useSelector(institutionSelectors.getDepartments);
   const currentModal = modals[MODAL_NAME];
   const [newItem, setNewItem] = useState<Profile>(
     currentModal.value || ITEM_INIT_DATA,
@@ -66,13 +63,6 @@ export const AddingProfileModal = () => {
           value={newItem.name}
         />
       </Flex>
-      <Dropdown
-        options={departments.map((el) => ({ id: el.id!, name: el.name }))}
-        selectedOption={newItem.department_id}
-        setSelectedOption={(option) =>
-          setNewItem((prev) => ({ ...prev, department_id: +option }))
-        }
-      />
       <Flex justify="flex-end">
         <Flex direction="column">
           <Flex gap="16px" $top="large" justify="start">

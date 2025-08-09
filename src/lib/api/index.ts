@@ -4,7 +4,6 @@ import AppRoutes from '@lib/configs/routes';
 import SessionService from '@lib/utils/sessionService';
 import { showErrorNotification } from '@lib/utils/notification';
 import { Response } from '@type/common';
-import { TeacherAccount } from '@type/user';
 
 const defaultHeaders = {
   'Accept-Language': 'ru',
@@ -102,25 +101,6 @@ export const requestAllTeacher = async (): Promise<Response<Teacher[]>> => {
   return await request.get(
     'https://puzzlesignlanguage.ru/api/back/v1/teacher',
     {},
-  );
-};
-
-// Accounts management for institution teachers (auth service)
-export const requestCreateTeacherAccount = async (
-  data: TeacherAccount,
-): Promise<void> => {
-  await request.post(
-    '/v1/s9rk988utk/accounts/manage/institution/teacher',
-    data,
-  );
-};
-
-export const requestUpdateTeacherAccount = async (
-  data: TeacherAccount,
-): Promise<void> => {
-  await request.put(
-    '/v1/s9rk988utk/accounts/manage/institution/teacher',
-    data,
   );
 };
 export const requestCreateGroup = async (

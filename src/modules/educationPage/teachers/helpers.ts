@@ -1,16 +1,7 @@
 import { TreeViewBaseItem } from '@mui/x-tree-view';
 
-export const validateTeacher = (newTeacher: Teacher, isEditing?: boolean): string | undefined => {
+export const validateTeacher = (newTeacher: Teacher): string | undefined => {
   if (!newTeacher.fullname) return 'Необходимо ввести ФИО учителя!';
-  if (!newTeacher.email) return 'Необходимо ввести email учителя!';
-  
-  // Проверка формата email
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!emailRegex.test(newTeacher.email)) return 'Введите корректный email адрес!';
-  
-  // При редактировании пароль не обязателен (если не указан, значит не меняем)
-  if (!isEditing && !newTeacher.password) return 'Необходимо ввести пароль учителя!';
-  if (newTeacher.password && newTeacher.password.length < 6) return 'Пароль должен содержать минимум 6 символов!';
 };
 
 export const makeTree = (faculties: Faculty[], departments: Department[]) => {
