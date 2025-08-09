@@ -68,7 +68,7 @@ export const AddingProfileModal = () => {
       </Flex>
       <Dropdown
         options={departments.map((el) => ({ id: el.id!, name: el.name }))}
-        selectedOption={newItem.department_id}
+        selectedOption={newItem.department_id ?? null}
         setSelectedOption={(option) =>
           setNewItem((prev) => ({ ...prev, department_id: +option }))
         }

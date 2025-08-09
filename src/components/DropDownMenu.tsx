@@ -3,20 +3,11 @@ import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 
-interface Group {
-  id: string;
-  createdAt: string;  // or Date if you parse it
-  updatedAt: string;  // or Date
-  deletedAt: string | null;
-  name: string;
-  shift_id?: string;
-  studentsCount?: number;
-  profile_id?: string;
-  holidays?: any[];   // Replace 'any' with proper type if needed
-  disciplines?: any[];
-  lessons?: any[];
-  tutor_id?: string;
-}
+// Keep a local shape for reference if needed, but avoid name clash with global Group
+// interface DropdownGroup {
+//   id: string | number;
+//   name: string;
+// }
 
 interface Props {
   groups: Group[];
