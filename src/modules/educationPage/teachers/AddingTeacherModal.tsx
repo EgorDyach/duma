@@ -12,6 +12,8 @@ import {
   fetchAddTeacher,
   fetchRemoveTeacher,
   fetchUpdateTeacher,
+  fetchCreateTeacherAccount,
+  fetchUpdateTeacherAccount,
 } from '@store/institution/thunks';
 import { getId } from '@store/institution/store';
 import { validateTeacher } from './helpers';
@@ -26,12 +28,15 @@ const ITEM_INIT_DATA: Teacher = {
   fullname: '',
   holidays: [],
   department_id: -1,
+  email: '',
+  password: '',
 };
 
 export const AddingTeacherModal: React.FC = () => {
   const dispatch = useAppDispatch();
   const modals = useSelector(uiSelectors.getModals);
   const departments = useSelector(institutionSelectors.getDepartments);
+  const user = useSelector(uiSelectors.getUser);
   const currentModal = modals[MODAL_NAME];
 
   const [newItem, setNewItem] = useState<Teacher>(
@@ -40,24 +45,38 @@ export const AddingTeacherModal: React.FC = () => {
   const [holidays, setHolidays] = useState<Date[]>(
     newItem.holidays?.map((el) => new Date(el.date)) || [],
   );
-  const handleAdd = () => {
+  const handleAdd = async () => {
     const newItemWithHolidays = {
       ...newItem,
       holidays: holidays.map((el) => ({ date: el.toISOString() })),
     };
 
-    const validateError = validateTeacher(newItem);
+    const validateError = validateTeacher(newItem, currentModal.isEditing);
     if (validateError) return showErrorNotification(validateError);
 
+    // Prepare account payload for auth service
+    const teacherAccountPayload = {
+      email: newItem.email,
+      // send password only if provided (on edit it may be empty)
+      ...(newItem.password ? { password: newItem.password } : {}),
+      fullname: newItem.fullname,
+      institution_id:
+        user && 'institution_id' in user ? (user as any).institution_id : undefined,
+    } as any;
+
     if (currentModal.isEditing) {
-      return dispatch(
+      // Update account first (email/password changes)
+      await dispatch(fetchUpdateTeacherAccount(teacherAccountPayload) as any);
+      return await dispatch(
         fetchUpdateTeacher(
           newItemWithHolidays,
           getId(currentModal.value) as number,
-        ),
+        ) as any,
       );
     }
-    dispatch(fetchAddTeacher(newItemWithHolidays));
+    // Create account first, then entity
+    await dispatch(fetchCreateTeacherAccount(teacherAccountPayload) as any);
+    await dispatch(fetchAddTeacher(newItemWithHolidays) as any);
   };
 
   return (
@@ -78,6 +97,38 @@ export const AddingTeacherModal: React.FC = () => {
             }))
           }
           value={newItem.fullname}
+        />
+      </Flex>
+
+      <Flex $top="medium">
+        <Input
+          style={{ width: '100%' }}
+          label="Email"
+          placeholder="Введите email..."
+          type="email"
+          onChange={(e) =>
+            setNewItem((prev) => ({
+              ...prev,
+              email: e,
+            }))
+          }
+          value={newItem.email}
+        />
+      </Flex>
+
+      <Flex $top="medium">
+        <Input
+          style={{ width: '100%' }}
+          label="Пароль"
+          placeholder={currentModal.isEditing ? "Оставьте пустым, если не хотите менять пароль" : "Введите пароль..."}
+          type="password"
+          onChange={(e) =>
+            setNewItem((prev) => ({
+              ...prev,
+              password: e,
+            }))
+          }
+          value={newItem.password}
         />
       </Flex>
 

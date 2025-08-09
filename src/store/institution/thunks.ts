@@ -19,6 +19,8 @@ import {
   requestAllSubject,
   requestAllTeacher,
   requestAllGroup,
+  requestCreateTeacherAccount,
+  requestUpdateTeacherAccount,
   requestDeleteDiscipline,
   requestDeleteGroup,
   requestDeleteLessonTime,
@@ -49,6 +51,7 @@ import {
   requestUpdateDepartment,
   requestAllLessons,
 } from '@lib/api';
+import { TeacherAccount } from '@type/user';
 import { uiActions } from '@store/ui';
 import toLowerCaseKeys from '@lib/toLowerCaseKeys';
 
@@ -169,6 +172,30 @@ export const fetchUpdateTeacher =
       if (e instanceof AxiosError) return showErrorNotification(e.message);
       if (typeof e === 'string') return showErrorNotification(e);
       showErrorNotification('Что-то пошло не так...');
+    }
+  };
+
+// Create teacher account in auth service
+export const fetchCreateTeacherAccount =
+  (payload: TeacherAccount) => async (_dispatch: AppDispatch) => {
+    try {
+      await requestCreateTeacherAccount(payload);
+    } catch (e) {
+      if (e instanceof AxiosError) return showErrorNotification(e.message);
+      if (typeof e === 'string') return showErrorNotification(e);
+      showErrorNotification('Не удалось создать аккаунт учителя');
+    }
+  };
+
+// Update teacher account in auth service
+export const fetchUpdateTeacherAccount =
+  (payload: TeacherAccount) => async (_dispatch: AppDispatch) => {
+    try {
+      await requestUpdateTeacherAccount(payload);
+    } catch (e) {
+      if (e instanceof AxiosError) return showErrorNotification(e.message);
+      if (typeof e === 'string') return showErrorNotification(e);
+      showErrorNotification('Не удалось обновить аккаунт учителя');
     }
   };
 export const fetchAddDiscipline =
