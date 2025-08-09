@@ -3,6 +3,8 @@ export const validateProfile = (
   profiles: Profile[],
 ): string | undefined => {
   if (!newProfile.name) return 'Необходимо ввести название профиля!';
+  if (newProfile.department_id === undefined || newProfile.department_id === -1)
+    return 'Необходимо указать кафедру!';
   if (profiles.map((el) => el.name).includes(newProfile.name))
     return 'Данный профиль существует!';
 };
