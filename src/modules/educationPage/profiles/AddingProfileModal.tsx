@@ -40,10 +40,12 @@ export const AddingProfileModal = () => {
     const validateError = validateProfile(newItem, profiles);
     if (validateError) return showErrorNotification(validateError);
 
-    if (currentModal.isEditing)
+    if (currentModal.isEditing) {
+      console.log(newItem);
       return dispatch(
         fetchUpdateProfile(newItem, getId(currentModal.value) as number),
       );
+    }
     dispatch(fetchAddProfile(newItem));
   };
 
@@ -52,7 +54,7 @@ export const AddingProfileModal = () => {
       <StyledModalTitle $top="xsmall">
         {currentModal.isEditing ? 'Изменить профиль' : 'Новый профиль'}
       </StyledModalTitle>
-      <Flex $top="medium">
+      <Flex $top="medium" direction="column" gap="15px">
         <Input
           style={{ width: '100%' }}
           label="Название"
@@ -65,14 +67,14 @@ export const AddingProfileModal = () => {
           }
           value={newItem.name}
         />
+        <Dropdown
+          options={departments.map((el) => ({ id: el.id!, name: el.name }))}
+          selectedOption={newItem.department_id ?? null}
+          setSelectedOption={(option) =>
+            setNewItem((prev) => ({ ...prev, department_id: +option }))
+          }
+        />
       </Flex>
-      <Dropdown
-        options={departments.map((el) => ({ id: el.id!, name: el.name }))}
-        selectedOption={newItem.department_id ?? null}
-        setSelectedOption={(option) =>
-          setNewItem((prev) => ({ ...prev, department_id: +option }))
-        }
-      />
       <Flex justify="flex-end">
         <Flex direction="column">
           <Flex gap="16px" $top="large" justify="start">

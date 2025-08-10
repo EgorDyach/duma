@@ -22,6 +22,7 @@ import Input from '@components/input/Input';
 import { validateGroup } from './helpers';
 import { showErrorNotification } from '@lib/utils/notification';
 import MultiDatePicker from '@components/MultiDatepicker';
+import SearchableDropdown from '@components/SearchableDropdown';
 
 const ITEM_INIT_DATA: Group = {
   holidays: [],
@@ -67,6 +68,7 @@ export const AddingGroupModal: React.FC = () => {
   const shifts = useSelector(institutionSelectors.getShifts);
   const groups = useSelector(institutionSelectors.getGroups);
   const profiles = useSelector(institutionSelectors.getProfiles);
+  const teachers = useSelector(institutionSelectors.getTeachers);
   const [newItem, setNewItem] = useState<Group>(
     currentModal.value || ITEM_INIT_DATA,
   );
@@ -154,6 +156,15 @@ export const AddingGroupModal: React.FC = () => {
           ))}
         </ShiftsList>
       </Flex>
+      <Flex direction="column" gap="10px">
+        <Text>Куратор</Text>
+        <SearchableDropdown
+          options={teachers.map((el) => ({ name: el.fullname, id: el.id! }))}
+          selectedOption={newItem.tutor_id!}
+          setSelectedOption={(id) => setNewItem({ ...newItem, tutor_id: +id })}
+          placeholder="Введите ФИО куратора..."
+        />
+      </Flex>
       <Flex $top="small" direction="column">
         <Text>Профиль</Text>
         <ShiftsList>
@@ -204,11 +215,10 @@ export const AddingGroupModal: React.FC = () => {
       </Flex>
       <Flex gap="10px" direction="column">
         <Text>Выходные и каникулы</Text>
-
         <MultiDatePicker value={holidays} onChange={setHolidays} />
       </Flex>
 
-      <Flex $top="medium" justify="flex-end">
+      <Flex $top="medium" justify="flex-end" gap="10px">
         <StyledModalAdd onClick={handleAdd}>
           <Text $size="small">
             {' '}

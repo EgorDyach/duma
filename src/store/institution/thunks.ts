@@ -54,6 +54,7 @@ import {
 import { TeacherAccount } from '@type/user';
 import { uiActions } from '@store/ui';
 import toLowerCaseKeys from '@lib/toLowerCaseKeys';
+import { removeId } from '@lib/utils/removeId';
 
 export const fetchAddRoom = (item: Room) => async (dispatch: AppDispatch) => {
   try {
@@ -85,7 +86,7 @@ export const fetchRemoveRoom =
 export const fetchUpdateRoom =
   (data: Room, id: string | number) => async (dispatch: AppDispatch) => {
     try {
-      await requestUpdateRoom(data);
+      await requestUpdateRoom(removeId(data));
       dispatch(institutionActions.updateRoom({ data, id }));
       dispatch(uiActions.closeModals());
     } catch (e) {
@@ -125,7 +126,7 @@ export const fetchRemoveSubject =
 export const fetchUpdateSubject =
   (data: Subject, id: string | number) => async (dispatch: AppDispatch) => {
     try {
-      await requestUpdateSubject(data);
+      await requestUpdateSubject(removeId(data));
       dispatch(institutionActions.updateSubject({ data, id }));
       dispatch(uiActions.closeModals());
     } catch (e) {
@@ -165,7 +166,7 @@ export const fetchRemoveTeacher =
 export const fetchUpdateTeacher =
   (data: Teacher, id: string | number) => async (dispatch: AppDispatch) => {
     try {
-      await requestUpdateTeacher(data);
+      await requestUpdateTeacher(removeId(data));
       dispatch(institutionActions.updateTeacher({ data, id }));
       dispatch(uiActions.closeModals());
     } catch (e) {
@@ -191,7 +192,7 @@ export const fetchCreateTeacherAccount =
 export const fetchUpdateTeacherAccount =
   (payload: TeacherAccount) => async (_dispatch: AppDispatch) => {
     try {
-      await requestUpdateTeacherAccount(payload);
+      await requestUpdateTeacherAccount(removeId(payload));
     } catch (e) {
       if (e instanceof AxiosError) return showErrorNotification(e.message);
       if (typeof e === 'string') return showErrorNotification(e);
@@ -234,7 +235,7 @@ export const fetchRemoveDiscipline =
 export const fetchUpdateDiscipline =
   (data: Discipline, id: string | number) => async (dispatch: AppDispatch) => {
     try {
-      await requestUpdateDiscipline(data);
+      await requestUpdateDiscipline(removeId(data));
       dispatch(
         institutionActions.updateDiscipline({
           data: toLowerCaseKeys({
@@ -283,7 +284,7 @@ export const fetchRemoveLessonTime =
 export const fetchUpdateLessonTime =
   (data: LessonTime, id: string | number) => async (dispatch: AppDispatch) => {
     try {
-      await requestUpdateLessonTime(data);
+      await requestUpdateLessonTime(removeId(data));
       dispatch(institutionActions.updateLessonTime({ data, id }));
       dispatch(uiActions.closeModals());
     } catch (e) {
@@ -322,7 +323,7 @@ export const fetchRemoveShift =
 export const fetchUpdateShift =
   (data: Shift, id: string | number) => async (dispatch: AppDispatch) => {
     try {
-      await requestUpdateShift(data);
+      await requestUpdateShift(removeId(data));
       dispatch(institutionActions.updateShift({ data, id }));
       dispatch(uiActions.closeModals());
     } catch (e) {
@@ -361,7 +362,7 @@ export const fetchRemoveGroup =
 export const fetchUpdateGroup =
   (data: Group, id: string | number) => async (dispatch: AppDispatch) => {
     try {
-      await requestUpdateGroup(data);
+      await requestUpdateGroup(removeId(data));
       dispatch(institutionActions.updateGroup({ data, id }));
       dispatch(uiActions.closeModals());
     } catch (e) {
@@ -401,7 +402,7 @@ export const fetchRemoveProfile =
 export const fetchUpdateProfile =
   (data: Profile, id: string | number) => async (dispatch: AppDispatch) => {
     try {
-      await requestUpdateProfile(data);
+      await requestUpdateProfile(removeId(data));
       dispatch(institutionActions.updateProfile({ data, id }));
       dispatch(uiActions.closeModals());
     } catch (e) {
@@ -580,7 +581,7 @@ export const fetchRemoveCourse =
 export const fetchUpdateCourse =
   (data: Course, id: string | number) => async (dispatch: AppDispatch) => {
     try {
-      await requestUpdateCourse(data);
+      await requestUpdateCourse(removeId(data));
       dispatch(institutionActions.updateCourse({ data, id }));
       dispatch(uiActions.closeModals());
     } catch (e) {
@@ -661,7 +662,7 @@ export const fetchRemoveFaculty =
 export const fetchUpdateFaculty =
   (data: Faculty, id: string | number) => async (dispatch: AppDispatch) => {
     try {
-      await requestUpdateFaculty(data);
+      await requestUpdateFaculty(removeId(data));
       dispatch(institutionActions.updateFaculty({ data, id }));
       dispatch(uiActions.closeModals());
     } catch (e) {
@@ -717,7 +718,7 @@ export const fetchRemoveDepartment =
 export const fetchUpdateDepartment =
   (data: Department, id: string | number) => async (dispatch: AppDispatch) => {
     try {
-      await requestUpdateDepartment(data);
+      await requestUpdateDepartment(removeId(data));
       dispatch(institutionActions.updateDepartment({ data, id }));
       dispatch(uiActions.closeModals());
     } catch (e) {
