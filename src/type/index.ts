@@ -106,6 +106,8 @@ type CourseToleration = {
 };
 
 type Course = {
+  discipline_id: number | undefined;
+  teacher_id: number | undefined;
   course: CourseData;
   course_affinity: CourseAffinity[];
   course_toleration: CourseToleration[];
@@ -162,6 +164,7 @@ type RoomTaint = {
 };
 
 type Room = {
+  id: number;
   room: RoomData;
   room_taints: RoomTaint[];
   room_labels: RoomLabel[];

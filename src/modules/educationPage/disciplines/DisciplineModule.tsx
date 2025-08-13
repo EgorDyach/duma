@@ -8,7 +8,7 @@ import { uiActions, uiSelectors } from '@store/ui';
 import { useSelector } from 'react-redux';
 import { AddingDisciplineModal } from './AddingDisciplineModal';
 import { useEffectOnce } from '@hooks/useEffectOnce';
-import { fetchAllDisciplines, fetchAllFaculty, fetchAllSubjects } from '@store/institution/thunks';
+import { fetchAllDisciplines, fetchAllFaculty, fetchAllSubjects, fetchAllTeachers } from '@store/institution/thunks';
 import { SubHeader, Text } from '@components/Typography';
 import styled from 'styled-components';
 import {
@@ -56,6 +56,7 @@ const DisciplineModule = () => {
   const groups = useSelector(institutionSelectors.getGroups);
   const teachers = useSelector(institutionSelectors.getTeachers);
   const requests = useSelector(uiSelectors.getRequests);
+  const faculties = useSelector(institutionSelectors.getFaculties)
   const dispatch = useAppDispatch();
   const [filters, setFilters] = useState<Filters>({
     group: [],
@@ -74,6 +75,7 @@ const DisciplineModule = () => {
       disciplines.find((el) => el.id === 0),
     );
   }, [courses]);
+console.log(teachers, "teachers333");
 
   const setFilterField = (field: keyof Filters, value: (string | number)[]) => {
     setFilters((prev) => ({ ...prev, [field]: value }));
@@ -214,7 +216,7 @@ const DisciplineModule = () => {
                             course_toleration: [],
                             discipline_id: item.id as number,
                             course: {
-                            teacher_id: 0,
+                            teacher_id: item.id as number,
                             }
                           },
                           modalName: 'addCourse',
@@ -226,12 +228,14 @@ const DisciplineModule = () => {
                   </Title>
                   <Flex wrap="wrap" gap="11px">
                     {courses
-                      .filter((el) => el.discipline_id === item.id)
+                      .filter((el) => {
+                        el.discipline_id === item.id
+                      })
                       .map((el) => {
                         const teacher = teachers.find(
                           (t) => t.id === el.teacher_id,
                         );
-                        console.log('teacher', courses);
+                        console.log('awdasdwwwwwwwwwwwwwwwwwwwwwwwwwwwww', el);
                         return teacher ? (
                           <Button key={el.id}>
                             <Flex gap="12px">

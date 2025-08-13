@@ -107,11 +107,12 @@ const currentWeekLessons = (
 
 const SchedulePage = () => {
   const lessons = useSelector(institutionSelectors.getLessons);
+    const user = useSelector(uiSelectors.getUser);
   const requests = useSelector(uiSelectors.getRequests);
   const dispatch = useAppDispatch();
   const [weekOffset, setWeekOffset] = useState(0);
     const groups = useSelector(institutionSelectors.getGroups);
-    console.log(groups, "groups");
+    console.log(user, "user");
 
   useEffectOnce(() => {
     dispatch(fetchAllLessons());

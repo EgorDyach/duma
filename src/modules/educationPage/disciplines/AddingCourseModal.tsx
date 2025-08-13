@@ -43,8 +43,8 @@ const TagsContainer = styled(Flex)`
 const ITEM_INIT_DATA: Course = {
   course_affinity: [],
   course_toleration: [],
+  discipline_id: -1,
   course: {
-    discipline_id: -1,
     teacher_id: -1,
   },
 };
@@ -52,27 +52,33 @@ const ITEM_INIT_DATA: Course = {
 export const AddingCourseModal = () => {
   const dispatch = useAppDispatch();
   const modals = useSelector(uiSelectors.getModals);
-  const teachers = useSelector(institutionSelectors.getTeachers);
-  const disciplines = useSelector(institutionSelectors.getDisciplines);
-  const subjects = useSelector(institutionSelectors.getSubjects);
-  const courses = useSelector(institutionSelectors.getCourses);
-  const rooms = useSelector(institutionSelectors.getRooms);
+  const teachers = useSelector(institutionSelectors.getTeachers) || [];
+  const disciplines = useSelector(institutionSelectors.getDisciplines) || [];
+  const subjects = useSelector(institutionSelectors.getSubjects) || [];
+  const courses = useSelector(institutionSelectors.getCourses) || [];
+  const rooms = useSelector(institutionSelectors.getRooms) || [];
   const currentModal = modals[MODAL_NAME];
   const [newItem, setNewItem] = useState<Course>(
-    currentModal.value || ITEM_INIT_DATA,
+    currentModal?.value || ITEM_INIT_DATA,
   );
-  const currentDiscipline = useMemo(
-    () => disciplines.find((el) => el.id === newItem.course.discipline_id),
-    [disciplines, newItem.course.discipline_id],
-  );
+console.log(newItem, '2');
 
-  useEffect(() => console.log(newItem.course.teacher_id), []);
+  const currentDiscipline = disciplines.find((el) => el.id === newItem.discipline_id)
+  console.log(currentDiscipline, "curr");
+  
+
+  useEffect(() => {
+    if (!currentDiscipline && disciplines.length > 0) {
+      dispatch(uiActions.closeModals());
+      showErrorNotification('Не удалось открыть дисциплину!');
+    }
+  }, [currentDiscipline, disciplines, dispatch]);
 
   const handleAdd = () => {
     const validateError = validateCourse(newItem);
     if (validateError) return showErrorNotification(validateError);
 
-    if (currentModal.isEditing) {
+    if (currentModal?.isEditing) {
       return dispatch(
         fetchUpdateCourse(newItem, getId(currentModal.value) as number),
       );
@@ -80,58 +86,39 @@ export const AddingCourseModal = () => {
     dispatch(fetchAddCourse(newItem));
   };
 
-  if (!currentDiscipline) {
-    dispatch(uiActions.closeModals());
-    showErrorNotification('Не удалось открыть дисциплину!');
-    return <></>;
-  }
-
-  const currentSubject = useMemo(
-    () => subjects.find((el) => el.id === currentDiscipline?.subject_id),
-    [subjects, currentDiscipline?.subject_id],
-  );
+  const formatTeacherName = (fullname: string = '') => {
+    const parts = fullname.trim().split(/\s+/).filter(Boolean);
+    if (parts.length < 3) return fullname;
+    
+    return `${parts[0]} ${parts[1][0]}.${parts[2][0]}.`;
+  };
 
   const checkAffinity = (newAffinity: string) => {
-    if (newItem.course_affinity.find((el) => el.entity === newAffinity)) {
-      setNewItem((prev) => ({
-        ...prev,
-        course_affinity: prev.course_affinity.filter(
-          (affinity) => affinity.entity !== newAffinity,
-        ),
-      }));
-    } else {
-      setNewItem((prev) => ({
-        ...prev,
-        course_affinity: [
-          ...prev.course_affinity,
-          { entity: newAffinity, should_exist: true },
-        ],
-      }));
-    }
+    setNewItem(prev => ({
+      ...prev,
+      course_affinity: prev.course_affinity.some(a => a.entity === newAffinity)
+        ? prev.course_affinity.filter(a => a.entity !== newAffinity)
+        : [...prev.course_affinity, { entity: newAffinity, should_exist: true }]
+    }));
   };
 
   const checkToleration = (newToleration: string) => {
-    if (
-      newItem.course_toleration.find(
-        (el) => el.toleration_value === newToleration,
-      )
-    ) {
-      setNewItem((prev) => ({
-        ...prev,
-        course_toleration: prev.course_toleration.filter(
-          (toleration) => toleration.toleration_value !== newToleration,
-        ),
-      }));
-    } else {
-      setNewItem((prev) => ({
-        ...prev,
-        course_toleration: [
-          ...prev.course_toleration,
-          { toleration_value: newToleration },
-        ],
-      }));
-    }
+    setNewItem(prev => ({
+      ...prev,
+      course_toleration: prev.course_toleration.some(t => t.toleration_value === newToleration)
+        ? prev.course_toleration.filter(t => t.toleration_value !== newToleration)
+        : [...prev.course_toleration, { toleration_value: newToleration }]
+    }));
   };
+
+  const currentSubject = useMemo(
+    () => subjects.find(el => el.id === currentDiscipline?.subject_id),
+    [subjects, currentDiscipline?.subject_id]
+  );
+
+  if (!currentDiscipline || !currentModal) {
+    return null;
+  }
 
   return (
     <>
@@ -139,47 +126,36 @@ export const AddingCourseModal = () => {
         <Flex gap="10px">
           <StyledModalTitle $top="xsmall">
             {currentModal.isEditing ? 'Изменить курс для ' : 'Новый курс для '}
-            {currentSubject?.name
-              ? `${currentSubject.name} ${currentDiscipline?.discipline_type ? `(${currentDiscipline?.discipline_type})` : ''}`
-              : 'Неизвестный предмет'}
+            {currentSubject?.name || 'Неизвестный предмет'}
+            {currentDiscipline.discipline_type && ` (${currentDiscipline.discipline_type})`}
           </StyledModalTitle>
         </Flex>
       </Flex>
 
       <Flex $top="medium" direction="column" gap="8px">
         <Text>Выбрать учителя:</Text>
-        {/* TODO: сделать searchable dropdown*/}
         <Dropdown
-          options={[...teachers]
-            .filter((el) =>
-              el.id !== newItem.course.teacher_id
+          options={teachers
+            .filter(teacher => 
+              teacher.id !== newItem.course.teacher_id
                 ? !courses
-                    .filter(
-                      (q) => q.course.discipline_id === currentDiscipline.id,
-                    )
-                    .map((q) => q.course.teacher_id)
-                    .includes(el.id as number)
-                : true,
+                    .filter(c => c.discipline_id === currentDiscipline.id)
+                    .some(c => c.teacher_id === teacher.id)
+                : true
             )
-            .sort((a, b) => a.fullname.localeCompare(b.fullname))
-            .map((teacher) => {
-              const name = `${teacher.fullname.split(' ')[0]} ${teacher.fullname.split(' ')[1][0]}. ${teacher.fullname.split(' ')[2][0]}.`;
-              return {
-                id: +(teacher.id || -1),
-                name,
-              };
-            })}
+            .sort((a, b) => (a.fullname || '').localeCompare(b.fullname || ''))
+            .map(teacher => ({
+              id: Number(teacher.id) || -1,
+              name: formatTeacherName(teacher.fullname)
+            }))}
           selectedOption={newItem.course.teacher_id}
-          setSelectedOption={(id) => {
-            console.log('id', +id);
-            setNewItem((prev) => ({
-              ...prev,
-              course: {
-                teacher_id: +id,
-                discipline_id: prev.course.discipline_id,
-              },
-            }));
-          }}
+          setSelectedOption={id => setNewItem(prev => ({
+            ...prev,
+            course: {
+              ...prev.course,
+              teacher_id: Number(id)
+            }
+          }))}
         />
 
         <Text>Параметры аудитории:</Text>
@@ -187,41 +163,37 @@ export const AddingCourseModal = () => {
           <Flex direction="column" gap="10px">
             <Text>Добавить особенность аудитории:</Text>
             <TagsContainer direction="column" gap="8px">
-              {rooms.map((room) => {
-                return room.room_taints.map((taint) => (
-                  <Flex gap="8px" align="center">
+              {rooms.flatMap(room => 
+                room.room_taints?.map((taint, i) => (
+                  <Flex key={`tol-${room.id}-${i}`} gap="8px" align="center">
                     <Checkbox
                       setChecked={() => checkToleration(taint.taint_value)}
-                      checked={
-                        !!newItem.course_toleration.find(
-                          (el) => el.toleration_value === taint.taint_value,
-                        )
-                      }
+                      checked={newItem.course_toleration.some(
+                        t => t.toleration_value === taint.taint_value
+                      )}
                     />
                     <Text>{taint.taint_value}</Text>
                   </Flex>
-                ));
-              })}
+                )) || []
+              )}
             </TagsContainer>
           </Flex>
           <Flex direction="column" gap="10px">
             <Text>Добавить определенную аудиторию:</Text>
             <TagsContainer direction="column" gap="8px">
-              {rooms.map((room) => {
-                return room.room_labels.map((label) => (
-                  <Flex gap="8px" align="center">
+              {rooms.flatMap(room =>
+                room.room_labels?.map((label, i) => (
+                  <Flex key={`aff-${room.id}-${i}`} gap="8px" align="center">
                     <Checkbox
                       setChecked={() => checkAffinity(label.label_value)}
-                      checked={
-                        !!newItem.course_affinity.find(
-                          (el) => el.entity === label.label_value,
-                        )
-                      }
+                      checked={newItem.course_affinity.some(
+                        a => a.entity === label.label_value
+                      )}
                     />
                     <Text>{label.label_value}</Text>
                   </Flex>
-                ));
-              })}
+                )) || []
+              )}
             </TagsContainer>
           </Flex>
         </RoomAffinityContainer>
@@ -236,8 +208,8 @@ export const AddingCourseModal = () => {
             </StyledModalAdd>
             {currentModal.isEditing && (
               <Button
-                onClick={() =>
-                  dispatch(fetchRemoveCourse(newItem.course.id as number))
+                onClick={() => 
+                  dispatch(fetchRemoveCourse(Number(newItem.course.id)))
                 }
               >
                 <Text $size="small">Удалить</Text>
