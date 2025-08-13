@@ -8,7 +8,7 @@ import { uiActions, uiSelectors } from '@store/ui';
 import { useSelector } from 'react-redux';
 import { AddingDisciplineModal } from './AddingDisciplineModal';
 import { useEffectOnce } from '@hooks/useEffectOnce';
-import { fetchAllFaculty, fetchAllSubjects } from '@store/institution/thunks';
+import { fetchAllDisciplines, fetchAllFaculty, fetchAllSubjects } from '@store/institution/thunks';
 import { SubHeader, Text } from '@components/Typography';
 import styled from 'styled-components';
 import {
@@ -64,7 +64,7 @@ const DisciplineModule = () => {
   const [displayedDisciplines, setDisplayedDisciplines] = useState(disciplines);
 
   useEffectOnce(() => {
-    dispatch(fetchAllSubjects());
+    dispatch(fetchAllDisciplines());
     dispatch(fetchAllFaculty());
   });
 
@@ -159,6 +159,8 @@ const DisciplineModule = () => {
               ),
             )
             .map((item) => {
+              console.log(item, 'item'  );
+              
               return (
                 <StyledFlex
                   direction="column"
@@ -210,10 +212,10 @@ const DisciplineModule = () => {
                           value: {
                             course_affinity: [],
                             course_toleration: [],
+                            discipline_id: item.id as number,
                             course: {
-                              discipline_id: item.id as number,
-                              teacher_id: -1,
-                            },
+                            teacher_id: 0,
+                            }
                           },
                           modalName: 'addCourse',
                         }),
@@ -224,14 +226,14 @@ const DisciplineModule = () => {
                   </Title>
                   <Flex wrap="wrap" gap="11px">
                     {courses
-                      .filter((el) => el.course.discipline_id === item.id)
+                      .filter((el) => el.discipline_id === item.id)
                       .map((el) => {
                         const teacher = teachers.find(
-                          (t) => t.id === el.course.teacher_id,
+                          (t) => t.id === el.teacher_id,
                         );
                         console.log('teacher', courses);
                         return teacher ? (
-                          <Button key={el.course.id}>
+                          <Button key={el.id}>
                             <Flex gap="12px">
                               <Text>{teacher.fullname}</Text>
                               {/* <StyledIcon
