@@ -10,7 +10,7 @@ export const validateTeacher = (newTeacher: Teacher, isEditing?: boolean): strin
   
   // При редактировании пароль не обязателен (если не указан, значит не меняем)
   if (!isEditing && !newTeacher.password) return 'Необходимо ввести пароль учителя!';
-  if (newTeacher.password && newTeacher.password.length < 6) return 'Пароль должен содержать минимум 6 символов!';
+  // Убрана проверка на минимальную длину пароля по требованию
 };
 
 export const makeTree = (faculties: Faculty[], departments: Department[]) => {

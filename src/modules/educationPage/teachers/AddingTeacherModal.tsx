@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Flex from '@components/Flex';
 import {
   StyledModalTitle,
@@ -12,7 +12,6 @@ import {
   fetchAddTeacher,
   fetchRemoveTeacher,
   fetchUpdateTeacher,
-  fetchCreateTeacherAccount,
   fetchUpdateTeacherAccount,
 } from '@store/institution/thunks';
 import { getId } from '@store/institution/store';
@@ -42,6 +41,16 @@ export const AddingTeacherModal: React.FC = () => {
   const [newItem, setNewItem] = useState<Teacher>(
     currentModal.value || ITEM_INIT_DATA,
   );
+
+  // Autofill email when открываем модалку редактирования: email приходит из связанного account
+  useEffect(() => {
+    if (currentModal.isEditing && currentModal.value) {
+      const accEmail = (currentModal.value as any)?.account?.email;
+      if (accEmail) {
+        setNewItem((prev) => ({ ...prev, email: accEmail } as any));
+      }
+    }
+  }, [currentModal.isEditing, currentModal.value]);
   const [holidays, setHolidays] = useState<Date[]>(
     newItem.holidays?.map((el) => new Date(el.date)) || [],
   );
@@ -75,7 +84,7 @@ export const AddingTeacherModal: React.FC = () => {
       );
     }
     // Create account first, then entity
-    await dispatch(fetchCreateTeacherAccount(teacherAccountPayload) as any);
+    // await dispatch(fetchCreateTeacherAccount(teacherAccountPayload) as any);
     await dispatch(fetchAddTeacher(newItemWithHolidays) as any);
   };
 

@@ -102,11 +102,21 @@ export const AddingRoomModal = () => {
           label="Особенность комнаты"
           placeholder="Особенность..."
           tagDuplicationText="Такая особенность уже существует!"
-          setTags={(n) =>
-            setNewItem((prev) => ({
-              ...prev,
-              room_taints: n.map((el) => ({ taint_value: el })),
-            }))
+          setTags={(nextTags) =>
+            setNewItem((prev) => {
+              const previousByValue: Record<string, RoomTaint> = Object.fromEntries(
+                (prev.room_taints || []).map((t) => [t.taint_value, t]),
+              );
+              const normalized: RoomTaint[] = nextTags.map((val) => {
+                const existing = previousByValue[val];
+                if (existing) return existing;
+                return { taint_value: val, should_exist: true } as RoomTaint;
+              });
+              return {
+                ...prev,
+                room_taints: normalized,
+              };
+            })
           }
           tags={newItem.room_taints.map((taint) => taint.taint_value) || []}
         />
@@ -114,11 +124,21 @@ export const AddingRoomModal = () => {
           label="Назначение комнаты"
           placeholder="Назначение..."
           tagDuplicationText="Такое назначение уже существует!"
-          setTags={(n) =>
-            setNewItem((prev) => ({
-              ...prev,
-              room_labels: n.map((el) => ({ label_value: el })),
-            }))
+          setTags={(nextTags) =>
+            setNewItem((prev) => {
+              const previousByValue: Record<string, RoomLabel> = Object.fromEntries(
+                (prev.room_labels || []).map((l) => [l.label_value, l]),
+              );
+              const normalized: RoomLabel[] = nextTags.map((val) => {
+                const existing = previousByValue[val];
+                if (existing) return existing;
+                return { label_value: val } as RoomLabel;
+              });
+              return {
+                ...prev,
+                room_labels: normalized,
+              };
+            })
           }
           tags={newItem.room_labels.map((label) => label.label_value) || []}
         />

@@ -57,8 +57,8 @@ export const requestCreateRoom = async (
     data,
   ]);
 };
-export const requestUpdateRoom = async (data: Room): Promise<void> => {
-  await request.put('https://puzzlesignlanguage.ru/api/back/v1/room', [data]);
+export const requestUpdateRoom = async (data: any): Promise<void> => {
+  await request.put('https://puzzlesignlanguage.ru/api/back/v1/room', data);
 };
 export const requestDeleteRoom = async (data: {
   id: string | number;
@@ -106,10 +106,13 @@ export const requestAllTeacher = async (): Promise<Response<Teacher[]>> => {
 };
 
 // Accounts management for institution teachers (auth service)
+// Returns created account object so caller can extract its ID
 export const requestCreateTeacherAccount = async (
   data: TeacherAccount,
-): Promise<void> => {
-  await request.post(
+): Promise<{
+  message: any; Status: string; Account: any 
+}> => {
+  return await request.post(
     '/v1/s9rk988utk/accounts/manage/institution/teacher',
     data,
   );

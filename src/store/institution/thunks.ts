@@ -56,6 +56,18 @@ import { uiActions } from '@store/ui';
 import toLowerCaseKeys from '@lib/toLowerCaseKeys';
 import { removeId } from '@lib/utils/removeId';
 
+// Deduplicate helpers
+function uniqueById<T extends { id?: number }>(items: T[]): T[] {
+  const seen = new Set<number>();
+  return items.filter((it) => {
+    const id = it?.id as number | undefined;
+    if (!id) return true;
+    if (seen.has(id)) return false;
+    seen.add(id);
+    return true;
+  });
+}
+
 export const fetchAddRoom = (item: Room) => async (dispatch: AppDispatch) => {
   try {
     const { message } = await requestCreateRoom(item);
@@ -86,7 +98,15 @@ export const fetchRemoveRoom =
 export const fetchUpdateRoom =
   (data: Room, id: string | number) => async (dispatch: AppDispatch) => {
     try {
-      await requestUpdateRoom(removeId(data));
+      // Backend expects a flat models.Room shape, not nested { room: {...} }
+      const payload = {
+        id: data.room.id,
+        name: data.room.name,
+        capacity: data.room.capacity,
+        room_taints: data.room_taints,
+        room_labels: data.room_labels,
+      };
+      await requestUpdateRoom(payload);
       dispatch(institutionActions.updateRoom({ data, id }));
       dispatch(uiActions.closeModals());
     } catch (e) {
@@ -135,10 +155,32 @@ export const fetchUpdateSubject =
       showErrorNotification('Что-то пошло не так...');
     }
   };
+// Create account first, then create teacher linked by account_id
 export const fetchAddTeacher =
-  (item: Teacher) => async (dispatch: AppDispatch) => {
+  (item: Teacher & { email?: string; password?: string }) =>
+  async (dispatch: AppDispatch) => {
     try {
-      const { message } = await requestCreateTeacher(item);
+      // 1) Create account in auth service
+      if (!item?.email || !item?.password) {
+        return showErrorNotification('Нужны email и пароль для создания аккаунта учителя');
+      }
+      const res = await requestCreateTeacherAccount({
+        email: item.email,
+        fullname: item.fullname,
+        password: item.password,
+        // account_id: Account?.id,
+      });
+      console.log(res?.message?.Account?.id, 'res'); // Debugging line
+      
+      // 2) Create teacher in backend
+      const teacherPayload = {
+        ...removeId(item),
+        // pass created account id to backend
+        account_id: res?.message?.Account?.id || undefined,
+      } as any;
+      console.log(teacherPayload, 'teacherPayload');
+      
+      const { message } = await requestCreateTeacher(teacherPayload);
       dispatch(
         institutionActions.setTeachers(
           message.Teachers.map((el) => toLowerCaseKeys(el)),
@@ -202,7 +244,11 @@ export const fetchUpdateTeacherAccount =
 export const fetchAddDiscipline =
   (item: Discipline) => async (dispatch: AppDispatch) => {
     try {
-      const { message } = await requestCreateDiscipline(item);
+      const payload: Discipline = {
+        ...item,
+        groups: uniqueById(item.groups || []),
+      };
+      const { message } = await requestCreateDiscipline(payload);
       dispatch(
         institutionActions.setDisciplines(
           message.Disciplines.map((el) =>
@@ -235,7 +281,28 @@ export const fetchRemoveDiscipline =
 export const fetchUpdateDiscipline =
   (data: Discipline, id: string | number) => async (dispatch: AppDispatch) => {
     try {
-      await requestUpdateDiscipline(removeId(data));
+      // Do NOT remove id: backend validates discipline by id and updates by it
+      const payload: Discipline = {
+        ...data,
+        groups: uniqueById(data.groups || []),
+      };
+      await requestUpdateDiscipline(payload);
+      // Refetch disciplines and courses to avoid duplicates and stale relations in UI
+      const { message } = await requestAllDiscipline();
+      const { message: courses } = await requestAllCourse();
+      dispatch(
+        institutionActions.setDisciplines(
+          message.map((el) =>
+            toLowerCaseKeys({
+              ...el,
+              groups: el.groups.map((q) => toLowerCaseKeys(q)),
+            }),
+          ),
+        ),
+      );
+      dispatch(
+        institutionActions.setCourses(courses.map((el) => toLowerCaseKeys(el))),
+      );
       dispatch(
         institutionActions.updateDiscipline({
           data: toLowerCaseKeys({
@@ -415,13 +482,35 @@ export const fetchUpdateProfile =
 export const fetchAllRooms = () => async (dispatch: AppDispatch) => {
   try {
     const { message } = await requestAllRoom();
-    dispatch(
-      institutionActions.setRooms(
-        message
-          .map((el) => toLowerCaseKeys(el))
-          .map((el) => ({ ...el, room: toLowerCaseKeys(el.room) })),
-      ),
-    );
+    // API may return rooms in a flat shape (id, name, capacity, etc.)
+    // Normalize to the Room type expected by UI: { room: { ... }, room_labels, room_taints }
+    const normalizedRooms: Room[] = message.map((raw: any) => {
+      const lower = toLowerCaseKeys(raw);
+      // If backend already provides nested room, keep it; otherwise, build it from flat fields
+      const roomData = lower.room
+        ? toLowerCaseKeys(lower.room)
+        : {
+            id: lower.id,
+            name: lower.name,
+            capacity: lower.capacity,
+            institution_id: lower.institution_id,
+          };
+
+      const room_labels = Array.isArray(lower.room_labels)
+        ? lower.room_labels.map((l: any) => toLowerCaseKeys(l))
+        : [];
+      const room_taints = Array.isArray(lower.room_taints)
+        ? lower.room_taints.map((t: any) => toLowerCaseKeys(t))
+        : [];
+
+      return {
+        room: roomData,
+        room_labels,
+        room_taints,
+      } as Room;
+    });
+
+    dispatch(institutionActions.setRooms(normalizedRooms));
   } catch (e) {
     if (e instanceof AxiosError) return showErrorNotification(e.message);
     if (typeof e === 'string') return showErrorNotification(e);
@@ -553,7 +642,15 @@ export const fetchAllCourses = () => async (dispatch: AppDispatch) => {
 export const fetchAddCourse =
   (item: Course) => async (dispatch: AppDispatch) => {
     try {
-      const { message } = await requestCreateCourse(item);
+      // Backend expects flat models.Course, not nested { course: {...} }
+      const payload = {
+        id: item.course.id,
+        teacher_id: item.course.teacher_id,
+        discipline_id: item.course.discipline_id,
+        course_affinity: item.course_affinity,
+        course_toleration: item.course_toleration,
+      } as any;
+      const { message } = await requestCreateCourse(payload);
       dispatch(
         institutionActions.setCourses(
           message.Courses.map((el) => toLowerCaseKeys(el)),
@@ -581,7 +678,15 @@ export const fetchRemoveCourse =
 export const fetchUpdateCourse =
   (data: Course, id: string | number) => async (dispatch: AppDispatch) => {
     try {
-      await requestUpdateCourse(removeId(data));
+      // Flatten payload and keep id for update
+      const payload = {
+        id: data.course.id,
+        teacher_id: data.course.teacher_id,
+        discipline_id: data.course.discipline_id,
+        course_affinity: data.course_affinity,
+        course_toleration: data.course_toleration,
+      } as any;
+      await requestUpdateCourse(payload);
       dispatch(institutionActions.updateCourse({ data, id }));
       dispatch(uiActions.closeModals());
     } catch (e) {

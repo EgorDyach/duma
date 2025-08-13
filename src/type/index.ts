@@ -9,6 +9,7 @@ type Teacher = {
   department_id: number;
   email: string;
   password: string;
+  account_id?: number;
 };
 
 type Holiday = {

@@ -94,9 +94,9 @@ export const AuthPage: FC<AuthProps> = ({ isAdmin = false }) => {
         SessionService.login(res.message.token, saving);
         navigate('/');
       }
-    } catch (e) {
-      const error = e as { response: { data: { error: string } } };
-      showErrorNotification(String(error));
+    } catch (e: any) {
+      const msg = e?.response?.data?.error || 'Неверный логин или пароль';
+      showErrorNotification(msg);
     } finally {
       setIsLoading(false);
     }

@@ -53,4 +53,5 @@ export type TeacherAccount = {
   token?: string;
   group?: number;
   updatedAt?: string;
+  account_id?: number;
 };

@@ -17,8 +17,8 @@ const Icon: FC = (props: SVGProps<SVGSVGElement>) => (
       x2="14"
       y2="15.0607"
       stroke="white"
-      stroke-width="1.5"
-      stroke-linecap="round"
+      strokeWidth="1.5"
+      strokeLinecap="round"
     />
   </svg>
 );

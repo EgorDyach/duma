@@ -55,7 +55,7 @@ const Checkbox = ({
           <path
             d="M6.5 11.75L10.4451 15.9769C10.9132 16.4784 11.7357 16.3705 12.0586 15.7652L17 6.5"
             stroke="white"
-            stroke-linecap="round"
+            strokeLinecap="round"
           />
         </svg>
       </StyledCheckbox>

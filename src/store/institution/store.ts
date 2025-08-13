@@ -3,7 +3,7 @@ import { InstitutionState, institutionStateName } from './types';
 import { institutionInitialState } from './constants';
 
 export function getId(item: any): string | number | undefined {
-  return item.id || item.ID || item.Id;
+  return item.id || item.ID || item.Id || (item.room && item.room.id);
 }
 
 function createListReducers<T>(key: keyof InstitutionState) {
