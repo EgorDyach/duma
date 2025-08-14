@@ -54,33 +54,30 @@ const ITEM_INIT_DATA: Course = {
 export const AddingCourseModal = () => {
   const dispatch = useAppDispatch();
   const modals = useSelector(uiSelectors.getModals);
-  const teachers = useSelector(institutionSelectors.getTeachers) || [];
   const disciplines = useSelector(institutionSelectors.getDisciplines) || [];
   const subjects = useSelector(institutionSelectors.getSubjects) || [];
   const courses = useSelector(institutionSelectors.getCourses) || [];
   const rooms = useSelector(institutionSelectors.getRooms) || [];
-    const faculties = useSelector(institutionSelectors.getFaculties)
+  const faculties = useSelector(institutionSelectors.getFaculties);
   const currentModal = modals[MODAL_NAME];
   const [newItem, setNewItem] = useState<Course>(
     currentModal?.value || ITEM_INIT_DATA,
   );
-console.log(newItem, '2');
 
-  const currentDiscipline = disciplines.find((el) => el.id === newItem.discipline_id)
-  console.log(currentDiscipline, "curr");
-  
-  const allTeachers = (faculties || []).flatMap((faculty: any) => 
-  (faculty.departments || []).flatMap((department: any) => 
-    department.teachers || []
-  )
-);
+  const currentTeacherId = newItem.course?.teacher_id ?? newItem.teacher_id ?? -1;
+  const currentCourseId = newItem.course?.id ?? newItem.id;
 
-useEffectOnce(() => {
+  const currentDiscipline = disciplines.find((el) => el.id === newItem.discipline_id);
+
+  const allTeachers = (faculties || []).flatMap((faculty: any) =>
+    (faculty.departments || []).flatMap((department: any) =>
+      department.teachers || []
+    )
+  );
+
+  useEffectOnce(() => {
     dispatch(fetchAllFaculty());
   });
-
-console.log(allTeachers, "2224");
-
 
   useEffect(() => {
     if (!currentDiscipline && disciplines.length > 0) {
@@ -104,12 +101,9 @@ console.log(allTeachers, "2224");
   const formatTeacherName = (fullname: string = '') => {
     const parts = fullname.trim().split(/\s+/).filter(Boolean);
     if (parts.length < 3) return fullname;
-    
+
     return `${parts[0]} ${parts[1][0]}.${parts[2][0]}.`;
   };
-
-  console.log(newItem, "78878787878 ");
-  
 
   const checkAffinity = (newAffinity: string) => {
     setNewItem(prev => ({
@@ -127,6 +121,24 @@ console.log(allTeachers, "2224");
         ? prev.course_toleration.filter(t => t.toleration_value !== newToleration)
         : [...prev.course_toleration, { toleration_value: newToleration }]
     }));
+  };
+
+  const handleTeacherChange = (id: number) => {
+    setNewItem(prev => {
+      if (prev.course) {
+        return {
+          ...prev,
+          course: {
+            ...prev.course,
+            teacher_id: Number(id)
+          }
+        };
+      }
+      return {
+        ...prev,
+        teacher_id: Number(id)
+      };
+    });
   };
 
   const currentSubject = useMemo(
@@ -154,26 +166,20 @@ console.log(allTeachers, "2224");
         <Text>Выбрать учителя:</Text>
         <Dropdown
           options={allTeachers
-            .filter(teacher => 
-              teacher.ID !== newItem.course.teacher_id
+            .filter(teacher =>
+              teacher.ID !== currentTeacherId
                 ? !courses
-                    .filter(c => c.discipline_id === currentDiscipline.id)
-                    .some(c => c.teacher_id === teacher.id)
+                  .filter(c => c.discipline_id === currentDiscipline.id)
+                  .some(c => c.teacher_id === teacher.ID)
                 : true
             )
             .sort((a, b) => (a.fullname || '').localeCompare(b.fullname || ''))
             .map(teacher => ({
-              id: Number(teacher.id) || -1,
+              id: Number(teacher.ID) || -1,
               name: formatTeacherName(teacher.fullname)
             }))}
-          selectedOption={newItem.course.teacher_id}
-          setSelectedOption={id => setNewItem(prev => ({
-            ...prev,
-            course: {
-              ...prev.course,
-              teacher_id: Number(id)
-            }
-          }))}
+          selectedOption={currentTeacherId}
+          setSelectedOption={handleTeacherChange}
         />
 
         <Text>Параметры аудитории:</Text>
@@ -181,7 +187,7 @@ console.log(allTeachers, "2224");
           <Flex direction="column" gap="10px">
             <Text>Добавить особенность аудитории:</Text>
             <TagsContainer direction="column" gap="8px">
-              {rooms.flatMap(room => 
+              {rooms.flatMap(room =>
                 room.room_taints?.map((taint, i) => (
                   <Flex key={`tol-${room.id}-${i}`} gap="8px" align="center">
                     <Checkbox
@@ -226,8 +232,8 @@ console.log(allTeachers, "2224");
             </StyledModalAdd>
             {currentModal.isEditing && (
               <Button
-                onClick={() => 
-                  dispatch(fetchRemoveCourse(Number(newItem.course.id)))
+                onClick={() =>
+                  dispatch(fetchRemoveCourse(Number(currentCourseId)))
                 }
               >
                 <Text $size="small">Удалить</Text>

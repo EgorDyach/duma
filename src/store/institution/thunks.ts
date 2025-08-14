@@ -158,41 +158,41 @@ export const fetchUpdateSubject =
 // Create account first, then create teacher linked by account_id
 export const fetchAddTeacher =
   (item: Teacher & { email?: string; password?: string }) =>
-  async (dispatch: AppDispatch) => {
-    try {
-      // 1) Create account in auth service
-      if (!item?.email || !item?.password) {
-        return showErrorNotification('Нужны email и пароль для создания аккаунта учителя');
+    async (dispatch: AppDispatch) => {
+      try {
+        // 1) Create account in auth service
+        if (!item?.email || !item?.password) {
+          return showErrorNotification('Нужны email и пароль для создания аккаунта учителя');
+        }
+        const res = await requestCreateTeacherAccount({
+          email: item.email,
+          fullname: item.fullname,
+          password: item.password,
+          // account_id: Account?.id,
+        });
+        console.log(res?.message?.Account?.id, 'res'); // Debugging line
+
+        // 2) Create teacher in backend
+        const teacherPayload = {
+          ...removeId(item),
+          // pass created account id to backend
+          account_id: res?.message?.Account?.id || undefined,
+        } as any;
+        console.log(teacherPayload, 'teacherPayload');
+
+        const { message } = await requestCreateTeacher(teacherPayload);
+        dispatch(
+          institutionActions.setTeachers(
+            message.Teachers.map((el) => toLowerCaseKeys(el)),
+          ),
+        );
+        dispatch(uiActions.closeModals());
+      } catch (e) {
+        if (e instanceof AxiosError) return showErrorNotification(e.message);
+        if (typeof e === 'string') return showErrorNotification(e);
+        showErrorNotification('Что-то пошло не так...');
       }
-      const res = await requestCreateTeacherAccount({
-        email: item.email,
-        fullname: item.fullname,
-        password: item.password,
-        // account_id: Account?.id,
-      });
-      console.log(res?.message?.Account?.id, 'res'); // Debugging line
-      
-      // 2) Create teacher in backend
-      const teacherPayload = {
-        ...removeId(item),
-        // pass created account id to backend
-        account_id: res?.message?.Account?.id || undefined,
-      } as any;
-      console.log(teacherPayload, 'teacherPayload');
-      
-      const { message } = await requestCreateTeacher(teacherPayload);
-      dispatch(
-        institutionActions.setTeachers(
-          message.Teachers.map((el) => toLowerCaseKeys(el)),
-        ),
-      );
-      dispatch(uiActions.closeModals());
-    } catch (e) {
-      if (e instanceof AxiosError) return showErrorNotification(e.message);
-      if (typeof e === 'string') return showErrorNotification(e);
-      showErrorNotification('Что-то пошло не так...');
-    }
-  };
+    };
 export const fetchRemoveTeacher =
   (id: string | number) => async (dispatch: AppDispatch) => {
     try {
@@ -490,11 +490,11 @@ export const fetchAllRooms = () => async (dispatch: AppDispatch) => {
       const roomData = lower.room
         ? toLowerCaseKeys(lower.room)
         : {
-            id: lower.id,
-            name: lower.name,
-            capacity: lower.capacity,
-            institution_id: lower.institution_id,
-          };
+          id: lower.id,
+          name: lower.name,
+          capacity: lower.capacity,
+          institution_id: lower.institution_id,
+        };
 
       const room_labels = Array.isArray(lower.room_labels)
         ? lower.room_labels.map((l: any) => toLowerCaseKeys(l))
@@ -643,7 +643,7 @@ export const fetchAddCourse =
   (item: Course) => async (dispatch: AppDispatch) => {
     try {
       console.log(item, 'trtr');
-      
+
       // Backend expects flat models.Course, not nested { course: {...} }
       const payload = {
         id: item.course.id,
@@ -679,12 +679,14 @@ export const fetchRemoveCourse =
   };
 export const fetchUpdateCourse =
   (data: Course, id: string | number) => async (dispatch: AppDispatch) => {
+    console.log(data, "data0");
+
     try {
       // Flatten payload and keep id for update
       const payload = {
-        id: data.course.id,
-        teacher_id: data.course.teacher_id,
-        discipline_id: data.course.discipline_id,
+        id: data.id,
+        teacher_id: data.teacher_id,
+        discipline_id: data.discipline_id,
         course_affinity: data.course_affinity,
         course_toleration: data.course_toleration,
       } as any;
@@ -694,6 +696,8 @@ export const fetchUpdateCourse =
     } catch (e) {
       if (e instanceof AxiosError) return showErrorNotification(e.message);
       if (typeof e === 'string') return showErrorNotification(e);
+      console.log(e, "error");
+
       showErrorNotification('Что-то пошло не так...');
     }
   };

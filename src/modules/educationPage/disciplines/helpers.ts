@@ -14,8 +14,8 @@ export const validateDiscipline = (
 };
 
 export const validateCourse = (newCourse: Course): string | undefined => {
-  if (newCourse.course.discipline_id === -1) return 'Не выбрана дисциплина!';
-  if (newCourse.course.teacher_id === -1) return 'Не выбран учитель!';
+  if (newCourse.discipline_id === -1) return 'Не выбрана дисциплина!';
+  if (newCourse.teacher_id === -1) return 'Не выбран учитель!';
 };
 
 export const displayFilteredDisciplines = (

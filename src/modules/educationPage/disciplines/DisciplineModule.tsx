@@ -70,14 +70,11 @@ const DisciplineModule = () => {
     dispatch(fetchAllSubjects());
   });
 
-  const allTeachers = (faculties || []).flatMap((faculty: any) => 
-  (faculty.departments || []).flatMap((department: any) => 
-    department.teachers || []
-  )
-);
-
-  console.log(allTeachers, "allTeachers322");
-  
+  const allTeachers = (faculties || []).flatMap((faculty: any) =>
+    (faculty.departments || []).flatMap((department: any) =>
+      department.teachers || []
+    )
+  );
 
   const setFilterField = (field: keyof Filters, value: (string | number)[]) => {
     setFilters((prev) => ({ ...prev, [field]: value }));
@@ -163,8 +160,6 @@ const DisciplineModule = () => {
               ),
             )
             .map((item) => {
-              console.log(item, 'item'  );
-              
               return (
                 <StyledFlex
                   direction="column"
@@ -218,7 +213,7 @@ const DisciplineModule = () => {
                             course_toleration: [],
                             discipline_id: item.id as number,
                             course: {
-                            teacher_id: item.id as number,
+                              teacher_id: item.id as number,
                             }
                           },
                           modalName: 'addCourse',
@@ -230,14 +225,13 @@ const DisciplineModule = () => {
                   </Title>
                   <Flex wrap="wrap" gap="11px">
                     {courses
-  .filter(el => el.discipline_id === item.id)
-  .map((el) => {
-    const teacher = allTeachers.find(t => {
-      console.log("Comparing:", t.ID, el.teacher_id);
-      return t.ID === el.teacher_id;
-    });
-    
-    return teacher ? (
+                      .filter(el => el.discipline_id === item.id)
+                      .map((el) => {
+                        const teacher = allTeachers.find(t => {
+                          return t.ID === el.teacher_id;
+                        });
+
+                        return teacher ? (
                           <Button key={el.ID}>
                             <Flex gap="12px">
                               <Text>{teacher.fullname}</Text>
