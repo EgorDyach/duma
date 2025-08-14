@@ -67,15 +67,17 @@ const DisciplineModule = () => {
   useEffectOnce(() => {
     dispatch(fetchAllDisciplines());
     dispatch(fetchAllFaculty());
+    dispatch(fetchAllSubjects());
   });
 
-  useEffect(() => {
-    console.log(
-      'disc',
-      disciplines.find((el) => el.id === 0),
-    );
-  }, [courses]);
-console.log(teachers, "teachers333");
+  const allTeachers = (faculties || []).flatMap((faculty: any) => 
+  (faculty.departments || []).flatMap((department: any) => 
+    department.teachers || []
+  )
+);
+
+  console.log(allTeachers, "allTeachers322");
+  
 
   const setFilterField = (field: keyof Filters, value: (string | number)[]) => {
     setFilters((prev) => ({ ...prev, [field]: value }));
@@ -228,16 +230,15 @@ console.log(teachers, "teachers333");
                   </Title>
                   <Flex wrap="wrap" gap="11px">
                     {courses
-                      .filter((el) => {
-                        el.discipline_id === item.id
-                      })
-                      .map((el) => {
-                        const teacher = teachers.find(
-                          (t) => t.id === el.teacher_id,
-                        );
-                        console.log('awdasdwwwwwwwwwwwwwwwwwwwwwwwwwwwww', el);
-                        return teacher ? (
-                          <Button key={el.id}>
+  .filter(el => el.discipline_id === item.id)
+  .map((el) => {
+    const teacher = allTeachers.find(t => {
+      console.log("Comparing:", t.ID, el.teacher_id);
+      return t.ID === el.teacher_id;
+    });
+    
+    return teacher ? (
+                          <Button key={el.ID}>
                             <Flex gap="12px">
                               <Text>{teacher.fullname}</Text>
                               {/* <StyledIcon

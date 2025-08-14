@@ -642,11 +642,13 @@ export const fetchAllCourses = () => async (dispatch: AppDispatch) => {
 export const fetchAddCourse =
   (item: Course) => async (dispatch: AppDispatch) => {
     try {
+      console.log(item, 'trtr');
+      
       // Backend expects flat models.Course, not nested { course: {...} }
       const payload = {
         id: item.course.id,
         teacher_id: item.course.teacher_id,
-        discipline_id: item.course.discipline_id,
+        discipline_id: item.discipline_id,
         course_affinity: item.course_affinity,
         course_toleration: item.course_toleration,
       } as any;

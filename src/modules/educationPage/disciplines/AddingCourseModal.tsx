@@ -21,6 +21,8 @@ import Dropdown from '@components/Dropdown';
 import styled from 'styled-components';
 import { getId } from '@store/institution/store';
 import Checkbox from '@components/Checkbox';
+import { fetchAllFaculty } from '@store/institution/thunks';
+import { useEffectOnce } from '@hooks/useEffectOnce';
 
 export const MODAL_NAME = 'addCourse';
 
@@ -57,6 +59,7 @@ export const AddingCourseModal = () => {
   const subjects = useSelector(institutionSelectors.getSubjects) || [];
   const courses = useSelector(institutionSelectors.getCourses) || [];
   const rooms = useSelector(institutionSelectors.getRooms) || [];
+    const faculties = useSelector(institutionSelectors.getFaculties)
   const currentModal = modals[MODAL_NAME];
   const [newItem, setNewItem] = useState<Course>(
     currentModal?.value || ITEM_INIT_DATA,
@@ -66,6 +69,18 @@ console.log(newItem, '2');
   const currentDiscipline = disciplines.find((el) => el.id === newItem.discipline_id)
   console.log(currentDiscipline, "curr");
   
+  const allTeachers = (faculties || []).flatMap((faculty: any) => 
+  (faculty.departments || []).flatMap((department: any) => 
+    department.teachers || []
+  )
+);
+
+useEffectOnce(() => {
+    dispatch(fetchAllFaculty());
+  });
+
+console.log(allTeachers, "2224");
+
 
   useEffect(() => {
     if (!currentDiscipline && disciplines.length > 0) {
@@ -92,6 +107,9 @@ console.log(newItem, '2');
     
     return `${parts[0]} ${parts[1][0]}.${parts[2][0]}.`;
   };
+
+  console.log(newItem, "78878787878 ");
+  
 
   const checkAffinity = (newAffinity: string) => {
     setNewItem(prev => ({
@@ -135,9 +153,9 @@ console.log(newItem, '2');
       <Flex $top="medium" direction="column" gap="8px">
         <Text>Выбрать учителя:</Text>
         <Dropdown
-          options={teachers
+          options={allTeachers
             .filter(teacher => 
-              teacher.id !== newItem.course.teacher_id
+              teacher.ID !== newItem.course.teacher_id
                 ? !courses
                     .filter(c => c.discipline_id === currentDiscipline.id)
                     .some(c => c.teacher_id === teacher.id)
