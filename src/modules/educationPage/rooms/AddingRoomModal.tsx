@@ -24,10 +24,11 @@ import Tags from '@components/Tags';
 const ITEM_INIT_DATA: Room = {
   room: {
     name: '',
-    capacity: 0,
+    capacity: -1,
   },
   room_labels: [],
   room_taints: [],
+  id: -1
 };
 
 export const AddingRoomModal = () => {
