@@ -301,7 +301,7 @@ export const fetchUpdateDiscipline =
         ),
       );
       dispatch(
-        institutionActions.setCourses(courses.map((el) => toLowerCaseKeys(el))),
+        institutionActions.setCourses(courses.map((el: any) => toLowerCaseKeys(el))),
       );
       dispatch(
         institutionActions.updateDiscipline({
@@ -568,7 +568,7 @@ export const fetchAllDisciplines = () => async (dispatch: AppDispatch) => {
       ),
     );
     dispatch(
-      institutionActions.setCourses(courses.map((el) => toLowerCaseKeys(el))),
+      institutionActions.setCourses(courses.map((el: any) => toLowerCaseKeys(el))),
     );
   } catch (e) {
     if (e instanceof AxiosError) return showErrorNotification(e.message);
@@ -630,7 +630,7 @@ export const fetchAllCourses = () => async (dispatch: AppDispatch) => {
   try {
     const { message } = await requestAllCourse();
     dispatch(
-      institutionActions.setCourses(message.map((el) => toLowerCaseKeys(el))),
+      institutionActions.setCourses(message.map((el: any) => toLowerCaseKeys(el))),
     );
   } catch (e) {
     if (e instanceof AxiosError) return showErrorNotification(e.message);
@@ -655,7 +655,7 @@ export const fetchAddCourse =
       const { message } = await requestCreateCourse(payload);
       dispatch(
         institutionActions.setCourses(
-          message.Courses.map((el) => toLowerCaseKeys(el)),
+          message.Courses.map((el: any) => toLowerCaseKeys(el)),
         ),
       );
       dispatch(uiActions.closeModals());

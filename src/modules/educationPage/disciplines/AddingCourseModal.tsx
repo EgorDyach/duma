@@ -49,6 +49,9 @@ const ITEM_INIT_DATA: Course = {
   course: {
     teacher_id: -1,
   },
+  ID: undefined,
+  id: undefined,
+  teacher_id: undefined
 };
 
 export const AddingCourseModal = () => {

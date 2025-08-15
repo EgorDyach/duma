@@ -287,8 +287,8 @@ export const requestAllDiscipline = async (): Promise<
 };
 
 export const requestCreateCourse = async (
-  data: Course,
-): Promise<Response<{ Info: string; Courses: Course[] }>> => {
+  data: any,
+): Promise<Response<{ Info: string; Courses: any }>> => {
   return await request.post(
     'https://puzzlesignlanguage.ru/api/back/v1/course',
     [data],
@@ -304,7 +304,7 @@ export const requestDeleteCourse = async (data: {
 export const requestUpdateCourse = async (data: Course): Promise<void> => {
   await request.put('https://puzzlesignlanguage.ru/api/back/v1/course', [data]);
 };
-export const requestAllCourse = async (): Promise<Response<Course[]>> => {
+export const requestAllCourse = async (): Promise<Response<any>> => {
   return await request.get('https://puzzlesignlanguage.ru/api/back/v1/course');
 };
 

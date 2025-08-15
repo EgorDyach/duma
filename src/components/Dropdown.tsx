@@ -36,7 +36,7 @@ const StyledDropdown = styled.ul`
 interface DropdownProps<T> {
   options: { id: T; name: string }[];
   selectedOption: T | null;
-  setSelectedOption: (n: T) => void;
+  setSelectedOption: (n: any) => void;
   label?: string;
 }
 

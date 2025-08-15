@@ -81,8 +81,7 @@ type CourseData = {
   updatedat?: string;
   id?: number;
   institution_id?: number;
-  discipline_id: number;
-  teacher_id: number;
+  teacher_id: number ;
 };
 
 type CourseAffinity = {
@@ -106,6 +105,8 @@ type CourseToleration = {
 };
 
 type Course = {
+  ID: number | undefined
+  id: number | undefined
   discipline_id: number | undefined;
   teacher_id: number | undefined;
   course: CourseData;

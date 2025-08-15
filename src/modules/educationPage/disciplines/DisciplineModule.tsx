@@ -8,7 +8,7 @@ import { uiActions, uiSelectors } from '@store/ui';
 import { useSelector } from 'react-redux';
 import { AddingDisciplineModal } from './AddingDisciplineModal';
 import { useEffectOnce } from '@hooks/useEffectOnce';
-import { fetchAllDisciplines, fetchAllFaculty, fetchAllSubjects, fetchAllTeachers } from '@store/institution/thunks';
+import { fetchAllDisciplines, fetchAllFaculty, fetchAllSubjects } from '@store/institution/thunks';
 import { SubHeader, Text } from '@components/Typography';
 import styled from 'styled-components';
 import {
@@ -54,7 +54,6 @@ const DisciplineModule = () => {
   const subjects = useSelector(institutionSelectors.getSubjects);
   const courses = useSelector(institutionSelectors.getCourses);
   const groups = useSelector(institutionSelectors.getGroups);
-  const teachers = useSelector(institutionSelectors.getTeachers);
   const requests = useSelector(uiSelectors.getRequests);
   const faculties = useSelector(institutionSelectors.getFaculties)
   const dispatch = useAppDispatch();

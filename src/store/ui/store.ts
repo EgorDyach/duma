@@ -46,7 +46,7 @@ const uiSlice = createSlice({
       }: PayloadAction<{
         modalName: T;
         isEditing: boolean;
-        value: Modals[T] | null;
+        value: any;
       }>,
     ) {
       document.body.classList.add('scrollBlock');
