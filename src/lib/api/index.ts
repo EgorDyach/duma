@@ -110,7 +110,7 @@ export const requestAllTeacher = async (): Promise<Response<Teacher[]>> => {
 export const requestCreateTeacherAccount = async (
   data: TeacherAccount,
 ): Promise<{
-  message: any; Status: string; Account: any 
+  message: any; Status: string; Account: any
 }> => {
   return await request.post(
     '/v1/s9rk988utk/accounts/manage/institution/teacher',
@@ -366,4 +366,11 @@ export const requestAllDepartment = async (): Promise<
 
 export const requestAllLessons = async (): Promise<Response<Lesson[]>> => {
   return await request.get('https://puzzlesignlanguage.ru/api/back/v1/lesson');
+};
+
+export const requestGroupLessons = async (
+  id: string | number): Promise<any> => {
+  console.log(id, "idd");
+
+  return await request.get(`https://puzzlesignlanguage.ru/api/back/v1/group/${id}/lessons`, {});
 };

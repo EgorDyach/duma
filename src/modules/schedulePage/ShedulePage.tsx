@@ -16,9 +16,10 @@ import {
   fetchAllLessons,
   fetchAllRooms,
   fetchAllSubjects,
+  fetchGroupLessons
 } from '@store/institution/thunks';
 import { useEffectOnce } from '@hooks/useEffectOnce';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import DropDownMenu from '@components/DropDownMenu';
 
 function getDayOfWeekInRussian(date: Date) {
@@ -67,7 +68,7 @@ const WeekButton = styled.button`
 
 const currentWeekLessons = (
   lessons: Lesson[],
-  weekOffset: number = 0, // Параметр для изменения недели
+  weekOffset: number = 0,
 ): { daysLessons: Lesson[][]; firstDay: Date; lastDay: Date } => {
   const today = new Date();
   const firstDay = new Date(today);
@@ -81,16 +82,17 @@ const currentWeekLessons = (
   lastDay.setMonth(firstDay.getMonth());
   lastDay.setDate(firstDay.getDate() + 6);
 
-  console.log('week', firstDay, lastDay);
-
-  const weekLessons = [...lessons].filter((el) => {
-    return new Date(el.date) >= firstDay && new Date(el.date) <= lastDay;
+  const getAllLessons = (lessons: Lesson[]): Lesson[] => {
+  return lessons.flatMap(lesson => {
+    // Берем текущий урок и все вложенные уроки (если они есть)
+    return [lesson, ...(lesson.lessons ? getAllLessons(lesson.lessons) : [])];
   });
+}
 
-  console.log(
-    'weeklessons',
-    weekLessons.map((el) => el.date),
-  );
+  const weekLessons = getAllLessons(lessons).filter((el) => {
+    
+    return new Date(el.date) >= firstDay && new Date(el.date) <= lastDay;
+  });  
 
   const daysLessons: Lesson[][] = [[], [], [], [], [], []];
 
@@ -99,39 +101,33 @@ const currentWeekLessons = (
     if (day < 0) return;
     daysLessons[day].push(el);
   });
-
-  console.log('daylessons', daysLessons);
-
   return { daysLessons, firstDay, lastDay };
 };
 
 const SchedulePage = () => {
   const lessons = useSelector(institutionSelectors.getLessons);
-    const user = useSelector(uiSelectors.getUser);
+  const user = useSelector(uiSelectors.getUser);
   const requests = useSelector(uiSelectors.getRequests);
   const dispatch = useAppDispatch();
   const [weekOffset, setWeekOffset] = useState(0);
-    const groups = useSelector(institutionSelectors.getGroups);
-    console.log(user, "user");
-
+  const groups = useSelector(institutionSelectors.getGroups);
+  const [selectedGroup, setSelectedGroup] = useState<string | null>(null);
+  const [groupId, setGroupId] = useState<string | null>(null);
+  
   useEffectOnce(() => {
     dispatch(fetchAllLessons());
     dispatch(fetchAllRooms());
     dispatch(fetchAllSubjects());
     dispatch(fetchAllCourses());
     dispatch(fetchAllLessonTimes());
-    dispatch(fetchAllGroups());
     dispatch(fetchAllFaculty());
   });
 
-    const faculties = useSelector(institutionSelectors.getFaculties);
-    console.log(faculties, "faculties");
-    
-
-
-    const subjects = useSelector(institutionSelectors.getSubjects);
-
-    console.log(subjects, "subjects")
+  useEffect(() => {
+    if (groupId) {
+      dispatch(fetchGroupLessons(groupId));
+    }
+  }, [dispatch, groupId])
 
   const currentLessons = currentWeekLessons(lessons, weekOffset);
 
@@ -149,15 +145,17 @@ const SchedulePage = () => {
             <WeekButton onClick={() => setWeekOffset(weekOffset + 1)}>
               {'>'}
             </WeekButton>
-            <DropDownMenu groups={groups}/>
+            <DropDownMenu groups={groups} selectedGroup={selectedGroup} setSelectedGroup={setSelectedGroup} setGroupId={setGroupId}/>
           </ScheduleHead>
           {requests['lessons'] === 'pending' && <ContentLoader size={32} />}
           {requests['lessons'] !== 'pending' && (
             <ScheduleContainer>
               {currentLessons.daysLessons.map((el, index) => {
+                console.log(el, "burger2");
+                
                 const date = new Date(currentLessons.firstDay);
+                
                 date.setDate(currentLessons.firstDay.getDate() + index);
-                console.log(currentLessons.firstDay.getDate());
                 return (
                   <ScheduleCard
                     lessonsOnDay={

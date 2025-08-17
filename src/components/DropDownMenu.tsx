@@ -3,34 +3,29 @@ import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 
-// Keep a local shape for reference if needed, but avoid name clash with global Group
-// interface DropdownGroup {
-//   id: string | number;
-//   name: string;
-// }
-
 interface Props {
   groups: Group[];
+  selectedGroup: string | null;
+  setSelectedGroup: (name: string) => void;
+  setGroupId: (id: number | undefined) => void;
 }
 
-export default function DropDownMenu({ groups }: Props) {
+export default function DropDownMenu({ groups, selectedGroup, setSelectedGroup, setGroupId }: Props) {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const [selectedGroup, setSelectedGroup] = React.useState<string | null>(null);
   const open = Boolean(anchorEl);
 
-  console.log(selectedGroup, "selectedGroup");
-  
-  
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
 
-  const handleClose = (event: React.MouseEvent<HTMLElement>) => {
-    console.log('Selected group:', event.currentTarget.textContent);
-
+  const handleMenuItemClick = (event: React.MouseEvent<HTMLElement>, id: number | undefined, name: string) => {
+    setSelectedGroup(name);
+    setGroupId(id);
     setAnchorEl(null);
-    const selectedGroupName = event.currentTarget.textContent;
-    setSelectedGroup(selectedGroupName )
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
   };
 
   return (
@@ -48,7 +43,7 @@ export default function DropDownMenu({ groups }: Props) {
         id="basic-menu"
         anchorEl={anchorEl}
         open={open}
-        onClose={handleClose}
+        onClose={handleMenuClose}
         slotProps={{
           list: {
             'aria-labelledby': 'basic-button',
@@ -56,8 +51,11 @@ export default function DropDownMenu({ groups }: Props) {
         }}
       >
         {groups.map((group) => (
-          <MenuItem key={group.id} onClick={handleClose} >
-            {group.name}  {/* Render only the name */}
+          <MenuItem
+            key={group.id}
+            onClick={(e) => handleMenuItemClick(e, group.id, group.name)}
+          >
+            {group.name}
           </MenuItem>
         ))}
       </Menu>

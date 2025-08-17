@@ -50,6 +50,7 @@ import {
   requestDeleteDepartment,
   requestUpdateDepartment,
   requestAllLessons,
+  requestGroupLessons,
 } from '@lib/api';
 import { TeacherAccount } from '@type/user';
 import { uiActions } from '@store/ui';
@@ -852,3 +853,20 @@ export const fetchAllLessons = () => async (dispatch: AppDispatch) => {
     showErrorNotification('Что-то пошло не так...');
   }
 };
+
+export const fetchGroupLessons = (id: string | number) => async (dispatch: AppDispatch) => {
+  try {
+    const { message } = await requestGroupLessons(id);
+    console.log(message, "message");
+
+    dispatch(
+      institutionActions.setLessons(message.map((el: any) => toLowerCaseKeys(el))),
+    )
+  } catch (e) {
+    console.log(e, "error");
+
+    if (e instanceof AxiosError) return showErrorNotification(e.message);
+    if (typeof e === 'string') return showErrorNotification(e);
+    showErrorNotification('Что-то пошло не так...');
+  }
+}
