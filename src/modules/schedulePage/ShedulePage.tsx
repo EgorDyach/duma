@@ -115,10 +115,10 @@ const SchedulePage = () => {
   const [groupId, setGroupId] = useState<string | null>(null);
   
   useEffectOnce(() => {
-    dispatch(fetchAllLessons());
+    // dispatch(fetchAllLessons());
     dispatch(fetchAllRooms());
-    dispatch(fetchAllSubjects());
-    dispatch(fetchAllCourses());
+    // dispatch(fetchAllSubjects());
+    // dispatch(fetchAllCourses());
     dispatch(fetchAllLessonTimes());
     dispatch(fetchAllFaculty());
   });

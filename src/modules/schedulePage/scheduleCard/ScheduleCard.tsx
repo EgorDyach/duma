@@ -5,7 +5,6 @@ import styled from 'styled-components';
 import { ScheduleCardCell, ScheduleCardRow } from './TableStyles';
 import Flex from '@components/Flex';
 import PointIcon from '@components/icons/PointIcon';
-// import ClipIcon from '@components/icons/ClipIcon';
 import { toFixedNumberLessons } from './helpers';
 import { useSelector } from 'react-redux';
 import { institutionSelectors } from '@store/institution';
@@ -49,9 +48,6 @@ const ScheduleCard: React.FC<Schedule> = ({
 }) => {
   const lessonTimes = useSelector(institutionSelectors.getLessonTimes);
   const rooms = useSelector(institutionSelectors.getRooms);
-  const courses = useSelector(institutionSelectors.getCourses);
-  const disciplines = useSelector(institutionSelectors.getDisciplines);
-  const subjects = useSelector(institutionSelectors.getSubjects);
 
   const lessonToDisplayable = (lessons: (Lesson | null)[]): LessonData[] => {
     return lessons.map((lesson) => {
@@ -60,16 +56,13 @@ const ScheduleCard: React.FC<Schedule> = ({
       );
 
       const room = rooms.find((room) => room.room.id === lesson?.room_id);
-      const course = courses.find(
-        (course) => course.course.id === lesson?.course_id,
-      );
-      const discipline = disciplines.find((el) => el.id === course?.course.id);
-      const subject = subjects.find((el) => el.id === discipline?.subject_id);
+
+      const subject = lesson?.Course?.Discipline.subject      
 
       return {
         time: `${currentLessonTime?.start_time.slice(0, 5)} - ${currentLessonTime?.end_time.slice(0, 5)}`,
         location: room?.room.name,
-        name: subject?.name,
+        name: subject?.name || "Физика",
       };
     });
   };
@@ -94,8 +87,8 @@ const ScheduleCard: React.FC<Schedule> = ({
             {toFixedNumberLessons(
               lessonToDisplayable(lessons),
               lessonsOnDay || 0,
-            ).map((el: LessonData | null, index) => (
-              <ScheduleCardRow key={index}>
+            ).map((el: LessonData | null, index) => {              
+             return  <ScheduleCardRow key={index}>
                 <ScheduleCardCell style={{ width: 217 }}>
                   <Flex justify="space-between" style={{ marginBottom: 3 }}>
                     <Text $color="#AAA" $size="small">
@@ -135,7 +128,7 @@ const ScheduleCard: React.FC<Schedule> = ({
                   </Flex>
                 </ScheduleCardCell>
               </ScheduleCardRow>
-            ))}
+})}
           </tbody>
         </StyledTable>
       </Flex>

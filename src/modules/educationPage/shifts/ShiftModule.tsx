@@ -37,7 +37,7 @@ const ShiftModule = () => {
     );
 
   return (
-    <Flex flex="2" direction="column" gap="8px" align="start">
+    <Flex flex="2" direction="column" gap="8px" align="start" style={{padding: '8px'}}>
       <Modal modalName={MODAL_NAME}>
         <AddingShiftModal />
       </Modal>

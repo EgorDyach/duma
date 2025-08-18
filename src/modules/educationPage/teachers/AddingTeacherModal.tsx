@@ -37,6 +37,8 @@ export const AddingTeacherModal: React.FC = () => {
   const departments = useSelector(institutionSelectors.getDepartments);
   const user = useSelector(uiSelectors.getUser);
   const currentModal = modals[MODAL_NAME];
+  const [isEdit, setIsEdit] = useState(true)
+
 
   const [newItem, setNewItem] = useState<Teacher>(
     currentModal.value || ITEM_INIT_DATA,
@@ -111,6 +113,8 @@ export const AddingTeacherModal: React.FC = () => {
 
       <Flex $top="medium">
         <Input
+        disabled={isEdit}
+        suffix={"Изменить"}
           style={{ width: '100%' }}
           label="Email"
           placeholder="Введите email..."

@@ -44,6 +44,8 @@ export const InputWrapper = styled(Flex)`
 
 export const SuffixWrapper = styled(Flex)`
   position: absolute;
-  right: 15px;
+  right: 35px;
+  top: 187px;
   left: auto;
+  color: blue;
 `;

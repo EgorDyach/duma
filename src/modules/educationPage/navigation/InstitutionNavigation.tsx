@@ -10,6 +10,7 @@ import { StyledButton } from '../EducationPage';
 import axios from 'axios';
 import CloseIcon from '@components/icons/CloseIcon';
 import BurgerIcon from '@components/icons/BurgerIcon';
+import { useNavigate } from 'react-router-dom';
 
 const tabs = [
   { id: 'shifts', name: 'Смены' },
@@ -85,7 +86,7 @@ const NavigationElement: React.FC<NavigationElementProps> = ({
 );
 
 const Pointer = styled.div<{ $index: number }>`
-  width: 320px;
+  width: 250px;
   height: 36px;
   background-color: #fff;
   border-radius: 10px;
@@ -104,6 +105,7 @@ const Pointer = styled.div<{ $index: number }>`
 const InstitutionNavigation = () => {
   const activeTab = useSelector(uiSelectors.getActiveTabs);
   const dispatch = useDispatch();
+  const navigate = useNavigate()
   const [isServerLive, setIsServerLive] = useState(true);
   const [isMenuOpened, setIsMenuOpened] = useState(true);
 
@@ -148,6 +150,24 @@ const InstitutionNavigation = () => {
         ))}
       </ul>
       <Flex gap="16px" align="stretch" $top="large" direction="column">
+        <StyledButton
+          disabled={!isServerLive}
+          style={ 
+            isServerLive
+              ? { backgroundColor: 'white', borderColor: 'white', color: 'black' }
+              : {
+                  backgroundColor: '#f0414c',
+                  borderColor: '#f0414c',
+                  cursor: 'default',
+                }
+          }
+          $isActive
+          onClick={() =>
+            navigate('/schedule')
+          }
+        >
+          Расписание
+        </StyledButton>
         <StyledButton
           disabled={!isServerLive}
           style={

@@ -14,4 +14,5 @@ export interface InputProps
   onFocus?: VoidFunction;
   onSubmit?: VoidFunction;
   name?: string;
+  isEdit?: boolean;
 }
