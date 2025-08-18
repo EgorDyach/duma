@@ -8,8 +8,9 @@ import {
   SuffixWrapper,
   labelWrapper,
 } from './InputStyles';
-
+import { useState } from 'react';
 import Flex from '@components/Flex';
+import ConfirmationModal from '@components/Modal/ConfirmationModal/ConfirmationModal';
 
 const Input: React.FC<InputProps> = ({
   value,
@@ -22,8 +23,15 @@ const Input: React.FC<InputProps> = ({
   onBlur,
   onFocus,
   disabled,
+  setIsEdit,
   ...props
 }) => {
+  const [isOpenModal, setIsOpenModal] = useState(false)
+
+  const handleOpenModal = () => {
+    setIsOpenModal(!isOpenModal)
+  }
+
   return (
     <Flex direction="column" {...props}>
       <Flex
@@ -48,11 +56,12 @@ const Input: React.FC<InputProps> = ({
           onBlur={onBlur}
           disabled={disabled}
         />
-        {suffix && (
-          <SuffixWrapper direction="row" align="center">
+        {suffix && disabled && (
+          <SuffixWrapper direction="row" align="center" onClick={handleOpenModal}>
             {suffix}
           </SuffixWrapper>
         )}
+        {isOpenModal && setIsEdit && <ConfirmationModal isOpenModal={isOpenModal} setIsOpenModal={setIsOpenModal} setIsEdit={setIsEdit} />}
       </Flex>
     </Flex>
   );

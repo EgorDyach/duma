@@ -15,4 +15,5 @@ export interface InputProps
   onSubmit?: VoidFunction;
   name?: string;
   isEdit?: boolean;
+  setIsEdit?: (value: boolean) => void
 }

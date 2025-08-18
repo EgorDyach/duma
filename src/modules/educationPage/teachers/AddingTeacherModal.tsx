@@ -37,7 +37,7 @@ export const AddingTeacherModal: React.FC = () => {
   const departments = useSelector(institutionSelectors.getDepartments);
   const user = useSelector(uiSelectors.getUser);
   const currentModal = modals[MODAL_NAME];
-  const [isEdit, setIsEdit] = useState(true)
+  const [isEdit, setIsEdit] = useState(false)
 
 
   const [newItem, setNewItem] = useState<Teacher>(
@@ -113,7 +113,8 @@ export const AddingTeacherModal: React.FC = () => {
 
       <Flex $top="medium">
         <Input
-        disabled={isEdit}
+        disabled={!isEdit}
+        setIsEdit={setIsEdit}
         suffix={"Изменить"}
           style={{ width: '100%' }}
           label="Email"
@@ -129,7 +130,7 @@ export const AddingTeacherModal: React.FC = () => {
         />
       </Flex>
 
-      <Flex $top="medium">
+      {isEdit && <Flex $top="medium">
         <Input
           style={{ width: '100%' }}
           label="Пароль"
@@ -143,7 +144,7 @@ export const AddingTeacherModal: React.FC = () => {
           }
           value={newItem.password}
         />
-      </Flex>
+      </Flex>}
 
       <Flex $top="medium" gap="10px" direction="column">
         <Text>Выходные и отпуска</Text>

@@ -48,4 +48,5 @@ export const SuffixWrapper = styled(Flex)`
   top: 187px;
   left: auto;
   color: blue;
+  cursor: pointer;
 `;
