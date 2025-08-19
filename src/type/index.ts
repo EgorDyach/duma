@@ -190,6 +190,7 @@ type Department = {
 };
 
 type Lesson = {
+  lessons: any;
   course_id?: number;
   createdAt?: string;
   date: string;

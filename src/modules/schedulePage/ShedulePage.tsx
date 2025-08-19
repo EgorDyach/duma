@@ -71,42 +71,62 @@ const currentWeekLessons = (
   weekOffset: number = 0,
 ): { daysLessons: Lesson[][]; firstDay: Date; lastDay: Date } => {
   const today = new Date();
+
   const firstDay = new Date(today);
-  const lastDay = new Date(today);
-console.log(lessons, "lessons");
-
   const currentDayOfWeek = today.getDay();
-  const daysToAdd = weekOffset * 7;
+  const daysToMonday = currentDayOfWeek === 0 ? -6 : 1 - currentDayOfWeek;
 
-  firstDay.setDate(today.getDate() - currentDayOfWeek + 1 + daysToAdd);
+  firstDay.setDate(today.getDate() + daysToMonday + (weekOffset * 7));
+  firstDay.setHours(0, 0, 0, 0);
 
-  lastDay.setMonth(firstDay.getMonth());
+  const lastDay = new Date(firstDay);
   lastDay.setDate(firstDay.getDate() + 6);
+  lastDay.setHours(23, 59, 59, 999);
+
+  console.log('First day:', firstDay);
+  console.log('Last day:', lastDay);
 
   const getAllLessons = (lessons: Lesson[]): Lesson[] => {
-  return lessons.flatMap(lesson => {
-    return [lesson, ...(lesson.lessons ? getAllLessons(lesson.lessons) : [])];
-  });
-}
+    return lessons.flatMap(lesson => {
+      return [lesson, ...(lesson.lessons ? getAllLessons(lesson.lessons) : [])];
+    });
+  }
 
   const weekLessons = getAllLessons(lessons).filter((el) => {
-    
-    return new Date(el.date) >= firstDay && new Date(el.date) <= lastDay;
-  });  
+    const lessonDate = new Date(el.date);
+    lessonDate.setHours(0, 0, 0, 0);
 
-  const daysLessons: Lesson[][] = [[], [], [], [], [], []];
+    const lessonDateOnly = new Date(lessonDate.getFullYear(), lessonDate.getMonth(), lessonDate.getDate());
+    const firstDayOnly = new Date(firstDay.getFullYear(), firstDay.getMonth(), firstDay.getDate());
+    const lastDayOnly = new Date(lastDay.getFullYear(), lastDay.getMonth(), lastDay.getDate());
+
+    return lessonDateOnly >= firstDayOnly && lessonDateOnly <= lastDayOnly;
+  });
+
+  console.log('Filtered lessons count:', weekLessons.length);
+  console.log('Filtered lessons:', weekLessons);
+
+  const daysLessons: Lesson[][] = [[], [], [], [], [], [], []];
 
   weekLessons.forEach((el) => {
-    console.log(el, "b");
-    
-    const day = new Date(el.date).getDay() - 1;
-    if (day < 0) return;
-    daysLessons[day].push(el);
+    const lessonDate = new Date(el.date);
+    const day = lessonDate.getDay();
+
+    let dayIndex;
+    if (day === 0) {
+      dayIndex = 6;
+    } else {
+      dayIndex = day - 1;
+    }
+
+    if (dayIndex >= 0 && dayIndex <= 6) {
+      daysLessons[dayIndex].push(el);
+    }
   });
-  console.log(daysLessons,"daa");
-  
+
   return { daysLessons, firstDay, lastDay };
 };
+
 
 const SchedulePage = () => {
   const lessons = useSelector(institutionSelectors.getLessons);
@@ -119,8 +139,8 @@ const SchedulePage = () => {
   const [groupId, setGroupId] = useState<string | null>(null);
 
   console.log(user, "user");
-  
-  
+
+
   useEffectOnce(() => {
     // dispatch(fetchAllLessons());
     dispatch(fetchAllRooms());
@@ -152,16 +172,16 @@ const SchedulePage = () => {
             <WeekButton onClick={() => setWeekOffset(weekOffset + 1)}>
               {'>'}
             </WeekButton>
-            <DropDownMenu groups={groups} selectedGroup={selectedGroup} setSelectedGroup={setSelectedGroup} setGroupId={setGroupId}/>
+            <DropDownMenu groups={groups} selectedGroup={selectedGroup} setSelectedGroup={setSelectedGroup} setGroupId={setGroupId} />
           </ScheduleHead>
           {requests['lessons'] === 'pending' && <ContentLoader size={32} />}
           {requests['lessons'] !== 'pending' && (
             <ScheduleContainer>
               {currentLessons.daysLessons.map((el, index) => {
                 console.log(el, "burger2");
-                
+
                 const date = new Date(currentLessons.firstDay);
-                
+
                 date.setDate(currentLessons.firstDay.getDate() + index);
                 return (
                   <ScheduleCard
