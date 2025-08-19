@@ -3,9 +3,12 @@ import { uiActions } from '@store/ui';
 import { AppDispatch } from '..';
 import {
   requestAddInstitution$,
+  requestAddInstitutionAdmin$,
   requestEditInstitution$,
-  requestInstitutions,
+  requestEditInstitutionAdmin$,
+  requestInstitutionAdmins,
   requestRemoveInstitution$,
+  requestRemoveInstitutionAmin$,
 } from '@lib/api/admin';
 import { adminActions } from '.';
 import { Institution, InstitutionsAdmin } from '@type/user';
@@ -27,9 +30,8 @@ export const fetchInstitutions =
   async (dispatch: AppDispatch): Promise<void> => {
     dispatch(uiActions.setRequestStarted('educations'));
     try {
-      const educations = await requestInstitutions();
-      console.log(educations);
-      const data: Record<string, InstitutionsAdmin[]> = {
+      const educations = await requestInstitutionAdmins();
+      const data: Record<string, Institution[]> = {
         School: [],
         University: [],
         Secondary: [],
@@ -39,21 +41,27 @@ export const fetchInstitutions =
       for (const el of educations.message
         .map((el) => toLowerCaseKeys(el))
         // TODO: чтобы отображались админы с уровнем ниже
-        .filter((el) => el.level === 1)) {
+        .filter((el) => el.level === 1)
+        .filter(
+          (item, index, self) =>
+            index ===
+            self.findIndex((t) => t.institution_id === item.institution_id),
+        )) {
         const institution = (await requestInstitution(el.institution_id))
           .message;
 
-        const newEl = JSON.parse(JSON.stringify(el));
-        newEl['institution'] = institution;
-
         if (institution.institution_type in data) {
-          data[institution.institution_type].push(newEl);
+          data[institution.institution_type].push(institution);
         } else {
-          data['otherInstitutions'].push(newEl);
+          data['otherInstitutions'].push(institution);
         }
       }
 
-      console.log(data);
+      dispatch(
+        adminActions.setAdmins(
+          educations.message.filter((el) => el.level === 1),
+        ),
+      );
       dispatch(adminActions.setSchools(data.School));
       dispatch(adminActions.setSecondaries(data.Secondary));
       dispatch(adminActions.setUniversities(data.University));
@@ -68,12 +76,12 @@ export const fetchInstitutions =
   };
 
 export const fetchDeleteInstitution =
-  (email: string) =>
+  (id: number) =>
   async (dispatch: AppDispatch): Promise<void> => {
     dispatch(uiActions.setRequestStarted('educations'));
     try {
-      await requestRemoveInstitution$(email);
-      dispatch(adminActions.removeItem(email));
+      await requestRemoveInstitution$(id);
+      dispatch(adminActions.removeItem(id));
       dispatch(uiActions.closeModals());
     } catch (error) {
       showErrorNotification('Ошибка при удалении учреждений');
@@ -81,12 +89,11 @@ export const fetchDeleteInstitution =
       dispatch(uiActions.setRequestFinished('educations'));
     }
   };
-5;
+
 export const fetchEditInstitution =
-  (newItem: InstitutionsAdmin) =>
+  (newItem: Institution) =>
   async (dispatch: AppDispatch): Promise<void> => {
     dispatch(uiActions.setRequestStarted('educations'));
-    if (!newItem.password) delete newItem.password;
     try {
       await requestEditInstitution$({ ...newItem });
       dispatch(adminActions.editItem(newItem));
@@ -99,16 +106,58 @@ export const fetchEditInstitution =
   };
 
 export const fetchAddInstitution =
+  (newItem: Institution) =>
+  async (dispatch: AppDispatch): Promise<void> => {
+    dispatch(uiActions.setRequestStarted('educations'));
+    try {
+      await requestAddInstitution$(newItem);
+      dispatch(adminActions.addItem(newItem));
+      dispatch(uiActions.closeModals());
+    } catch (error) {
+      showErrorNotification('Ошибка при удалении учреждений');
+    } finally {
+      dispatch(uiActions.setRequestFinished('educations'));
+    }
+  };
+
+export const fetchEditInstitutionAdmin =
+  (newItem: InstitutionsAdmin) =>
+  async (dispatch: AppDispatch): Promise<void> => {
+    dispatch(uiActions.setRequestStarted('educations'));
+    if (!newItem.password) delete newItem.password;
+    try {
+      await requestEditInstitutionAdmin$({ ...newItem });
+      dispatch(adminActions.editAdmin(newItem));
+      dispatch(uiActions.closeModals());
+    } catch (error) {
+      showErrorNotification('Ошибка при удалении учреждений');
+    } finally {
+      dispatch(uiActions.setRequestFinished('educations'));
+    }
+  };
+
+export const fetchAddInstitutionAdmin =
   (newItem: InstitutionsAdmin) =>
   async (dispatch: AppDispatch): Promise<void> => {
     dispatch(uiActions.setRequestStarted('educations'));
     try {
-      // const { institution_id } =
-      await requestAddInstitution$(newItem);
-      // if (newItem.institution.institution_type === 'school') {
-      //   await requestCreateFaculty({ name: 'Младшая школа', institution_id });
-      // }
-      dispatch(adminActions.addItem(newItem));
+      await requestAddInstitutionAdmin$(newItem);
+      dispatch(adminActions.addAdmin(newItem));
+      dispatch(uiActions.closeModals());
+    } catch (error) {
+      showErrorNotification('Ошибка при удалении учреждений');
+    } finally {
+      dispatch(uiActions.setRequestFinished('educations'));
+    }
+  };
+
+export const fetchDeleteInstitutionAdmin =
+  (email: string) =>
+  async (dispatch: AppDispatch): Promise<void> => {
+    dispatch(uiActions.setRequestStarted('educations'));
+    try {
+      await requestRemoveInstitutionAmin$(email);
+      dispatch(adminActions.removeAdmin(email));
       dispatch(uiActions.closeModals());
     } catch (error) {
       showErrorNotification('Ошибка при удалении учреждений');

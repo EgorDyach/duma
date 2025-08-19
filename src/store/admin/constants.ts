@@ -6,6 +6,7 @@ export const adminInitialState: AdminState = {
   Universities: [],
   Secondaries: [],
   otherInstitutions: [],
+  admins: [],
 };
 
 export const educationTypeMap: Record<

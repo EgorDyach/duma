@@ -1,5 +1,4 @@
 import Flex from '@components/Flex';
-import { AddingSecondaryModal } from './AddingSecondaryModal';
 import Button from '@components/Button';
 import { Title } from '@components/Title';
 import { useAppDispatch } from '@hooks/useAppDispatch';
@@ -9,18 +8,19 @@ import { useSelector } from 'react-redux';
 import { Modal } from '@components/Modal/Modal';
 import PenIcon from '@components/icons/PenIcon';
 import { Text } from '@components/Typography';
+import { AddingAdminModal } from './AddingAdminModal';
 
-export const MODAL_NAME = 'addSecondary';
+export const MODAL_NAME = 'addAdmin';
 
-const SecondaryModule = () => {
+const AdminManagementModule = () => {
   const dispatch = useAppDispatch();
   const requests = useSelector(uiSelectors.getRequests);
-  const secondaries = useSelector(adminSelectors.getSecondaries);
+  const admins = useSelector(adminSelectors.getAdmins);
 
   return (
     <>
       <Modal modalName={MODAL_NAME}>
-        <AddingSecondaryModal />
+        <AddingAdminModal />
       </Modal>
       <Flex direction="column">
         <Title
@@ -34,7 +34,7 @@ const SecondaryModule = () => {
             );
           }}
         >
-          ССУЗы
+          Администраторы
         </Title>
         {requests['educations'] === 'fetched' && (
           <>
@@ -50,8 +50,8 @@ const SecondaryModule = () => {
               basis="100%"
               gap="11px"
             >
-              {[...secondaries]
-                .sort((a, b) => a.name.localeCompare(b.name))
+              {[...admins]
+                .sort((a, b) => a.fullname.localeCompare(b.fullname))
                 .map((item, index) => (
                   <Flex gap="16px" align="center" key={index}>
                     <button
@@ -83,7 +83,7 @@ const SecondaryModule = () => {
                       size="full"
                       style={{ width: '100%' }}
                     >
-                      <Text>{item.name}</Text>
+                      <Text>{item.fullname}</Text>
                     </Button>
                   </Flex>
                 ))}
@@ -95,4 +95,4 @@ const SecondaryModule = () => {
   );
 };
 
-export default SecondaryModule;
+export default AdminManagementModule;
