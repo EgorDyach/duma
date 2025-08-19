@@ -73,6 +73,7 @@ const currentWeekLessons = (
   const today = new Date();
   const firstDay = new Date(today);
   const lastDay = new Date(today);
+console.log(lessons, "lessons");
 
   const currentDayOfWeek = today.getDay();
   const daysToAdd = weekOffset * 7;
@@ -84,7 +85,6 @@ const currentWeekLessons = (
 
   const getAllLessons = (lessons: Lesson[]): Lesson[] => {
   return lessons.flatMap(lesson => {
-    // Берем текущий урок и все вложенные уроки (если они есть)
     return [lesson, ...(lesson.lessons ? getAllLessons(lesson.lessons) : [])];
   });
 }
@@ -97,10 +97,14 @@ const currentWeekLessons = (
   const daysLessons: Lesson[][] = [[], [], [], [], [], []];
 
   weekLessons.forEach((el) => {
+    console.log(el, "b");
+    
     const day = new Date(el.date).getDay() - 1;
     if (day < 0) return;
     daysLessons[day].push(el);
   });
+  console.log(daysLessons,"daa");
+  
   return { daysLessons, firstDay, lastDay };
 };
 
@@ -113,6 +117,9 @@ const SchedulePage = () => {
   const groups = useSelector(institutionSelectors.getGroups);
   const [selectedGroup, setSelectedGroup] = useState<string | null>(null);
   const [groupId, setGroupId] = useState<string | null>(null);
+
+  console.log(user, "user");
+  
   
   useEffectOnce(() => {
     // dispatch(fetchAllLessons());

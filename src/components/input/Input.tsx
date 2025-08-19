@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { content } from '@lib/theme/colors';
 import { InputProps } from './types';
 import {
@@ -23,14 +23,21 @@ const Input: React.FC<InputProps> = ({
   onBlur,
   onFocus,
   disabled,
-  setIsEdit,
+  setIsEdit, // This should be optional in your InputProps type
+  isEditing,
   ...props
 }) => {
-  const [isOpenModal, setIsOpenModal] = useState(false)
+  const [isOpenModal, setIsOpenModal] = useState(false);
 
   const handleOpenModal = () => {
-    setIsOpenModal(!isOpenModal)
-  }
+    setIsOpenModal(!isOpenModal);
+  };
+
+  useEffect(() => {
+    if (!isEditing && setIsEdit) {
+      setIsEdit(false);
+    }
+  }, [isEditing, setIsEdit]);
 
   return (
     <Flex direction="column" {...props}>
@@ -54,14 +61,20 @@ const Input: React.FC<InputProps> = ({
           onChange={(e) => onChange(e.currentTarget.value)}
           onFocus={onFocus}
           onBlur={onBlur}
-          disabled={disabled}
+          disabled={isEditing ? disabled : false}
         />
-        {suffix && disabled && (
+        {suffix && disabled && isEditing && (
           <SuffixWrapper direction="row" align="center" onClick={handleOpenModal}>
             {suffix}
           </SuffixWrapper>
         )}
-        {isOpenModal && setIsEdit && <ConfirmationModal isOpenModal={isOpenModal} setIsOpenModal={setIsOpenModal} setIsEdit={setIsEdit} />}
+        {isOpenModal && setIsEdit && (
+          <ConfirmationModal 
+            isOpenModal={isOpenModal} 
+            setIsOpenModal={setIsOpenModal} 
+            setIsEdit={setIsEdit} 
+          />
+        )}
       </Flex>
     </Flex>
   );

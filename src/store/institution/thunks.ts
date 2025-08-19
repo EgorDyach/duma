@@ -209,7 +209,10 @@ export const fetchRemoveTeacher =
 export const fetchUpdateTeacher =
   (data: Teacher, id: string | number) => async (dispatch: AppDispatch) => {
     try {
-      await requestUpdateTeacher(removeId(data));
+      console.log(data, "tutu");
+      // await requestUpdateTeacher(removeId(data));
+      
+      await requestUpdateTeacher(data);
       dispatch(institutionActions.updateTeacher({ data, id }));
       dispatch(uiActions.closeModals());
     } catch (e) {

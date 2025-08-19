@@ -25,10 +25,11 @@ const ITEM_INIT_DATA: Room = {
   room: {
     name: '',
     capacity: -1,
+    id: -1
   },
   room_labels: [],
   room_taints: [],
-  id: -1
+  
 };
 
 export const AddingRoomModal = () => {
@@ -52,6 +53,9 @@ export const AddingRoomModal = () => {
     dispatch(fetchAddRoom(newItem));
   };
 
+  console.log(newItem, "newItem");
+  
+
   return (
     <>
       <Flex gap="30px" justify="space-between">
@@ -67,7 +71,7 @@ export const AddingRoomModal = () => {
           label="Название"
           placeholder="Введите название..."
           onChange={(e) =>
-            setNewItem((prev) => ({
+            setNewItem((prev) => ({              
               ...prev,
               room: {
                 id: prev.room.id,

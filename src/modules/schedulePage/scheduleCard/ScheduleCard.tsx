@@ -62,7 +62,7 @@ const ScheduleCard: React.FC<Schedule> = ({
       return {
         time: `${currentLessonTime?.start_time.slice(0, 5)} - ${currentLessonTime?.end_time.slice(0, 5)}`,
         location: room?.room.name,
-        name: subject?.name || "Физика",
+        name: subject?.name,
       };
     });
   };

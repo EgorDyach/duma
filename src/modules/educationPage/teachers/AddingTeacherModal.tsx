@@ -12,7 +12,6 @@ import {
   fetchAddTeacher,
   fetchRemoveTeacher,
   fetchUpdateTeacher,
-  fetchUpdateTeacherAccount,
 } from '@store/institution/thunks';
 import { getId } from '@store/institution/store';
 import { validateTeacher } from './helpers';
@@ -43,6 +42,9 @@ export const AddingTeacherModal: React.FC = () => {
   const [newItem, setNewItem] = useState<Teacher>(
     currentModal.value || ITEM_INIT_DATA,
   );
+
+  console.log(currentModal.isEditing, "currentModal.isEditing");
+  
 
   // Autofill email when открываем модалку редактирования: email приходит из связанного account
   useEffect(() => {
@@ -75,9 +77,10 @@ export const AddingTeacherModal: React.FC = () => {
         user && 'institution_id' in user ? (user as any).institution_id : undefined,
     } as any;
 
+    // console.log(getId(currentModal.value), "000");
+    
+
     if (currentModal.isEditing) {
-      // Update account first (email/password changes)
-      await dispatch(fetchUpdateTeacherAccount(teacherAccountPayload) as any);
       return await dispatch(
         fetchUpdateTeacher(
           newItemWithHolidays,
@@ -89,6 +92,9 @@ export const AddingTeacherModal: React.FC = () => {
     // await dispatch(fetchCreateTeacherAccount(teacherAccountPayload) as any);
     await dispatch(fetchAddTeacher(newItemWithHolidays) as any);
   };
+
+  console.log(currentModal.isEditing, "currentModal");
+  
 
   return (
     <>
@@ -115,6 +121,7 @@ export const AddingTeacherModal: React.FC = () => {
         <Input
         disabled={!isEdit}
         setIsEdit={setIsEdit}
+        isEditing={currentModal.isEditing}
         suffix={"Изменить"}
           style={{ width: '100%' }}
           label="Email"
@@ -130,7 +137,7 @@ export const AddingTeacherModal: React.FC = () => {
         />
       </Flex>
 
-      {isEdit && <Flex $top="medium">
+      {(!currentModal.isEditing && !isEdit || isEdit) && <Flex $top="medium">
         <Input
           style={{ width: '100%' }}
           label="Пароль"
