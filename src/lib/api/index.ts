@@ -370,7 +370,10 @@ export const requestAllLessons = async (): Promise<Response<Lesson[]>> => {
 
 export const requestGroupLessons = async (
   id: string | number): Promise<any> => {
-  console.log(id, "idd");
-
   return await request.get(`https://puzzlesignlanguage.ru/api/back/v1/group/${id}/lessons`, {});
+};
+
+export const requestTeacherLessons = async (
+  id: string | number): Promise<any> => {
+  return await request.get(`https://puzzlesignlanguage.ru/api/back/v1/teacher/${id}/lessons`, {});
 };

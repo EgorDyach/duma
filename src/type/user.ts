@@ -1,6 +1,7 @@
 export type User = UserDuma | InstitutionsAdmin;
 
 export type UserDuma = {
+  id?: number;
   ID: number;
   CreatedAt: string;
   UpdatedAt: string;

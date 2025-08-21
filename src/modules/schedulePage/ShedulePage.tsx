@@ -40,6 +40,7 @@ const ScheduleHead = styled.div`
   padding: 15px;
   display: flex;
   justify-content: space-between;
+  align-items: center;
   width: 100%;
   border-radius: 10px;
   margin-bottom: 20px;
@@ -64,6 +65,28 @@ const WeekButton = styled.button`
   border: none;
   font-size: 24px;
   color: #8a8c94;
+  cursor: pointer;
+  padding: 5px 10px;
+
+  &:hover {
+    color: #ffffff;
+  }
+`;
+
+const WeekNavigation = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 15px;
+`;
+
+const EmptyStateContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 300px;
+  background-color: #2c2d35;
+  border-radius: 10px;
+  margin-top: 20px;
 `;
 
 const currentWeekLessons = (
@@ -83,8 +106,8 @@ const currentWeekLessons = (
   lastDay.setDate(firstDay.getDate() + 6);
   lastDay.setHours(23, 59, 59, 999);
 
-  console.log('First day:', firstDay);
-  console.log('Last day:', lastDay);
+  const firstDayUTC = new Date(firstDay.toISOString().split('T')[0] + 'T00:00:00Z');
+  const lastDayUTC = new Date(lastDay.toISOString().split('T')[0] + 'T23:59:59Z');
 
   const getAllLessons = (lessons: Lesson[]): Lesson[] => {
     return lessons.flatMap(lesson => {
@@ -94,23 +117,18 @@ const currentWeekLessons = (
 
   const weekLessons = getAllLessons(lessons).filter((el) => {
     const lessonDate = new Date(el.date);
-    lessonDate.setHours(0, 0, 0, 0);
-
-    const lessonDateOnly = new Date(lessonDate.getFullYear(), lessonDate.getMonth(), lessonDate.getDate());
-    const firstDayOnly = new Date(firstDay.getFullYear(), firstDay.getMonth(), firstDay.getDate());
-    const lastDayOnly = new Date(lastDay.getFullYear(), lastDay.getMonth(), lastDay.getDate());
-
-    return lessonDateOnly >= firstDayOnly && lessonDateOnly <= lastDayOnly;
+    
+    return lessonDate >= firstDayUTC && lessonDate <= lastDayUTC;
   });
 
-  console.log('Filtered lessons count:', weekLessons.length);
-  console.log('Filtered lessons:', weekLessons);
+  console.log(weekLessons, "weekLessons9090");
+  
 
   const daysLessons: Lesson[][] = [[], [], [], [], [], [], []];
 
   weekLessons.forEach((el) => {
     const lessonDate = new Date(el.date);
-    const day = lessonDate.getDay();
+    const day = lessonDate.getUTCDay(); 
 
     let dayIndex;
     if (day === 0) {
@@ -127,6 +145,19 @@ const currentWeekLessons = (
   return { daysLessons, firstDay, lastDay };
 };
 
+const getWeekLabel = (weekOffset: number): string => {
+  if (weekOffset === 0) {
+    return 'Текущая неделя';
+  } else if (weekOffset === 1) {
+    return 'Следующая неделя';
+  } else if (weekOffset === -1) {
+    return 'Предыдущая неделя';
+  } else if (weekOffset > 1) {
+    return `Через ${weekOffset} недели`;
+  } else {
+    return `${Math.abs(weekOffset)} недели назад`;
+  }
+};
 
 const SchedulePage = () => {
   const lessons = useSelector(institutionSelectors.getLessons);
@@ -138,19 +169,18 @@ const SchedulePage = () => {
   const [selectedGroup, setSelectedGroup] = useState<string | null>(null);
   const [groupId, setGroupId] = useState<string | null>(null);
 
-  console.log(user, "user");
-
+  console.log(user, "userr");
 
   useEffectOnce(() => {
-    // dispatch(fetchAllLessons());
     dispatch(fetchAllRooms());
-    // dispatch(fetchAllSubjects());
-    // dispatch(fetchAllCourses());
     dispatch(fetchAllLessonTimes());
     dispatch(fetchAllFaculty());
   });
 
   useEffect(() => {
+    // if(user?.level === 2) {
+    //   setGroupId(user.id)
+    // }
     if (groupId) {
       dispatch(fetchGroupLessons(groupId));
     }
@@ -158,31 +188,43 @@ const SchedulePage = () => {
 
   const currentLessons = currentWeekLessons(lessons, weekOffset);
 
+  const handlePreviousWeek = () => {
+    setWeekOffset(weekOffset - 1);
+  };
+
+  const handleNextWeek = () => {
+    setWeekOffset(weekOffset + 1);
+  };
+
   return (
     <>
       <Flex gap="20px">
         <div style={{ width: '100%' }}>
           <ScheduleHead>
-            <WeekButton onClick={() => setWeekOffset(weekOffset - 1)}>
-              {'<'}
-            </WeekButton>
-            <Text $color="#8a8c94" $size="subheader">
-              Текущая неделя
-            </Text>
-            <WeekButton onClick={() => setWeekOffset(weekOffset + 1)}>
-              {'>'}
-            </WeekButton>
+            {groupId && user?.level === 1 && <WeekNavigation>
+              <WeekButton onClick={handlePreviousWeek} title="Предыдущая неделя">
+                {'<'}
+              </WeekButton>
+              <Text $color="#8a8c94" $size="subheader">
+                {getWeekLabel(weekOffset)}
+              </Text>
+              <WeekButton onClick={handleNextWeek} title="Следующая неделя">
+                {'>'}
+              </WeekButton>
+            </WeekNavigation>}
             <DropDownMenu groups={groups} selectedGroup={selectedGroup} setSelectedGroup={setSelectedGroup} setGroupId={setGroupId} />
           </ScheduleHead>
+          
           {requests['lessons'] === 'pending' && <ContentLoader size={32} />}
-          {requests['lessons'] !== 'pending' && (
+          
+          {requests['lessons'] !== 'pending' && groupId && user?.level === 1 ? (
             <ScheduleContainer>
               {currentLessons.daysLessons.map((el, index) => {
                 console.log(el, "burger2");
 
                 const date = new Date(currentLessons.firstDay);
-
                 date.setDate(currentLessons.firstDay.getDate() + index);
+                
                 return (
                   <ScheduleCard
                     lessonsOnDay={
@@ -198,6 +240,14 @@ const SchedulePage = () => {
                 );
               })}
             </ScheduleContainer>
+          ) : (
+            requests['lessons'] !== 'pending' && (
+              <EmptyStateContainer>
+                <Text $color="#8a8c94" $size="header">
+                  Выберите группу
+                </Text>
+              </EmptyStateContainer>
+            )
           )}
         </div>
         <NotificationModule />

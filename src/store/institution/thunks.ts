@@ -51,6 +51,7 @@ import {
   requestUpdateDepartment,
   requestAllLessons,
   requestGroupLessons,
+  requestTeacherLessons,
 } from '@lib/api';
 import { TeacherAccount } from '@type/user';
 import { uiActions } from '@store/ui';
@@ -211,7 +212,7 @@ export const fetchUpdateTeacher =
     try {
       console.log(data, "tutu");
       // await requestUpdateTeacher(removeId(data));
-      
+
       await requestUpdateTeacher(data);
       dispatch(institutionActions.updateTeacher({ data, id }));
       dispatch(uiActions.closeModals());
@@ -857,9 +858,9 @@ export const fetchAllLessons = () => async (dispatch: AppDispatch) => {
   }
 };
 
-export const fetchGroupLessons = (id: string | number) => async (dispatch: AppDispatch) => {
+export const fetchGroupLessons = (id: string | number, level: number | string) => async (dispatch: AppDispatch) => {
   try {
-    const { message } = await requestGroupLessons(id);
+    const { message } = level === 1 ? await requestGroupLessons(id) : await requestTeacherLessons(id)
     console.log(message, "message");
 
     dispatch(
