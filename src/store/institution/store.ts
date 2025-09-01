@@ -20,7 +20,7 @@ function createListReducers<T>(key: keyof InstitutionState) {
       { payload }: PayloadAction<string | number>,
     ) => {
       (state[key] as T[]) = (state[key] as T[]).filter(
-        (item: any) => getId(item) !== payload,
+        (item: T) => getId(item) !== payload,
       );
     },
     update: (
@@ -28,7 +28,7 @@ function createListReducers<T>(key: keyof InstitutionState) {
       { payload }: PayloadAction<{ id: string | number; data: Partial<T> }>,
     ) => {
       const list = state[key] as T[];
-      const index = list.findIndex((item: any) => getId(item) === payload.id);
+      const index = list.findIndex((item: T) => getId(item) === payload.id);
       if (index !== -1) {
         list[index] = { ...list[index], ...payload.data };
       }

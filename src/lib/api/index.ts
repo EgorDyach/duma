@@ -57,7 +57,7 @@ export const requestCreateRoom = async (
     data,
   ]);
 };
-export const requestUpdateRoom = async (data: any): Promise<void> => {
+export const requestUpdateRoom = async (data: Room): Promise<void> => {
   await request.put('https://puzzlesignlanguage.ru/api/back/v1/room', data);
 };
 export const requestDeleteRoom = async (data: {
@@ -110,7 +110,7 @@ export const requestAllTeacher = async (): Promise<Response<Teacher[]>> => {
 export const requestCreateTeacherAccount = async (
   data: TeacherAccount,
 ): Promise<{
-  message: any; Status: string; Account: any 
+  message: string; Status: string; Account: TeacherAccount
 }> => {
   return await request.post(
     '/v1/s9rk988utk/accounts/manage/institution/teacher',
@@ -287,7 +287,7 @@ export const requestAllDiscipline = async (): Promise<
 };
 
 export const requestCreateCourse = async (
-  data: any,
+  data: Course,
 ): Promise<Response<{ Info: string; Courses: any }>> => {
   return await request.post(
     'https://puzzlesignlanguage.ru/api/back/v1/course',

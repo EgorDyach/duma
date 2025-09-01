@@ -73,7 +73,7 @@ export const AddingCourseModal = () => {
   const currentDiscipline = disciplines.find((el) => el.id === newItem.discipline_id);
 
   const allTeachers = (faculties || []).flatMap((faculty: any) =>
-    (faculty.departments || []).flatMap((department: any) =>
+    (faculty.departments || []).flatMap((department: Department) =>
       department.teachers || []
     )
   );
@@ -126,7 +126,7 @@ export const AddingCourseModal = () => {
     }));
   };
 
-  const handleTeacherChange = (id: number) => {
+  const handleTeacherChange = (id: number | string) => {
     setNewItem(prev => {
       if (prev.course) {
         return {
@@ -234,13 +234,13 @@ export const AddingCourseModal = () => {
               </Text>
             </StyledModalAdd>
             {currentModal.isEditing && (
-              <Button
+              <StyledModalAdd
                 onClick={() =>
                   dispatch(fetchRemoveCourse(Number(currentCourseId)))
                 }
               >
                 <Text $size="small">Удалить</Text>
-              </Button>
+              </StyledModalAdd>
             )}
           </Flex>
         </Flex>

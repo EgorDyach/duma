@@ -55,6 +55,7 @@ import { TeacherAccount } from '@type/user';
 import { uiActions } from '@store/ui';
 import toLowerCaseKeys from '@lib/toLowerCaseKeys';
 import { removeId } from '@lib/utils/removeId';
+ // <-- Adjust path if needed
 
 // Deduplicate helpers
 function uniqueById<T extends { id?: number }>(items: T[]): T[] {
@@ -98,13 +99,21 @@ export const fetchRemoveRoom =
 export const fetchUpdateRoom =
   (data: Room, id: string | number) => async (dispatch: AppDispatch) => {
     try {
-      // Backend expects a flat models.Room shape, not nested { room: {...} }
-      const payload = {
+      const payload: Room = {
         id: data.room.id,
         name: data.room.name,
         capacity: data.room.capacity,
         room_taints: data.room_taints,
         room_labels: data.room_labels,
+        room: {
+          createdAt: undefined,
+          deletedAt: undefined,
+          updatedat: undefined,
+          id: undefined,
+          institution_id: undefined,
+          capacity: 0,
+          name: ''
+        }
       };
       await requestUpdateRoom(payload);
       dispatch(institutionActions.updateRoom({ data, id }));
@@ -170,13 +179,24 @@ export const fetchAddTeacher =
           password: item.password,
           // account_id: Account?.id,
         });
-        console.log(res?.message?.Account?.id, 'res'); // Debugging line
+
+        // If message is a string, try to parse it as JSON, otherwise use as object
+        let accountId: number | undefined;
+        let messageObj: any = res?.message;
+        if (typeof messageObj === 'string') {
+          try {
+            messageObj = JSON.parse(messageObj);
+          } catch {
+            messageObj = {};
+          }
+        }
+        accountId = messageObj?.Account?.id;
 
         // 2) Create teacher in backend
         const teacherPayload = {
           ...removeId(item),
           // pass created account id to backend
-          account_id: res?.message?.Account?.id || undefined,
+          account_id: accountId || undefined,
         } as any;
         console.log(teacherPayload, 'teacherPayload');
 

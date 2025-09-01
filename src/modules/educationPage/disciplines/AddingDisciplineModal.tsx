@@ -158,7 +158,7 @@ export const AddingDisciplineModal = () => {
           style={{ marginTop: 6 }}
           min={0}
           value={String(newItem.hours)}
-          onChange={(e: { target: { value: any; }; }) =>
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
             setNewItem({ ...newItem, hours: Number(e.target.value) })
           }
           onWheel={(e) => e.currentTarget.blur()}

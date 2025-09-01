@@ -2,7 +2,6 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import {
   uiStateName,
   Modals,
-  ModalTypes,
   UIState,
   ModalContent,
   DisplayedTab,
@@ -39,14 +38,14 @@ const uiSlice = createSlice({
         };
       });
     },
-    openModal<T extends ModalTypes>(
+    openModal<T extends any>(
       state: UIState,
       {
         payload,
       }: PayloadAction<{
         modalName: T;
         isEditing: boolean;
-        value: any;
+        value: ModalContent<any>;
       }>,
     ) {
       document.body.classList.add('scrollBlock');
@@ -54,8 +53,8 @@ const uiSlice = createSlice({
       state.modals[payload.modalName] = {
         isOpened: true,
         isEditing: payload.isEditing,
-        value: payload.value as Modals[T],
-      } as ModalContent<Modals[T]>;
+        value: payload.value as any,
+      } as ModalContent<any>;
     },
   },
 });
