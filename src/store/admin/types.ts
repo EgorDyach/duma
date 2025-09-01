@@ -1,12 +1,13 @@
-import { InstitutionsAdmin } from '@type/user';
+import { Institution, InstitutionsAdmin } from '@type/user';
 
 export const adminStateName = 'admin';
 
 export type AdminState = {
-  Schools: InstitutionsAdmin[];
-  Universities: InstitutionsAdmin[];
-  Secondaries: InstitutionsAdmin[];
-  otherInstitutions: InstitutionsAdmin[];
+  Schools: Institution[];
+  Universities: Institution[];
+  Secondaries: Institution[];
+  otherInstitutions: Institution[];
+  admins: InstitutionsAdmin[];
 };
 
 export type StoreWithAdminState = {

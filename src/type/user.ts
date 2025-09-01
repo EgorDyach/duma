@@ -24,12 +24,12 @@ export type InstitutionsAdmin = {
   password?: string;
   token?: string;
   fullname: string;
-  institution_id?: number;
+  institution_id: number;
   institution?: Institution;
 };
 
 export type Institution = {
-  ID?: number;
+  id?: number;
   CreatedAt?: string;
   UpdatedAt?: string;
   DeletedAt?: null | string;

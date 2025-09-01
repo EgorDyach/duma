@@ -1,21 +1,54 @@
 import { ApiResponse } from '@type/api';
 import { handledRequest, getEmptyApiResponse } from './utils';
 import { request } from '.';
-import { InstitutionsAdmin } from '@type/user';
+import { Institution, InstitutionsAdmin } from '@type/user';
 
-const requestInstitutions$ = async (): Promise<
+const requestInstitution$ = async (
+  id: number,
+): Promise<ApiResponse<Institution>> => {
+  return request.get(`/v1/s9rk988utk/accounts/manage/institution/:${id}`);
+};
+
+export const requestInstitutions = handledRequest(
+  requestInstitution$,
+  'Не удалось получить список учреждений!',
+  getEmptyApiResponse<Institution>(),
+);
+
+export const requestRemoveInstitution$ = async (
+  id: number,
+): Promise<ApiResponse<void>> => {
+  return request.delete('/v1/s9rk988utk/accounts/manage/institution', {
+    data: { id },
+  });
+};
+
+export const requestEditInstitution$ = async (
+  newItem: Institution,
+): Promise<ApiResponse<void>> => {
+  return request.put('/v1/s9rk988utk/accounts/manage/institution', newItem);
+};
+
+export const requestAddInstitution$ = async (
+  newItem: Institution,
+): Promise<ApiResponse<void>> => {
+  console.log(newItem);
+  return request.post('/v1/s9rk988utk/accounts/manage/institution', newItem);
+};
+
+const requestInstitutionAdmins$ = async (): Promise<
   ApiResponse<InstitutionsAdmin[]>
 > => {
   return request.get('/v1/s9rk988utk/accounts/manage/institution/admin/list');
 };
 
-export const requestInstitutions = handledRequest(
-  requestInstitutions$,
+export const requestInstitutionAdmins = handledRequest(
+  requestInstitutionAdmins$,
   'Не удалось получить список учреждений!',
   getEmptyApiResponse<InstitutionsAdmin[]>(),
 );
 
-export const requestRemoveInstitution$ = async (
+export const requestRemoveInstitutionAmin$ = async (
   email: string,
 ): Promise<ApiResponse<void>> => {
   return request.delete('/v1/s9rk988utk/accounts/manage/institution/admin', {
@@ -23,7 +56,7 @@ export const requestRemoveInstitution$ = async (
   });
 };
 
-export const requestEditInstitution$ = async (
+export const requestEditInstitutionAdmin$ = async (
   newItem: InstitutionsAdmin,
 ): Promise<ApiResponse<void>> => {
   return request.put(
@@ -32,7 +65,7 @@ export const requestEditInstitution$ = async (
   );
 };
 
-export const requestAddInstitution$ = async (
+export const requestAddInstitutionAdmin$ = async (
   newItem: InstitutionsAdmin,
 ): Promise<ApiResponse<void>> => {
   console.log(newItem);

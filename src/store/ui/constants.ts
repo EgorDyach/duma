@@ -80,5 +80,10 @@ export const uiInitialState: UIState = {
       isEditing: false,
       value: null,
     },
+    addAdmin: {
+      isOpened: false,
+      isEditing: false,
+      value: null,
+    },
   },
 };

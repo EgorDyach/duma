@@ -3,11 +3,9 @@ import { useState } from 'react';
 import {
   StyledModalTitle,
   StyledModalInput,
-  StyledItemTitle,
   StyledModalAdd,
 } from '@components/Modal/ModalStyles';
-import Input from '@components/input/Input';
-import { InstitutionsAdmin } from '@type/user';
+import { Institution } from '@type/user';
 import { useSelector } from 'react-redux';
 import { uiSelectors } from '@store/ui';
 import { MODAL_NAME } from './SchoolModule';
@@ -17,35 +15,24 @@ import {
   fetchDeleteInstitution,
   fetchEditInstitution,
 } from '@store/admin/thunks';
-import { generatePassword } from './helpers';
 import { Text } from '@components/Typography';
 
-const ITEM_INIT_DATA: InstitutionsAdmin = {
-  id: new Date().getTime(),
-  email: '',
-  fullname: '',
-  level: 1,
-  institution: {
-    institution_type: 'School',
-    name: '',
-  },
+const ITEM_INIT_DATA: Institution = {
+  institution_type: 'School',
+  name: '',
 };
 
 export const AddingSchoolModal = () => {
   const dispatch = useAppDispatch();
   const modals = useSelector(uiSelectors.getModals);
   const currentModal = modals[MODAL_NAME];
-  const [newItem, setNewItem] = useState<InstitutionsAdmin>(
+  const [newItem, setNewItem] = useState<Institution>(
     currentModal.value || ITEM_INIT_DATA,
   );
 
   const handleAdd = () => {
     if (currentModal.isEditing) return dispatch(fetchEditInstitution(newItem));
     dispatch(fetchAddInstitution(newItem));
-    // dispatch(fetchAddFaculty({ name: 'Младшая школа' }));
-    // dispatch(fetchAddFaculty({ name: 'Средняя школа' }));
-    // dispatch(fetchAddFaculty({ name: 'Старшая школа' }));
-    // requestCreateFaculty({ name: 'Младшая школа' });
   };
 
   return (
@@ -61,98 +48,13 @@ export const AddingSchoolModal = () => {
               // @ts-ignore
               setNewItem((prev) => ({
                 ...prev,
-                institution: {
-                  ...prev.institution,
-                  name: e.target.value,
-                },
+                name: e.target.value,
               }))
             }
-            value={newItem.institution?.name}
+            value={newItem?.name}
           />
         </Flex>
       </Flex>
-      <Flex direction="column" $top="medium" gap="16px">
-        <StyledItemTitle>
-          <span>*</span>Имя администратора
-          <Input
-            value={newItem.fullname}
-            onChange={(newVal) =>
-              setNewItem((prev) => ({
-                ...prev,
-                fullname: newVal,
-              }))
-            }
-            name={''}
-          />
-        </StyledItemTitle>
-      </Flex>
-      <Flex direction="column" $top="medium" gap="16px">
-        <StyledItemTitle>
-          <span>*</span> Email администратора
-          <Flex gap="10px" align="end">
-            <Input
-              disabled={currentModal.isEditing}
-              // @ts-ignore
-              style={{ flex: 10, width: '100%' }}
-              value={newItem.email}
-              onChange={(newVal) =>
-                setNewItem((prev) => ({
-                  ...prev,
-                  email: currentModal.isEditing ? prev.email : newVal,
-                }))
-              }
-              name={''}
-            />
-          </Flex>
-        </StyledItemTitle>
-      </Flex>
-      <Flex direction="column" $top="medium" gap="16px">
-        <StyledItemTitle>
-          {currentModal.isEditing ? (
-            'Новый пароль'
-          ) : (
-            <>
-              <span>*</span> Создать пароль
-            </>
-          )}
-          <Flex gap="10px" align="end">
-            <Input
-              // @ts-ignore
-              style={{ flex: 10, width: '100%' }}
-              value={newItem.password || ''}
-              onChange={(newVal) =>
-                setNewItem((prev) => ({
-                  ...prev,
-                  password: newVal,
-                }))
-              }
-              name={''}
-            />
-            <button
-              style={{
-                flex: 1,
-                height: 44.5,
-                border: 'none',
-                borderRadius: 10,
-                backgroundColor: '#5727ec',
-                color: 'white',
-                cursor: 'pointer',
-                fontSize: 16,
-                display: 'flex',
-                padding: '12px ',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-              onClick={() =>
-                setNewItem({ ...newItem, password: generatePassword() })
-              }
-            >
-              Сгенерировать
-            </button>
-          </Flex>
-        </StyledItemTitle>
-      </Flex>
-
       <Flex justify="flex-end">
         <Flex direction="column">
           <Flex gap="16px" $top="large" justify="start">
@@ -164,7 +66,7 @@ export const AddingSchoolModal = () => {
             {currentModal.isEditing && currentModal.value && (
               <StyledModalAdd
                 onClick={() => {
-                  dispatch(fetchDeleteInstitution(currentModal.value!.email));
+                  dispatch(fetchDeleteInstitution(currentModal.value!.id!));
                 }}
               >
                 <Text $size="small">Удалить</Text>

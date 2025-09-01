@@ -51,10 +51,9 @@ const SchoolModule = () => {
               gap="11px"
             >
               {[...schools]
-                .filter((el) => el.level === 1)
-                .sort((a, b) => a.fullname.localeCompare(b.fullname))
-                .map((item) => (
-                  <Flex gap="16px" align="center">
+                .sort((a, b) => a.name.localeCompare(b.name))
+                .map((item, index) => (
+                  <Flex gap="16px" align="center" key={index}>
                     <button
                       onClick={() =>
                         dispatch(
@@ -79,22 +78,12 @@ const SchoolModule = () => {
                       <PenIcon width="24px" height="24px" />
                     </button>
                     <Button
-                      key={item.institution?.ID}
+                      key={item.id}
                       // @ts-ignore
                       size="full"
                       style={{ width: '100%' }}
                     >
-                      <Text>{item.institution?.name}</Text>
-                    </Button>
-                    <Button
-                      key={item.institution?.ID}
-                      // @ts-ignore
-                      size="full"
-                      style={{ width: '100%' }}
-                    >
-                      <Text>
-                        <Text>{item.fullname}</Text>
-                      </Text>
+                      <Text>{item.name}</Text>
                     </Button>
                   </Flex>
                 ))}

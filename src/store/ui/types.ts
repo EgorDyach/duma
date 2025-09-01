@@ -1,4 +1,4 @@
-import { User, InstitutionsAdmin } from '@type/user';
+import { User, Institution, InstitutionsAdmin } from '@type/user';
 
 export const uiStateName = 'ui';
 
@@ -25,6 +25,7 @@ export type ModalTypes =
   | 'addDiscipline'
   | 'addSecondary'
   | 'addUniversity'
+  | 'addAdmin'
   | 'GenerateModal';
 
 export type Modals = {
@@ -39,9 +40,10 @@ export type Modals = {
   addTeacher: Teacher;
   addDiscipline: Discipline;
   addCourse: Course;
-  addSecondary: InstitutionsAdmin;
-  addUniversity: InstitutionsAdmin;
-  addSchool: InstitutionsAdmin;
+  addSecondary: Institution;
+  addUniversity: Institution;
+  addSchool: Institution;
+  addAdmin: InstitutionsAdmin;
   GenerateModal: string;
 };
 
