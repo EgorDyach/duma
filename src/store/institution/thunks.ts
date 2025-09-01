@@ -858,19 +858,27 @@ export const fetchAllLessons = () => async (dispatch: AppDispatch) => {
   }
 };
 
-export const fetchGroupLessons = (id: string | number, level: number | string | undefined) => async (dispatch: AppDispatch) => {
+export const fetchAdminLessons = (groupId: string | number | undefined  ) => async (dispatch: AppDispatch) => {
   try {
-    const { message } = level === 1 ? await requestGroupLessons(id) : await requestTeacherLessons(id)
-    console.log(message, "message");
-
-    dispatch(
-      institutionActions.setLessons(message.map((el: any) => toLowerCaseKeys(el))),
-    )
+    const { message } = await requestGroupLessons(groupId);
+    dispatch(institutionActions.setLessons(message.map((el: any) => toLowerCaseKeys(el))));
   } catch (e) {
-    console.log(e, "error");
-
-    if (e instanceof AxiosError) return showErrorNotification(e.message);
-    if (typeof e === 'string') return showErrorNotification(e);
-    showErrorNotification('Что-то пошло не так...');
+    handleLessonError(e);
   }
 }
+
+export const fetchTeacherLessons = () => async (dispatch: AppDispatch) => {
+  try {
+    const { message } = await requestTeacherLessons();
+    dispatch(institutionActions.setLessons(message.map((el: any) => toLowerCaseKeys(el))));
+  } catch (e) {
+    handleLessonError(e);
+  }
+}
+
+// Вспомогательная функция для обработки ошибок
+const handleLessonError = (e: unknown) => {
+  if (e instanceof AxiosError) return showErrorNotification(e.message);
+  if (typeof e === 'string') return showErrorNotification(e);
+  showErrorNotification('Что-то пошло не так...');
+};

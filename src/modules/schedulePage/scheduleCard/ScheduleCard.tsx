@@ -79,7 +79,7 @@ const ScheduleCard: React.FC<Schedule> = ({
             }}
             $color={content.white}
           >
-            {`${day.toLocaleUpperCase()}, ${String(date.getDate()).padStart(2, '0')}.${String(date.getMonth()).padStart(2, '0')}`}
+            {`${day.toLocaleUpperCase()}, ${String(date.getDate()).padStart(2, '0')}.${String(date.getMonth() + 1).padStart(2, '0')}`}
           </Text>
         </CardDateWrapper>
         <StyledTable style={{ tableLayout: 'auto' }}>

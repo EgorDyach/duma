@@ -92,15 +92,17 @@ export const AuthPage: FC<AuthProps> = ({ isAdmin = false }) => {
         dispatch(institutionActions.setSubjects([]));
         dispatch(institutionActions.setTeachers([]));
         SessionService.login(res.message.token, saving);
-        navigate('/');
+        navigate('/schedule');
       }
     } catch (e: any) {
+      console.log(e, "error");
       const msg = e?.response?.data?.error || 'Неверный логин или пароль';
       showErrorNotification(msg);
     } finally {
       setIsLoading(false);
     }
   };
+
   return (
     <StyledFlex wrap="wrap" gap="20px">
       <DecorateFlex>
