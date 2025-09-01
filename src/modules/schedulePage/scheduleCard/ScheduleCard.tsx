@@ -57,7 +57,7 @@ const ScheduleCard: React.FC<Schedule> = ({
 
       const room = rooms.find((room) => room.room.id === lesson?.room_id);
 
-      const subject = lesson?.Course?.Discipline.subject      
+      const subject = lesson?.Course?.Discipline?.subject;
 
       return {
         time: `${currentLessonTime?.start_time.slice(0, 5)} - ${currentLessonTime?.end_time.slice(0, 5)}`,

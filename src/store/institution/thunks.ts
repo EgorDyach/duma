@@ -858,7 +858,7 @@ export const fetchAllLessons = () => async (dispatch: AppDispatch) => {
   }
 };
 
-export const fetchGroupLessons = (id: string | number, level: number | string) => async (dispatch: AppDispatch) => {
+export const fetchGroupLessons = (id: string | number, level: number | string | undefined) => async (dispatch: AppDispatch) => {
   try {
     const { message } = level === 1 ? await requestGroupLessons(id) : await requestTeacherLessons(id)
     console.log(message, "message");

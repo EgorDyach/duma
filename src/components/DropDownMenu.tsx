@@ -18,7 +18,7 @@ export default function DropDownMenu({ groups, selectedGroup, setSelectedGroup, 
     setAnchorEl(event.currentTarget);
   };
 
-  const handleMenuItemClick = (event: React.MouseEvent<HTMLElement>, id: number | undefined, name: string) => {
+  const handleMenuItemClick = (id: number | undefined, name: string) => {
     setSelectedGroup(name);
     setGroupId(id);
     setAnchorEl(null);
@@ -53,7 +53,7 @@ export default function DropDownMenu({ groups, selectedGroup, setSelectedGroup, 
         {groups.map((group) => (
           <MenuItem
             key={group.id}
-            onClick={(e) => handleMenuItemClick(e, group.id, group.name)}
+            onClick={() => handleMenuItemClick(group.id, group.name)}
           >
             {group.name}
           </MenuItem>

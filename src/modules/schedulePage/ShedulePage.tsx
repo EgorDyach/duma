@@ -10,12 +10,8 @@ import { useSelector } from 'react-redux';
 import ContentLoader from '@components/ContentLoader';
 import {
   fetchAllFaculty,
-  fetchAllCourses,
-  fetchAllGroups,
   fetchAllLessonTimes,
-  fetchAllLessons,
   fetchAllRooms,
-  fetchAllSubjects,
   fetchGroupLessons
 } from '@store/institution/thunks';
 import { useEffectOnce } from '@hooks/useEffectOnce';
@@ -119,10 +115,7 @@ const currentWeekLessons = (
     const lessonDate = new Date(el.date);
     
     return lessonDate >= firstDayUTC && lessonDate <= lastDayUTC;
-  });
-
-  console.log(weekLessons, "weekLessons9090");
-  
+  });  
 
   const daysLessons: Lesson[][] = [[], [], [], [], [], [], []];
 
@@ -167,7 +160,7 @@ const SchedulePage = () => {
   const [weekOffset, setWeekOffset] = useState(0);
   const groups = useSelector(institutionSelectors.getGroups);
   const [selectedGroup, setSelectedGroup] = useState<string | null>(null);
-  const [groupId, setGroupId] = useState<string | null>(null);
+  const [groupId, setGroupId] = useState<number | undefined>(undefined);
 
   console.log(user, "userr");
 
@@ -182,7 +175,7 @@ const SchedulePage = () => {
     //   setGroupId(user.id)
     // }
     if (groupId) {
-      dispatch(fetchGroupLessons(groupId));
+      dispatch(fetchGroupLessons(groupId, user?.level));
     }
   }, [dispatch, groupId])
 

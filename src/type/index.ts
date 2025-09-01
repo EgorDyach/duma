@@ -73,6 +73,7 @@ type Discipline = {
   hours: number;
   discipline_type: string;
   subject_id: number;
+  subject?: Subject;
 };
 
 type CourseData = {
@@ -112,6 +113,7 @@ type Course = {
   course: CourseData;
   course_affinity: CourseAffinity[];
   course_toleration: CourseToleration[];
+  Discipline?: Discipline;
 };
 
 type LessonTime = {
@@ -200,6 +202,7 @@ type Lesson = {
   lesson_time_id?: number;
   room_id?: number;
   updatedAt?: string;
+  Course?: Course;
 };
 
 type ResponseFaculty = Faculty & {

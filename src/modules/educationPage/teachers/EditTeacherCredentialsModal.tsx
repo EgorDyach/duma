@@ -11,7 +11,7 @@ import { fetchUpdateTeacherAccount } from '@store/institution/thunks';
 import { showErrorNotification } from '@lib/utils/notification';
 import Input from '@components/input/Input';
 import { Text } from '@components/Typography';
-import { Teacher } from '@type/index';
+
 
 export const MODAL_NAME = 'editTeacherCredentials';
 
@@ -24,7 +24,7 @@ const ITEM_INIT_DATA = {
 export const EditTeacherCredentialsModal: React.FC = () => {
   const dispatch = useAppDispatch();
   const modals = useSelector(uiSelectors.getModals);
-  const currentModal = modals[MODAL_NAME];
+  const currentModal = (modals as typeof modals & { editTeacherCredentials?: any })[MODAL_NAME];
 
   const [credentials, setCredentials] = useState(ITEM_INIT_DATA);
   const [hasChanges, setHasChanges] = useState(false);

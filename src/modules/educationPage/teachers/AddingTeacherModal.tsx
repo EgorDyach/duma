@@ -34,7 +34,6 @@ export const AddingTeacherModal: React.FC = () => {
   const dispatch = useAppDispatch();
   const modals = useSelector(uiSelectors.getModals);
   const departments = useSelector(institutionSelectors.getDepartments);
-  const user = useSelector(uiSelectors.getUser);
   const currentModal = modals[MODAL_NAME];
   const [isEdit, setIsEdit] = useState(false)
 
@@ -66,18 +65,6 @@ export const AddingTeacherModal: React.FC = () => {
 
     const validateError = validateTeacher(newItem, currentModal.isEditing);
     if (validateError) return showErrorNotification(validateError);
-
-    // Prepare account payload for auth service
-    const teacherAccountPayload = {
-      email: newItem.email,
-      // send password only if provided (on edit it may be empty)
-      ...(newItem.password ? { password: newItem.password } : {}),
-      fullname: newItem.fullname,
-      institution_id:
-        user && 'institution_id' in user ? (user as any).institution_id : undefined,
-    } as any;
-
-    // console.log(getId(currentModal.value), "000");
     
 
     if (currentModal.isEditing) {
