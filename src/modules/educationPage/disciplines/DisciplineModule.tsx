@@ -70,7 +70,7 @@ const DisciplineModule = () => {
   });
 
   const allTeachers = (faculties || []).flatMap((faculty: any) =>
-    (faculty.departments || []).flatMap((department: any) =>
+    (faculty.departments || []).flatMap((department: Department) =>
       department.teachers || []
     )
   );
@@ -97,7 +97,7 @@ const DisciplineModule = () => {
             uiActions.openModal({
               modalName: 'addDiscipline',
               isEditing: false,
-              value: null,
+              value: null as any,
             }),
           )
         }
@@ -183,7 +183,7 @@ const DisciplineModule = () => {
                         dispatch(
                           uiActions.openModal({
                             modalName: 'addDiscipline',
-                            value: item,
+                            value: item as any,
                             isEditing: true,
                           }),
                         )
@@ -214,7 +214,7 @@ const DisciplineModule = () => {
                             course: {
                               teacher_id: item.id as number,
                             }
-                          },
+                          } as any,
                           modalName: 'addCourse',
                         }),
                       );
@@ -234,16 +234,6 @@ const DisciplineModule = () => {
                           <Button key={el.ID}>
                             <Flex gap="12px">
                               <Text>{teacher.fullname}</Text>
-                              {/* <StyledIcon
-                                color="red"
-                                width="20px"
-                                height="20px"
-                                onClick={() =>
-                                  dispatch(
-                                    fetchRemoveCourse(el.course.id as number),
-                                  )
-                                }
-                              /> */}
                               <StyledIcon
                                 width="16px"
                                 height="16px"
@@ -251,7 +241,7 @@ const DisciplineModule = () => {
                                   dispatch(
                                     uiActions.openModal({
                                       isEditing: true,
-                                      value: el,
+                                      value: el as any,
                                       modalName: 'addCourse',
                                     }),
                                   )
@@ -264,19 +254,6 @@ const DisciplineModule = () => {
                         );
                       })}
                   </Flex>
-                  {/* <TextButton
-                  text={}
-                  size="full"
-                  onClick={() =>
-                    dispatch(
-                      uiActions.openModal({
-                        modalName: 'addDiscipline',
-                        isEditing: true,
-                        value: item,
-                      }),
-                    )
-                  }
-                /> */}
                 </StyledFlex>
               );
             })}

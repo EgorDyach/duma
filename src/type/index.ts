@@ -10,6 +10,11 @@ type Teacher = {
   email: string;
   password: string;
   account_id?: number;
+  account?: {
+    id?: number;
+    email?: string;
+    password?: string;
+  };
 };
 
 type Holiday = {
@@ -165,10 +170,12 @@ type RoomTaint = {
 };
 
 type Room = {
-  id: number;
+  id: number | undefined;
+  name: string;
   room: RoomData;
   room_taints: RoomTaint[];
   room_labels: RoomLabel[];
+  capacity: number;
 };
 
 type Faculty = {
@@ -187,6 +194,7 @@ type Department = {
   createdAt?: string;
   deletedAt?: {};
   updatedAt?: string;
+  teachers?: Teacher[];
 };
 
 type Lesson = {

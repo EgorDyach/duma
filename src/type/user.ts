@@ -10,6 +10,7 @@ export type UserDuma = {
   password: '<nil>' | string;
   token: string;
   level?: number;
+  institution_id: number;
 };
 
 export type InstitutionsAdmin = {

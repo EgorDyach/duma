@@ -22,6 +22,7 @@ import MultiDatePicker from '@components/MultiDatepicker';
 import { Text } from '@components/Typography';
 import Dropdown from '@components/Dropdown';
 import { institutionSelectors } from '@store/institution';
+import { User } from '@type/user';
 
 const ITEM_INIT_DATA: Teacher = {
   fullname: '',
@@ -42,12 +43,11 @@ export const AddingTeacherModal: React.FC = () => {
     currentModal.value || ITEM_INIT_DATA,
   );
 
-  // Autofill email when открываем модалку редактирования: email приходит из связанного account
   useEffect(() => {
     if (currentModal.isEditing && currentModal.value) {
-      const accEmail = (currentModal.value as any)?.account?.email;
+      const accEmail = (currentModal.value)?.account?.email;
       if (accEmail) {
-        setNewItem((prev) => ({ ...prev, email: accEmail } as any));
+        setNewItem((prev) => ({ ...prev, email: accEmail } as Teacher));
       }
     }
   }, [currentModal.isEditing, currentModal.value]);
@@ -63,29 +63,24 @@ export const AddingTeacherModal: React.FC = () => {
     const validateError = validateTeacher(newItem, currentModal.isEditing);
     if (validateError) return showErrorNotification(validateError);
 
-    // Prepare account payload for auth service
     const teacherAccountPayload = {
       email: newItem.email,
-      // send password only if provided (on edit it may be empty)
       ...(newItem.password ? { password: newItem.password } : {}),
       fullname: newItem.fullname,
       institution_id:
-        user && 'institution_id' in user ? (user as any).institution_id : undefined,
-    } as any;
+        user && 'institution_id' in user ? (user as User).institution_id : undefined,
+    };
 
     if (currentModal.isEditing) {
-      // Update account first (email/password changes)
-      await dispatch(fetchUpdateTeacherAccount(teacherAccountPayload) as any);
+      await dispatch(fetchUpdateTeacherAccount(teacherAccountPayload));
       return await dispatch(
         fetchUpdateTeacher(
           newItemWithHolidays,
           getId(currentModal.value) as number,
-        ) as any,
+        ) 
       );
     }
-    // Create account first, then entity
-    // await dispatch(fetchCreateTeacherAccount(teacherAccountPayload) as any);
-    await dispatch(fetchAddTeacher(newItemWithHolidays) as any);
+    await dispatch(fetchAddTeacher(newItemWithHolidays));
   };
 
   return (
