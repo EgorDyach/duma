@@ -16,9 +16,10 @@ import {
 } from '@store/institution/thunks';
 import { validateShift } from './helpers';
 import { institutionSelectors } from '@store/institution';
-import { showErrorNotification } from '@lib/utils/notification';
+import { showErrorNotification, showSuccessNotification } from '@lib/utils/notification';
 import Input from '@components/input/Input';
 import { Text } from '@components/Typography';
+import { SUCCESS_MESSAGE } from '../../../config';
 
 const ITEM_INIT_DATA: Shift = {
   number: 0,
@@ -33,6 +34,9 @@ export const AddingShiftModal = () => {
     currentModal.value || ITEM_INIT_DATA,
   );
 
+  console.log(SUCCESS_MESSAGE, "2");
+
+
   const handleAdd = () => {
     const validateError = validateShift(newItem, shifts);
     if (validateError) return showErrorNotification(validateError);
@@ -42,6 +46,7 @@ export const AddingShiftModal = () => {
         fetchUpdateShift(newItem, getId(currentModal.value) as number),
       );
     dispatch(fetchAddShift(newItem));
+    showSuccessNotification(SUCCESS_MESSAGE)
   };
 
   return (

@@ -17,11 +17,12 @@ import {
 import styled from 'styled-components';
 import { institutionSelectors } from '@store/institution';
 import { validateLessonTime } from './helpers';
-import { showErrorNotification } from '@lib/utils/notification';
+import { showErrorNotification, showSuccessNotification } from '@lib/utils/notification';
 import TimePicker from 'rc-time-picker';
 import 'rc-time-picker/assets/index.css';
 import { Text } from '@components/Typography';
 import moment from 'moment';
+import { SUCCESS_MESSAGE } from '../../../config';
 
 const ShiftsList = styled.ul`
   display: flex;
@@ -65,7 +66,8 @@ export const AddingLessonTimeModal = () => {
   const [newItem, setNewItem] = useState<LessonTime>(
     currentModal.value || ITEM_INIT_DATA,
   );
-
+  console.log(currentModal, "cm");
+  
   const handleAdd = () => {
     const item = {
       ...newItem,
@@ -73,11 +75,14 @@ export const AddingLessonTimeModal = () => {
     const validateError = validateLessonTime(newItem);
     if (validateError) return showErrorNotification(validateError);
 
-    if (currentModal.isEditing)
+    if (currentModal.isEditing) {
       return dispatch(
         fetchUpdateLessonTime(item, getId(currentModal.value) as number),
       );
-    dispatch(fetchAddLessonTime(item));
+    } else {
+      dispatch(fetchAddLessonTime(item));
+      showSuccessNotification(SUCCESS_MESSAGE)
+    }
   };
 
   return (

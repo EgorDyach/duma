@@ -15,9 +15,10 @@ import {
 } from '@store/institution/thunks';
 import { validateFaculty } from './helpers';
 import { institutionSelectors } from '@store/institution';
-import { showErrorNotification } from '@lib/utils/notification';
+import { showErrorNotification, showSuccessNotification } from '@lib/utils/notification';
 import Input from '@components/input/Input';
 import { Text } from '@components/Typography';
+import { SUCCESS_MESSAGE } from '../../../config';
 
 export const MODAL_NAME = 'addFaculty';
 
@@ -38,11 +39,15 @@ export const AddingFacultyModal = () => {
     const validateError = validateFaculty(newItem, faculties);
     if (validateError) return showErrorNotification(validateError);
 
-    if (currentModal.isEditing)
-      return dispatch(
+    if (currentModal.isEditing) {
+      dispatch(
         fetchUpdateFaculty(newItem, getId(currentModal.value) as number),
       );
+      showSuccessNotification(SUCCESS_MESSAGE)
+    }
     dispatch(fetchAddFaculty(newItem));
+    showSuccessNotification(SUCCESS_MESSAGE)
+
   };
 
   return (
