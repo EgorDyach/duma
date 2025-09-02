@@ -858,7 +858,7 @@ export const fetchAllLessons = () => async (dispatch: AppDispatch) => {
   }
 };
 
-export const fetchAdminLessons = (groupId: string | number | undefined  ) => async (dispatch: AppDispatch) => {
+export const fetchAdminLessons = (groupId: string | number | undefined) => async (dispatch: AppDispatch) => {
   try {
     const { message } = await requestGroupLessons(groupId);
     dispatch(institutionActions.setLessons(message.map((el: any) => toLowerCaseKeys(el))));
@@ -870,7 +870,7 @@ export const fetchAdminLessons = (groupId: string | number | undefined  ) => asy
 export const fetchTeacherLessons = () => async (dispatch: AppDispatch) => {
   try {
     const { message } = await requestTeacherLessons();
-    dispatch(institutionActions.setLessons(message.map((el: any) => toLowerCaseKeys(el))));
+    dispatch(institutionActions.setLessons(message.Lessons.map((el: any) => toLowerCaseKeys(el))));
   } catch (e) {
     handleLessonError(e);
   }

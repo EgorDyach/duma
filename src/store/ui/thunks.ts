@@ -11,7 +11,6 @@ import { requestAuthenticate } from '@lib/api/user';
 export const fetchUser =
   (navigate: NavigateFunction) => async (dispatch: AppDispatch) => {
     const token = SessionService.accessToken;
-    console.log(token, "token");
     
     if (!token) {
       const backPath = getLocationQuery('back') || location.pathname.slice(1);
