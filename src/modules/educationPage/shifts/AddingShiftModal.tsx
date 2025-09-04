@@ -46,7 +46,6 @@ export const AddingShiftModal = () => {
         fetchUpdateShift(newItem, getId(currentModal.value) as number),
       );
     dispatch(fetchAddShift(newItem));
-    showSuccessNotification(SUCCESS_MESSAGE)
   };
 
   return (
