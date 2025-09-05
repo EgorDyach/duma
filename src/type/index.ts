@@ -167,7 +167,6 @@ type RoomTaint = {
 };
 
 type Room = {
-  id: number;
   room: RoomData;
   room_taints: RoomTaint[];
   room_labels: RoomLabel[];

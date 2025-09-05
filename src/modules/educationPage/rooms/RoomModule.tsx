@@ -10,7 +10,6 @@ import { useSelector } from 'react-redux';
 import { AddingRoomModal } from './AddingRoomModal';
 import { useEffectOnce } from '@hooks/useEffectOnce';
 import { fetchAllRooms } from '@store/institution/thunks';
-import { useEffect } from 'react';
 import {
   StyledTable,
   StyledHeaderCell,
@@ -29,10 +28,6 @@ const RoomModule = () => {
   useEffectOnce(() => {
     dispatch(fetchAllRooms());
   });
-
-  useEffect(() => {
-    console.log('room0: ', rooms[0]);
-  }, [rooms]);
 
   return (
     <Flex flex="2" direction="column" gap="8px" align="start">
@@ -65,7 +60,7 @@ const RoomModule = () => {
             </thead>
             <tbody>
               {[...rooms]
-                .sort((a, b) => a.room.name.localeCompare(b.room.name))
+                .sort((a, b) => a.room?.name.localeCompare(b.room.name))
                 .map((item, index) => {
                   return (
                     <StyledRow>

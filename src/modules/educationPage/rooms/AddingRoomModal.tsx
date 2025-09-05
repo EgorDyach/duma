@@ -29,7 +29,6 @@ const ITEM_INIT_DATA: Room = {
   },
   room_labels: [],
   room_taints: [],
-  id: 0
 };
 
 export const AddingRoomModal = () => {

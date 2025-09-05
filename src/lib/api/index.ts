@@ -51,7 +51,7 @@ export const request = createRequestInstance(true);
 export const noAuthRequest = createRequestInstance(false);
 
 export const requestCreateRoom = async (
-  data: Room,
+  data: any,
 ): Promise<Response<{ Info: string; Rooms: Room[] }>> => {
   return await request.post('https://puzzlesignlanguage.ru/api/back/v1/room', [
     data,
