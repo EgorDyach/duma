@@ -42,7 +42,7 @@ export const AddingTeacherModal: React.FC = () => {
     currentModal.value || ITEM_INIT_DATA,
   );
 
-  console.log(currentModal.isEditing, "currentModal.isEditing");
+  console.log(newItem, "@@@@@");
   
 
   // Autofill email when открываем модалку редактирования: email приходит из связанного account
@@ -62,6 +62,9 @@ export const AddingTeacherModal: React.FC = () => {
       ...newItem,
       holidays: holidays.map((el) => ({ date: el.toISOString() })),
     };
+
+    console.log(newItemWithHolidays, "newItemWithHolidays");
+    
 
     const validateError = validateTeacher(newItem, currentModal.isEditing);
     if (validateError) return showErrorNotification(validateError);

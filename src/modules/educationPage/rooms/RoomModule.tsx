@@ -21,13 +21,16 @@ import PenIcon from '@components/icons/PenIcon';
 export const MODAL_NAME = 'addRoom';
 
 const RoomModule = () => {
-  const rooms = useSelector(institutionSelectors.getRooms);
+  const rooms = useSelector(institutionSelectors.getRooms) || [];
   const requests = useSelector(uiSelectors.getRequests);
   const dispatch = useAppDispatch();
 
   useEffectOnce(() => {
     dispatch(fetchAllRooms());
   });
+
+  console.log(rooms, "rooms");
+  
 
   return (
     <Flex flex="2" direction="column" gap="8px" align="start">
@@ -60,7 +63,7 @@ const RoomModule = () => {
             </thead>
             <tbody>
               {[...rooms]
-                .sort((a, b) => a.room?.name.localeCompare(b.room.name))
+                .sort((a, b) => a.room.name.localeCompare(b.room.name))
                 .map((item, index) => {
                   return (
                     <StyledRow>

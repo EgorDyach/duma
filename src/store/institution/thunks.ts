@@ -75,17 +75,29 @@ function uniqueById<T extends { id?: number }>(items: T[]): T[] {
 export const fetchAddRoom = (item: Room) => async (dispatch: AppDispatch) => {
   try {
     const payload = {
-        name: item.room.name,
-        capacity: item.room.capacity,
-        room_taints: item.room_taints,
-        room_labels: item.room_labels,
-      };
+      name: item.room.name,
+      capacity: item.room.capacity,
+      room_taints: item.room_taints,
+      room_labels: item.room_labels,
+    };
     const { message } = await requestCreateRoom(payload);
-    dispatch(
-      institutionActions.setRooms(
-        message.Rooms.map((el) => toLowerCaseKeys(el)),
-      ),
-    );
+
+    // Преобразуем ответ в нужную структуру
+    const normalizedRooms = message.Rooms.map((el: any) => {
+      const lower = toLowerCaseKeys(el);
+      return {
+        room: {
+          id: lower.id,
+          name: lower.name,
+          capacity: lower.capacity,
+          institution_id: lower.institution_id,
+        },
+        room_taints: lower.room_taints || [],
+        room_labels: lower.room_labels || [],
+      };
+    });
+
+    dispatch(institutionActions.setRooms(normalizedRooms));
     dispatch(uiActions.closeModals());
     showSuccessNotification(SUCCESS_MESSAGE);
   } catch (e) {
@@ -94,6 +106,7 @@ export const fetchAddRoom = (item: Room) => async (dispatch: AppDispatch) => {
     showErrorNotification('Что-то пошло не так...');
   }
 };
+
 export const fetchRemoveRoom =
   (id: string | number) => async (dispatch: AppDispatch) => {
     try {
@@ -174,44 +187,44 @@ export const fetchUpdateSubject =
 // Create account first, then create teacher linked by account_id
 export const fetchAddTeacher =
   (item: Teacher & { email?: string; password?: string }) =>
-  async (dispatch: AppDispatch) => {
-    try {
-      // 1) Create account in auth service
-      if (!item?.email || !item?.password) {
-        return showErrorNotification(
-          'Нужны email и пароль для создания аккаунта учителя',
+    async (dispatch: AppDispatch) => {
+      try {
+        // 1) Create account in auth service
+        if (!item?.email || !item?.password) {
+          return showErrorNotification(
+            'Нужны email и пароль для создания аккаунта учителя',
+          );
+        }
+        const res = await requestCreateTeacherAccount({
+          email: item.email,
+          fullname: item.fullname,
+          password: item.password,
+          // account_id: Account?.id,
+        });
+        console.log(res?.message?.Account?.id, 'res'); // Debugging line
+
+        // 2) Create teacher in backend
+        const teacherPayload = {
+          ...item,
+          // pass created account id to backend
+          account_id: res?.message?.Account?.id || undefined,
+        } as any;
+        console.log(teacherPayload, 'teacherPayload');
+
+        const { message } = await requestCreateTeacher(teacherPayload);
+        dispatch(
+          institutionActions.setTeachers(
+            message.Teachers.map((el) => toLowerCaseKeys(el)),
+          ),
         );
+        dispatch(uiActions.closeModals());
+        showSuccessNotification(SUCCESS_MESSAGE);
+      } catch (e) {
+        if (e instanceof AxiosError) return showErrorNotification(e.message);
+        if (typeof e === 'string') return showErrorNotification(e);
+        showErrorNotification('Что-то пошло не так...');
       }
-      const res = await requestCreateTeacherAccount({
-        email: item.email,
-        fullname: item.fullname,
-        password: item.password,
-        // account_id: Account?.id,
-      });
-      console.log(res?.message?.Account?.id, 'res'); // Debugging line
-
-      // 2) Create teacher in backend
-      const teacherPayload = {
-        ...item,
-        // pass created account id to backend
-        account_id: res?.message?.Account?.id || undefined,
-      } as any;
-      console.log(teacherPayload, 'teacherPayload');
-
-      const { message } = await requestCreateTeacher(teacherPayload);
-      dispatch(
-        institutionActions.setTeachers(
-          message.Teachers.map((el) => toLowerCaseKeys(el)),
-        ),
-      );
-      dispatch(uiActions.closeModals());
-      showSuccessNotification(SUCCESS_MESSAGE);
-    } catch (e) {
-      if (e instanceof AxiosError) return showErrorNotification(e.message);
-      if (typeof e === 'string') return showErrorNotification(e);
-      showErrorNotification('Что-то пошло не так...');
-    }
-  };
+    };
 export const fetchRemoveTeacher =
   (id: string | number) => async (dispatch: AppDispatch) => {
     try {
@@ -531,11 +544,11 @@ export const fetchAllRooms = () => async (dispatch: AppDispatch) => {
       const roomData = lower.room
         ? toLowerCaseKeys(lower.room)
         : {
-            id: lower.id,
-            name: lower.name,
-            capacity: lower.capacity,
-            institution_id: lower.institution_id,
-          };
+          id: lower.id,
+          name: lower.name,
+          capacity: lower.capacity,
+          institution_id: lower.institution_id,
+        };
 
       const room_labels = Array.isArray(lower.room_labels)
         ? lower.room_labels.map((l: any) => toLowerCaseKeys(l))
