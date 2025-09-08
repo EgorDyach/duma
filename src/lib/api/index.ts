@@ -81,6 +81,8 @@ export const requestAllRoom = async (): Promise<Response<Room[]>> => {
 export const requestCreateTeacher = async (
   data: Teacher,
 ): Promise<Response<{ Info: string; Teachers: Teacher[] }>> => {
+  console.log(data, "data in api");
+  
   return await request.post(
     'https://puzzlesignlanguage.ru/api/back/v1/teacher',
     [data],

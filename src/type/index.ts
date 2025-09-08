@@ -7,6 +7,11 @@ type Teacher = {
   fullname: string;
   holidays?: Holiday[];
   department_id: number;
+  account?: {
+    email: string;
+    password: string;
+    id: number;
+  };
   email: string;
   password: string;
   account_id?: number;

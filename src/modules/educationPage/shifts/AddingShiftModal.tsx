@@ -16,7 +16,10 @@ import {
 } from '@store/institution/thunks';
 import { validateShift } from './helpers';
 import { institutionSelectors } from '@store/institution';
-import { showErrorNotification, showSuccessNotification } from '@lib/utils/notification';
+import {
+  showErrorNotification,
+  showSuccessNotification,
+} from '@lib/utils/notification';
 import Input from '@components/input/Input';
 import { Text } from '@components/Typography';
 import { SUCCESS_MESSAGE } from '../../../config';
@@ -33,9 +36,7 @@ export const AddingShiftModal = () => {
   const [newItem, setNewItem] = useState<Shift>(
     currentModal.value || ITEM_INIT_DATA,
   );
-
-  console.log(SUCCESS_MESSAGE, "2");
-
+  
 
   const handleAdd = () => {
     const validateError = validateShift(newItem, shifts);
@@ -96,6 +97,60 @@ export const AddingShiftModal = () => {
                 <Text $size="small">Удалить</Text>
               </StyledModalAdd>
             )}
+            {/* <Flex wrap="wrap" gap="11px" style={{ width: '100%' }}>
+              <StyledTable>
+                <thead>
+                  <StyledHeaderCell />
+                  <StyledHeaderCell>Название</StyledHeaderCell>
+                  <StyledHeaderCell>Вместимость</StyledHeaderCell>
+                  <StyledHeaderCell>Назначение</StyledHeaderCell>
+                  <StyledHeaderCell>Особенности</StyledHeaderCell>
+                </thead>
+                <tbody>
+                  {[...rooms]
+                    .sort((a, b) => a.room.name.localeCompare(b.room.name))
+                    .map((item, index) => {
+                      return (
+                        <StyledRow>
+                          <StyledCell>
+                            <Button
+                              key={index}
+                              size="large"
+                              onClick={() =>
+                                dispatch(
+                                  uiActions.openModal({
+                                    modalName: MODAL_NAME,
+                                    isEditing: true,
+                                    value: item,
+                                  }),
+                                )
+                              }
+                            >
+                              <PenIcon
+                                width="16px"
+                                height="16px"
+                                fill="#641aee"
+                              />
+                            </Button>
+                          </StyledCell>
+                          <StyledCell>{item.room.name}</StyledCell>
+                          <StyledCell>{item.room.capacity}</StyledCell>
+                          <StyledCell>
+                            {item.room_labels
+                              .map((val) => val.label_value)
+                              .join(', ')}
+                          </StyledCell>
+                          <StyledCell>
+                            {item.room_taints
+                              .map((val) => val.taint_value)
+                              .join(', ')}
+                          </StyledCell>
+                        </StyledRow>
+                      );
+                    })}
+                </tbody>
+              </StyledTable>
+            </Flex> */}
           </Flex>
         </Flex>
       </Flex>

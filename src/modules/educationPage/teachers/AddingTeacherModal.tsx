@@ -78,8 +78,6 @@ export const AddingTeacherModal: React.FC = () => {
         ) as any,
       );
     }
-    // Create account first, then entity
-    // await dispatch(fetchCreateTeacherAccount(teacherAccountPayload) as any);
     await dispatch(fetchAddTeacher(newItemWithHolidays) as any);
   };
 

@@ -195,19 +195,14 @@ export const fetchAddTeacher =
             'Нужны email и пароль для создания аккаунта учителя',
           );
         }
-        const res = await requestCreateTeacherAccount({
-          email: item.email,
-          fullname: item.fullname,
-          password: item.password,
-          // account_id: Account?.id,
-        });
-        console.log(res?.message?.Account?.id, 'res'); // Debugging line
-
         // 2) Create teacher in backend
         const teacherPayload = {
           ...item,
+          account: {
+            email: item.email,
+            password: item.password,
+          }
           // pass created account id to backend
-          account_id: res?.message?.Account?.id || undefined,
         } as any;
         console.log(teacherPayload, 'teacherPayload');
 
@@ -241,7 +236,8 @@ export const fetchRemoveTeacher =
 export const fetchUpdateTeacher =
   (data: Teacher, id: string | number) => async (dispatch: AppDispatch) => {
     try {
-
+      console.log(data, 'data in thunk');
+      
       await requestUpdateTeacher(data);
       dispatch(institutionActions.updateTeacher({ data, id }));
       dispatch(uiActions.closeModals());
@@ -580,7 +576,7 @@ export const fetchAllSubjects = () => async (dispatch: AppDispatch) => {
     message.forEach((el) =>
       el.disciplines?.forEach((discipline) =>
         disciplines.push(toLowerCaseKeys(discipline)),
-      ),
+      ),  
     );
 
     dispatch(
