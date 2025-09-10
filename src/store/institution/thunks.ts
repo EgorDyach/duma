@@ -187,39 +187,40 @@ export const fetchUpdateSubject =
 // Create account first, then create teacher linked by account_id
 export const fetchAddTeacher =
   (item: Teacher & { email?: string; password?: string }) =>
-    async (dispatch: AppDispatch) => {
-      try {
-        // 1) Create account in auth service
-        if (!item?.email || !item?.password) {
-          return showErrorNotification(
-            'Нужны email и пароль для создания аккаунта учителя',
-          );
-        }
-        // 2) Create teacher in backend
-        const teacherPayload = {
-          ...item,
-          account: {
-            email: item.email,
-            password: item.password,
-          }
-          // pass created account id to backend
-        } as any;
-        console.log(teacherPayload, 'teacherPayload');
-
-        const { message } = await requestCreateTeacher(teacherPayload);
-        dispatch(
-          institutionActions.setTeachers(
-            message.Teachers.map((el) => toLowerCaseKeys(el)),
-          ),
+  async (dispatch: AppDispatch) => {
+    try {
+      // 1) Create account in auth service
+      if (!item?.email || !item?.password) {
+        return showErrorNotification(
+          'Нужны email и пароль для создания аккаунта учителя',
         );
-        dispatch(uiActions.closeModals());
-        showSuccessNotification(SUCCESS_MESSAGE);
-      } catch (e) {
-        if (e instanceof AxiosError) return showErrorNotification(e.message);
-        if (typeof e === 'string') return showErrorNotification(e);
-        showErrorNotification('Что-то пошло не так...');
       }
-    };
+
+      // 2) Create teacher in backend
+      const { email, password, ...itemWithoutCredentials } = item;
+
+      const teacherPayload = {
+        ...itemWithoutCredentials,
+        account: {
+          email: email,
+          password: password,
+        },
+      } as any;
+
+      const { message } = await requestCreateTeacher(teacherPayload);
+      dispatch(
+        institutionActions.setTeachers(
+          message.Teachers.map((el) => toLowerCaseKeys(el)),
+        ),
+      );
+      dispatch(uiActions.closeModals());
+      showSuccessNotification(SUCCESS_MESSAGE);
+    } catch (e) {
+      if (e instanceof AxiosError) return showErrorNotification(e.message);
+      if (typeof e === 'string') return showErrorNotification(e);
+      showErrorNotification('Что-то пошло не так...');
+    }
+  };
 export const fetchRemoveTeacher =
   (id: string | number) => async (dispatch: AppDispatch) => {
     try {
@@ -237,7 +238,7 @@ export const fetchUpdateTeacher =
   (data: Teacher, id: string | number) => async (dispatch: AppDispatch) => {
     try {
       console.log(data, 'data in thunk');
-      
+
       await requestUpdateTeacher(data);
       dispatch(institutionActions.updateTeacher({ data, id }));
       dispatch(uiActions.closeModals());
@@ -540,11 +541,11 @@ export const fetchAllRooms = () => async (dispatch: AppDispatch) => {
       const roomData = lower.room
         ? toLowerCaseKeys(lower.room)
         : {
-          id: lower.id,
-          name: lower.name,
-          capacity: lower.capacity,
-          institution_id: lower.institution_id,
-        };
+            id: lower.id,
+            name: lower.name,
+            capacity: lower.capacity,
+            institution_id: lower.institution_id,
+          };
 
       const room_labels = Array.isArray(lower.room_labels)
         ? lower.room_labels.map((l: any) => toLowerCaseKeys(l))
@@ -576,7 +577,7 @@ export const fetchAllSubjects = () => async (dispatch: AppDispatch) => {
     message.forEach((el) =>
       el.disciplines?.forEach((discipline) =>
         disciplines.push(toLowerCaseKeys(discipline)),
-      ),  
+      ),
     );
 
     dispatch(

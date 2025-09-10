@@ -32,14 +32,14 @@ export const appRoutersConfig = createBrowserRouter([
   {
     path: '/',
     errorElement: (
-      <ProtectedRoute>
+      <ProtectedRoute allowedLevels={[0, 1]}>
         <MainLayout>
           <PageNotFound />
         </MainLayout>
       </ProtectedRoute>
     ),
     element: (
-      <ProtectedRoute>
+      <ProtectedRoute allowedLevels={[0, 1]}>
         <MainLayout />
       </ProtectedRoute>
     ),

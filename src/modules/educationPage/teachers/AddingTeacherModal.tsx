@@ -35,22 +35,19 @@ export const AddingTeacherModal: React.FC = () => {
   const modals = useSelector(uiSelectors.getModals);
   const departments = useSelector(institutionSelectors.getDepartments);
   const currentModal = modals[MODAL_NAME];
-  const [isEdit, setIsEdit] = useState(false)
-
+  const [isEdit, setIsEdit] = useState(false);
 
   const [newItem, setNewItem] = useState<Teacher>(
     currentModal.value || ITEM_INIT_DATA,
   );
 
-  console.log(newItem, "@@@@@");
-  
-
   // Autofill email when открываем модалку редактирования: email приходит из связанного account
   useEffect(() => {
     if (currentModal.isEditing && currentModal.value) {
       const accEmail = (currentModal.value as any)?.account?.email;
+
       if (accEmail) {
-        setNewItem((prev) => ({ ...prev, email: accEmail } as any));
+        setNewItem((prev) => ({ ...prev, email: accEmail }) as any);
       }
     }
   }, [currentModal.isEditing, currentModal.value]);
@@ -63,12 +60,8 @@ export const AddingTeacherModal: React.FC = () => {
       holidays: holidays.map((el) => ({ date: el.toISOString() })),
     };
 
-    console.log(newItemWithHolidays, "newItemWithHolidays");
-    
-
     const validateError = validateTeacher(newItem, currentModal.isEditing);
     if (validateError) return showErrorNotification(validateError);
-    
 
     if (currentModal.isEditing) {
       return await dispatch(
@@ -80,9 +73,6 @@ export const AddingTeacherModal: React.FC = () => {
     }
     await dispatch(fetchAddTeacher(newItemWithHolidays) as any);
   };
-
-  console.log(currentModal.isEditing, "currentModal");
-  
 
   return (
     <>
@@ -107,39 +97,53 @@ export const AddingTeacherModal: React.FC = () => {
 
       <Flex $top="medium">
         <Input
-        disabled={!isEdit}
-        setIsEdit={setIsEdit}
-        isEditing={currentModal.isEditing}
-        suffix={"Изменить"}
+          disabled={!isEdit}
+          setIsEdit={setIsEdit}
+          isEditing={currentModal.isEditing}
+          suffix={'Изменить'}
           style={{ width: '100%' }}
           label="Email"
           placeholder="Введите email..."
           type="email"
           onChange={(e) =>
-            setNewItem((prev) => ({
-              ...prev,
-              email: e,
-            }))
+            setNewItem(
+              (prev) =>
+                ({
+                  ...prev,
+                  email: e,
+                  account: { ...prev.account, email: e },
+                }) as any,
+            )
           }
           value={newItem.email}
         />
       </Flex>
 
-      {(!currentModal.isEditing && !isEdit || isEdit) && <Flex $top="medium">
-        <Input
-          style={{ width: '100%' }}
-          label="Пароль"
-          placeholder={currentModal.isEditing ? "Оставьте пустым, если не хотите менять пароль" : "Введите пароль..."}
-          type="password"
-          onChange={(e) =>
-            setNewItem((prev) => ({
-              ...prev,
-              password: e,
-            }))
-          }
-          value={newItem.password}
-        />
-      </Flex>}
+      {((!currentModal.isEditing && !isEdit) || isEdit) && (
+        <Flex $top="medium">
+          <Input
+            style={{ width: '100%' }}
+            label="Пароль"
+            placeholder={
+              currentModal.isEditing
+                ? 'Оставьте пустым, если не хотите менять пароль'
+                : 'Введите пароль...'
+            }
+            type="password"
+            onChange={(e) =>
+              setNewItem(
+                (prev) =>
+                  ({
+                    ...prev,
+                    password: e,
+                    account: { ...prev.account, password: e },
+                  }) as any,
+              )
+            }
+            value={newItem.password}
+          />
+        </Flex>
+      )}
 
       <Flex $top="medium" gap="10px" direction="column">
         <Text>Выходные и отпуска</Text>

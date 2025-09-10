@@ -18,11 +18,9 @@ import { validateShift } from './helpers';
 import { institutionSelectors } from '@store/institution';
 import {
   showErrorNotification,
-  showSuccessNotification,
 } from '@lib/utils/notification';
 import Input from '@components/input/Input';
 import { Text } from '@components/Typography';
-import { SUCCESS_MESSAGE } from '../../../config';
 
 const ITEM_INIT_DATA: Shift = {
   number: 0,

@@ -7,8 +7,18 @@ import { useNavigate } from 'react-router-dom';
 import Flex from './Flex';
 import { useAppDispatch } from '@hooks/useAppDispatch';
 import { useRequestFetched } from '@hooks/useRequestFetching';
+import { Navigate } from 'react-router-dom';
 
-export const ProtectedRoute: FC<PropsWithChildren> = ({ children }) => {
+interface ProtectedRouteProps extends PropsWithChildren {
+  allowedLevels?: number[];
+  redirectPath?: string;
+}
+
+export const ProtectedRoute: FC<ProtectedRouteProps> = ({ 
+  children, 
+  allowedLevels = [0, 1, 2, 3],
+  redirectPath = '/schedule' 
+}) => {
   const user = useSelector(uiSelectors.getUser);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -19,12 +29,17 @@ export const ProtectedRoute: FC<PropsWithChildren> = ({ children }) => {
     if (!user) dispatch(fetchUser(navigate));
   });
 
-  if (!userIsFetched)
+  if (!userIsFetched) {
     return (
       <Flex align="center" justify="center" style={{ height: '100vh' }}>
         <h2>Загрузка...</h2>
       </Flex>
     );
+  }
+
+  if (user && user.level !== undefined && !allowedLevels?.includes(user.level)) {
+    return <Navigate to={redirectPath} replace />;
+  }
 
   return children;
 };
