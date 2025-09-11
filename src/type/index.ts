@@ -10,10 +10,9 @@ type Teacher = {
   account?: {
     email: string;
     password: string;
-    id: number;
   };
-  email: string;
-  password: string;
+  email?: string;
+  password?: string;
   account_id?: number;
 };
 

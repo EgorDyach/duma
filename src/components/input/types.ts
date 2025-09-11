@@ -5,7 +5,7 @@ export interface InputProps
   disabled?: boolean;
   label?: string;
   type?: string;
-  value: string;
+  value?: string;
   theme?: 'light' | 'dark';
   onChange: (value: string) => void; // оставляем типизацию как строку
   error?: string;

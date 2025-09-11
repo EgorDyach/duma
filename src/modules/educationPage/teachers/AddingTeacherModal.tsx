@@ -41,7 +41,6 @@ export const AddingTeacherModal: React.FC = () => {
     currentModal.value || ITEM_INIT_DATA,
   );
 
-  // Autofill email when открываем модалку редактирования: email приходит из связанного account
   useEffect(() => {
     if (currentModal.isEditing && currentModal.value) {
       const accEmail = (currentModal.value as any)?.account?.email;
@@ -71,7 +70,12 @@ export const AddingTeacherModal: React.FC = () => {
         ) as any,
       );
     }
-    await dispatch(fetchAddTeacher(newItemWithHolidays) as any);
+
+    await dispatch(fetchAddTeacher({
+      ...newItemWithHolidays,
+      email: newItem.email,
+      password: newItem.password
+    }) as any);
   };
 
   return (
