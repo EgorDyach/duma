@@ -205,8 +205,11 @@ export const fetchAddTeacher =
             password: password,
           },
         };
-
+        
         const { message } = await requestCreateTeacher(teacherPayload);
+
+        console.log(message.Teachers, "tea");
+        
 
         if (message.Teachers && typeof message.Teachers === 'object') {
           const newTeacher = toLowerCaseKeys(message.Teachers);

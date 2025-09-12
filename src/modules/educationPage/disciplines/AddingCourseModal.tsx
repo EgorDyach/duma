@@ -67,8 +67,14 @@ export const AddingCourseModal = () => {
     currentModal?.value || ITEM_INIT_DATA,
   );
 
+  console.log(newItem, "newItem0");
+  
+
   const currentTeacherId = newItem.course?.teacher_id ?? newItem.teacher_id ?? -1;
   const currentCourseId = newItem.course?.id ?? newItem.id;
+
+  console.log(currentTeacherId, "currentTeacherId");
+  
 
   const currentDiscipline = disciplines.find((el) => el.id === newItem.discipline_id);
 
