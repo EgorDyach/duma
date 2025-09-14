@@ -197,7 +197,8 @@ const SchedulePage = () => {
 
   const currentLessons = currentWeekLessons(lessons, weekOffset);
   const hasLessons = hasLessonsThisWeek(currentLessons.daysLessons);
-
+  console.log(currentLessons, "currentLessons");
+  
   const handlePreviousWeek = () => {
     setWeekOffset(weekOffset - 1);
   };
