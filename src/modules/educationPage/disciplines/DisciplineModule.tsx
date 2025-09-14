@@ -225,13 +225,13 @@ const DisciplineModule = () => {
                   <Flex wrap="wrap" gap="11px">
                     {courses
                       .filter(el => el.discipline_id === item.id)
-                      .map((el) => {
+                      .map((el) => {                        
                         const teacher = allTeachers.find(t => {
-                          return t.ID === el.teacher_id;
+                          return t.id === el.teacher_id;
                         });
 
                         return teacher ? (
-                          <Button key={el.ID}>
+                          <Button key={el.id}>
                             <Flex gap="12px">
                               <Text>{teacher.fullname}</Text>
                               {/* <StyledIcon

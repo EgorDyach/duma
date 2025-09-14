@@ -9,7 +9,7 @@ import { uiActions, uiSelectors } from '@store/ui';
 import { useSelector } from 'react-redux';
 import { AddingProfileModal } from './AddingProfileModal';
 import { useEffectOnce } from '@hooks/useEffectOnce';
-import { fetchAllFaculty } from '@store/institution/thunks';
+import { fetchAddCourse, fetchAllFaculty } from '@store/institution/thunks';
 import { Text } from '@components/Typography';
 import {
   AddingFacultyModal,
@@ -19,6 +19,7 @@ import {
   AddingDepartmentModal,
   MODAL_NAME as MODAL_DEPARTMENT_NAME,
 } from './AddingDepartmentModal';
+import { fetchAllDepartment } from '@store/institution/thunks';
 
 export const MODAL_NAME = 'addProfile';
 
@@ -31,6 +32,7 @@ const ProfileModule = () => {
   const dispatch = useAppDispatch();
   useEffectOnce(() => {
     dispatch(fetchAllFaculty());
+    dispatch(fetchAllDepartment())
   });
   return (
     <Flex flex="2" direction="column" gap="8px" align="start">

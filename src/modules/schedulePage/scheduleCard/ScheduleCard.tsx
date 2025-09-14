@@ -65,7 +65,7 @@ const ScheduleCard: React.FC<Schedule> = ({
         name: subject?.name,
       };
     });
-  };
+  };  
 
   return (
     <CardWrapper>
@@ -87,7 +87,7 @@ const ScheduleCard: React.FC<Schedule> = ({
             {toFixedNumberLessons(
               lessonToDisplayable(lessons),
               lessonsOnDay || 0,
-            ).map((el: LessonData | null, index) => {              
+            ).map((el: LessonData | null, index) => {     
              return  <ScheduleCardRow key={index}>
                 <ScheduleCardCell style={{ width: 217 }}>
                   <Flex justify="space-between" style={{ marginBottom: 3 }}>

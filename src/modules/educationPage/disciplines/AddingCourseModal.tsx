@@ -170,7 +170,7 @@ export const AddingCourseModal = () => {
         <Dropdown
           options={allTeachers
             .filter(teacher =>
-              teacher.ID !== currentTeacherId
+              teacher.id !== currentTeacherId
                 ? !courses
                   .filter(c => c.discipline_id === currentDiscipline.id)
                   .some(c => c.teacher_id === teacher.ID)
@@ -178,7 +178,7 @@ export const AddingCourseModal = () => {
             )
             .sort((a, b) => (a.fullname || '').localeCompare(b.fullname || ''))
             .map(teacher => ({
-              id: Number(teacher.ID) || -1,
+              id: Number(teacher.id) || -1,
               name: formatTeacherName(teacher.fullname)
             }))}
           selectedOption={currentTeacherId}

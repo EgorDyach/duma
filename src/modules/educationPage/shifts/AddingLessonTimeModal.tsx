@@ -1,6 +1,6 @@
 import { getId } from '@store/institution/store';
 import Flex from '@components/Flex';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   StyledModalTitle,
   StyledModalAdd,
@@ -55,21 +55,40 @@ const ITEM_INIT_DATA: LessonTime = {
   start_time: '00:00',
   end_time: '00:00',
   shift_id: -1,
+  number: 1,
 };
 
 export const AddingLessonTimeModal = () => {
   const dispatch = useAppDispatch();
   const modals = useSelector(uiSelectors.getModals);
   const shifts = useSelector(institutionSelectors.getShifts);
+  const lessonTimes = useSelector(institutionSelectors.getLessonTimes);
   const currentModal = modals[MODAL_NAME];
   const [newItem, setNewItem] = useState<LessonTime>(
     currentModal.value || ITEM_INIT_DATA,
   );
 
+  const getNextLessonNumber = (shiftId: number): number => {
+    const shiftLessonTimes = lessonTimes.filter(lt => lt.shift_id === shiftId);
+    if (shiftLessonTimes.length === 0) return 1;
+    
+    const maxNumber = Math.max(...shiftLessonTimes.map(lt => lt.number || 1));
+    return maxNumber + 1;
+  };
+
+  useEffect(() => {
+    if (newItem.shift_id !== -1 && !currentModal.isEditing) {
+      const nextNumber = getNextLessonNumber(newItem.shift_id);
+      setNewItem(prev => ({ ...prev, number: nextNumber }));
+    }
+  }, [newItem.shift_id, lessonTimes, currentModal.isEditing]);
+
   const handleAdd = () => {
     const item = {
       ...newItem,
+      number: currentModal.isEditing ? newItem.number : getNextLessonNumber(newItem.shift_id)
     };
+    
     const validateError = validateLessonTime(newItem);
     if (validateError) return showErrorNotification(validateError);
 
@@ -93,6 +112,13 @@ export const AddingLessonTimeModal = () => {
           </StyledModalTitle>
         </Flex>
       </Flex>
+      
+      {currentModal.isEditing && (
+        <Flex direction="column" $top="medium">
+          <Text>Номер урока: {newItem.number}</Text>
+        </Flex>
+      )}
+      
       <ShiftsList>
         {shifts.map((el) => (
           <li
@@ -108,7 +134,11 @@ export const AddingLessonTimeModal = () => {
                 color: el.id === newItem.shift_id ? '#fff' : '#641aee',
               }}
               onClick={() => {
-                setNewItem((prev) => ({ ...prev, shift_id: el.id || -1 }));
+                setNewItem((prev) => ({ 
+                  ...prev, 
+                  shift_id: el.id || -1,
+                  number: getNextLessonNumber(el.id || -1)
+                }));
               }}
             >
               {el.number}

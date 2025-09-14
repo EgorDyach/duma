@@ -492,14 +492,18 @@ export const fetchAddProfile =
   (item: Profile) => async (dispatch: AppDispatch) => {
     try {
       const { message } = await requestCreateProfile(item);
+      console.log(message, "profileresp");
+      
       dispatch(
         institutionActions.setProfiles(
-          message.Profiles.map((el) => toLowerCaseKeys(el)),
+          message.Profiles.map((el) => toLowerCaseKeys(el.department)),
         ),
       );
       dispatch(uiActions.closeModals());
       showSuccessNotification(SUCCESS_MESSAGE);
     } catch (e) {
+      console.log(e, "epr");
+      
       if (e instanceof AxiosError) return showErrorNotification(e.message);
       if (typeof e === 'string') return showErrorNotification(e);
       showErrorNotification('Что-то пошло не так...');
@@ -865,14 +869,18 @@ export const fetchAddDepartment =
   (item: Department) => async (dispatch: AppDispatch) => {
     try {
       const { message } = await requestCreateDepartment(item);
+      console.log(message, "departement@");
+      
       dispatch(
-        institutionActions.setFaculty(
-          message.Departments.map((el) => toLowerCaseKeys(el)),
+        institutionActions.setDepartment(
+          message.Department.map((el) => toLowerCaseKeys(el)),
         ),
       );
       dispatch(uiActions.closeModals());
       showSuccessNotification(SUCCESS_MESSAGE);
     } catch (e) {
+      console.log(e, "error");
+      
       if (e instanceof AxiosError) return showErrorNotification(e.message);
       if (typeof e === 'string') return showErrorNotification(e);
       showErrorNotification('Что-то пошло не так...');
