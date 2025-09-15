@@ -891,6 +891,8 @@ export const fetchAddDepartment =
   };
 export const fetchRemoveDepartment =
   (id: string | number) => async (dispatch: AppDispatch) => {
+    console.log(id, "id@@@");
+    
     try {
       await requestDeleteDepartment({ id });
       dispatch(institutionActions.removeDepartmnent(id));

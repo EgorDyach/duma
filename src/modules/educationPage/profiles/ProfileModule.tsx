@@ -32,8 +32,10 @@ const ProfileModule = () => {
   const dispatch = useAppDispatch();
   useEffectOnce(() => {
     dispatch(fetchAllFaculty());
-    dispatch(fetchAllDepartment())
   });
+
+  const allDepartments = faculties.flatMap(faculty => faculty.departments || []);
+
   return (
     <Flex flex="2" direction="column" gap="8px" align="start">
       <Modal modalName={MODAL_NAME}>
